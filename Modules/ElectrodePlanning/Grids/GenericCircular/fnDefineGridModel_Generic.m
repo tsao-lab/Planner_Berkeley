@@ -6,6 +6,7 @@ function strctGridParam = fnDefineGridModel_Generic()
 strctGridParam.m_fMinimumDistanceBetweenHolesMM = 1;
 strctGridParam.m_fGridHoleDiameterMM = 0.75;
 strctGridParam.m_fGridInnerDiameterMM = 16.6;
+strctGridParam.m_fGridOuterDiameterMM = 19; %Added by Hongsun 2020-11
 strctGridParam.m_fGridHeightMM = 10;
 strctGridParam.m_fGridHeightAboveMM = 9;
 afCenter = -7:7;

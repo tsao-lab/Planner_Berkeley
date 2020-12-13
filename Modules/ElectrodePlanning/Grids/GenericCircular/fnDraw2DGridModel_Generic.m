@@ -83,29 +83,50 @@ for iHoleIter=1:iNumHoles
 end;
 
 
+%Comment by Hongsun
+% % 
+% % fOuterDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridOuterDiam');
+% % fInnerDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridInnerDiam');
+% % 
 % 
-% fOuterDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridOuterDiam');
-% fInnerDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridInnerDiam');
-% 
-
-plot(hAxes, ...
-    afCos*strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM/2,...
-    afSin*strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM/2,'m','LineWidth',2);
-
 % plot(hAxes, ...
-%     [0 0],[0 fInnerDiameterMM/2],'y','LineWidth',2);
+%     afCos*strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM/2,...
+%     afSin*strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM/2,'m','LineWidth',2);
+% 
+% % plot(hAxes, ...
+% %     [0 0],[0 fInnerDiameterMM/2],'y','LineWidth',2);
+% 
+% % fThetaRad = fnGetGridParameter(strctGridModel.m_strctGridParams,'Theta')/180*pi;
+% % 
+% % fGridOriX  = cos(-fThetaRad+pi/2)*fInnerDiameterMM/2;
+% % fGridOriY = sin(-fThetaRad+pi/2)*fInnerDiameterMM/2;
+% % plot(hAxes, ...
+% %     [0 fGridOriX],[0 fGridOriY],'g','LineWidth',2);
+% % set(hAxes,'xlim',[-fOuterDiameterMM/2 fOuterDiameterMM/2],'ylim',[-fOuterDiameterMM/2 fOuterDiameterMM/2]);
+% % 
+% % 
+% % box on
+% set(hAxes,'xlim',[-10 10],'ylim',[-10 10]);
+
+
+%----------- Below added by Hongsun--------2020-11-----------%
+fOuterDiameterMM = strctGridModel.m_strctGridParams.m_fGridOuterDiameterMM;
+fInnerDiameterMM = strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM;
+
+plot(hAxes, afCos*fInnerDiameterMM/2, afSin*fInnerDiameterMM/2, 'm', 'LineWidth', 2);
+
+plot(hAxes, [0 0],[0 fInnerDiameterMM/2],'y','LineWidth',2);
 
 % fThetaRad = fnGetGridParameter(strctGridModel.m_strctGridParams,'Theta')/180*pi;
-% 
-% fGridOriX  = cos(-fThetaRad+pi/2)*fInnerDiameterMM/2;
-% fGridOriY = sin(-fThetaRad+pi/2)*fInnerDiameterMM/2;
-% plot(hAxes, ...
-%     [0 fGridOriX],[0 fGridOriY],'g','LineWidth',2);
-% set(hAxes,'xlim',[-fOuterDiameterMM/2 fOuterDiameterMM/2],'ylim',[-fOuterDiameterMM/2 fOuterDiameterMM/2]);
-% 
-% 
-% box on
-set(hAxes,'xlim',[-10 10],'ylim',[-10 10]);
+fThetaRad = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(1)/180*pi;
+
+fGridOriX  = cos(-fThetaRad+pi/2)*fInnerDiameterMM/2;
+fGridOriY = sin(-fThetaRad+pi/2)*fInnerDiameterMM/2;
+plot(hAxes, [0 fGridOriX],[0 fGridOriY],'g','LineWidth',2);
+set(hAxes,'xlim',[-fOuterDiameterMM/2 fOuterDiameterMM/2],'ylim',[-fOuterDiameterMM/2 fOuterDiameterMM/2]);
+box on
+return;
+%-----------------Above added by Hongsun------------------------%
 
 
 % 

@@ -7,7 +7,9 @@ end;
 
 
 iNumChamberModels = length(g_strctModule.m_strctParams.m_strctConfig.m_acChamberModels.m_strctModel);
-for iModelIter=1:iNumChamberModels
+
+% for iModelIter=1:iNumChamberModels %comment by Hongsun 2020-10
+for iModelIter=iNewType:iNewType
     strctChamber.m_strType = g_strctModule.m_strctParams.m_strctConfig.m_acChamberModels.m_strctModel{iModelIter}.m_strModelName;
     strctChamber.m_strFuncName = g_strctModule.m_strctParams.m_strctConfig.m_acChamberModels.m_strctModel{iModelIter}.m_strModelFunc;
     strctChamber.m_strctModel = eval(strctChamber.m_strFuncName);
@@ -24,3 +26,4 @@ g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iSelect
     pt3fPosInStereoSpace(1),pt3fPosInStereoSpace(2),pt3fPosInStereoSpace(3));
 fnInvalidate();
 return;
+            

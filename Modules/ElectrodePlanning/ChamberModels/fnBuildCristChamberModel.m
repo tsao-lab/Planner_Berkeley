@@ -5,8 +5,11 @@ function strctModel = fnBuildCristChamberModel(fChamberAngle)
 %
 % Future versions may automatically do this projection so only the short
 % version will be needed.
-strctModel.m_astrctMeshShort = fnBuildShortModel( fnGetStandardCristChamberParams(fChamberAngle));
-strctModel.m_astrctMeshLong = fnBuildLongModel( fnGetStandardCristChamberParams(fChamberAngle));
+% Changed by Hongsun
+strctModel.strctParams = fnGetStandardCristChamberParams(fChamberAngle);
+strctModel.m_astrctMeshShort = fnBuildShortModel(strctModel.strctParams);
+strctModel.m_astrctMeshLong = fnBuildLongModel( strctModel.strctParams);
+
 return;
 
 

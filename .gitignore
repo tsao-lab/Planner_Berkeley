@@ -1,2 +1,7 @@
 
 *.lnk
+*.pdb
+*.tlog
+*.obj
+*.user
+*.ipch

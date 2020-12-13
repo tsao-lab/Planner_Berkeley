@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1300
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastInterp3", "FastInterp3\FastInterp3.vcxproj", "{F27977BF-A1CF-4091-ACB2-EFD8040C539F}"
 EndProject
@@ -38,6 +38,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolidWorksRecordingChamber2014", "SolidWorks2014\SolidWorksRecordingChamber2014.vcxproj", "{CBEF87D1-6E70-48C8-878E-9B512D5979C5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolidWorksRecordingChamber2016", "SolidWorks2016\SolidWorksRecordingChamber2016.vcxproj", "{004831B7-864E-4BE6-BEF6-57BEAA949A65}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolidWorksRecordingChamber2019", "SolidWorks2019\SolidWorksRecordingChamber2019.vcxproj", "{B066A142-2507-42F8-B399-B36060D68103}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SolidWorksCreateChamberCAP2019", "SolidWorks2019_CreateChamberCAP\SolidWorksCreatChamberCAP2019.vcxproj", "{F236D92E-D4CE-4320-8B2F-9687003B3AA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,8 +195,27 @@ Global
 		{004831B7-864E-4BE6-BEF6-57BEAA949A65}.Release|Win32.Build.0 = Release|Win32
 		{004831B7-864E-4BE6-BEF6-57BEAA949A65}.Release|x64.ActiveCfg = Release|x64
 		{004831B7-864E-4BE6-BEF6-57BEAA949A65}.Release|x64.Build.0 = Release|x64
+		{B066A142-2507-42F8-B399-B36060D68103}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B066A142-2507-42F8-B399-B36060D68103}.Debug|Win32.Build.0 = Debug|Win32
+		{B066A142-2507-42F8-B399-B36060D68103}.Debug|x64.ActiveCfg = Debug|x64
+		{B066A142-2507-42F8-B399-B36060D68103}.Debug|x64.Build.0 = Debug|x64
+		{B066A142-2507-42F8-B399-B36060D68103}.Release|Win32.ActiveCfg = Release|Win32
+		{B066A142-2507-42F8-B399-B36060D68103}.Release|Win32.Build.0 = Release|Win32
+		{B066A142-2507-42F8-B399-B36060D68103}.Release|x64.ActiveCfg = Release|x64
+		{B066A142-2507-42F8-B399-B36060D68103}.Release|x64.Build.0 = Release|x64
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Debug|Win32.Build.0 = Debug|Win32
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Debug|x64.ActiveCfg = Debug|x64
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Debug|x64.Build.0 = Debug|x64
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Release|Win32.ActiveCfg = Release|Win32
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Release|Win32.Build.0 = Release|Win32
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Release|x64.ActiveCfg = Release|x64
+		{F236D92E-D4CE-4320-8B2F-9687003B3AA4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E08868B4-7A21-44FC-86B6-49CE17A7A72F}
 	EndGlobalSection
 EndGlobal

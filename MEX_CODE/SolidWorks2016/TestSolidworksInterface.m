@@ -14,7 +14,9 @@ strTemplate = 'C:\Users\shayo\Dropbox (MIT)\Code\Github\Planner\Solidworks\Grid_
 strOutputFile = 'C:\Users\shayo\Dropbox (MIT)\Code\Github\Planner\Solidworks\RecordingChamberMod.SLDPRT';
 	
 iErr = fndllSolidWorksRecordingChamber2016(P, Tilt, Rot, Rad, strTemplate, strOutputFile,false);
+
+clear all
 %%
-addpath('C:\Users\shayo\SkyDrive\Planner\Code\MEX\Win_x64');
-load('C:\Users\shayo\SkyDrive\Planner\Code\SolidWorksDebug.mat');
-iErr = fndllSolidWorksRecordingChamber(P, Tilt, Rot, Rad, strTemplate, strOutputFile);
+% addpath('C:\Users\shayo\SkyDrive\Planner\Code\MEX\Win_x64');
+% load('C:\Users\shayo\SkyDrive\Planner\Code\SolidWorksDebug.mat');
+% iErr = fndllSolidWorksRecordingChamber(P, Tilt, Rot, Rad, strTemplate, strOutputFile);

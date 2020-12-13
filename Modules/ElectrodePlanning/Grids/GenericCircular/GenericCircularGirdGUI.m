@@ -1,4 +1,6 @@
 function varargout = GenericCircularGirdGUI(varargin)
+%added by Hongsun
+global g_strctModule
 % GENERICCIRCULARGIRDGUI M-file for GenericCircularGirdGUI.fig
 %      GENERICCIRCULARGIRDGUI, by itself, creates a new GENERICCIRCULARGIRDGUI or raises the existing
 %      singleton*.
@@ -22,7 +24,7 @@ function varargout = GenericCircularGirdGUI(varargin)
 
 % Edit the above text to modify the response to help GenericCircularGirdGUI
 
-% Last Modified by GUIDE v2.5 03-Jan-2014 11:41:51
+% Last Modified by GUIDE v2.5 23-Nov-2020 01:53:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -66,8 +68,8 @@ if length(varargin) >= 1
             strctPlannerInfo = varargin{2};
             strctGridModel = varargin{3};
             strctGridFunc = varargin{4};
-             strctGridName = varargin{5};
- 
+            strctGridName = varargin{5};
+
              set(handles.hRotationSlider,'min',-180,'max',180);
             set(handles.hTiltSlider,'min',0,'max',89);
             set(handles.hTranslationXSlider,'min',-1,'max',1,'value',0);
@@ -80,6 +82,10 @@ if length(varargin) >= 1
             setappdata(handles.figure1,'strctPlannerInfo',strctPlannerInfo);
             setappdata(handles.figure1,'strctGridModel',strctGridModel);
             setappdata(handles.figure1,'strctGridFunc',strctGridFunc);
+            
+            %added by Hongsun
+            set(handles.hInnerDiameterEdit, 'string', ...
+                num2str(strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM));
     end
 end
           set(handles.figure1,'visible','on');
@@ -739,6 +745,9 @@ set(handles.hTranslationYEdit,'string','0');
 
 
 function hExportGrid_Callback(hObject, eventdata, handles)
+%added by Hongsun
+global g_strctModule
+
 if ~strcmpi(computer,'PCWIN64') && ~strcmpi(computer,'PCWIN32') 
     h=msgbox('Automatic model generation with solidworks is only available under Windows platform.');
     waitfor(h);
@@ -751,7 +760,10 @@ if isempty(strctOutput)
     return;
 end;
 
-
+%added by Hongsun
+chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
+    m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
+            
 P = [strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm;strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm];
 N = size(P,2);
 Tilt = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg;
@@ -770,8 +782,9 @@ acVersions = {'Software\Solidworks\SolidWorks 2010',...
     'Software\Solidworks\SolidWorks 2014',...
     'Software\Solidworks\SolidWorks 2015',...
     'Software\Solidworks\SolidWorks 2016',...
-    'Software\Solidworks\SolidWorks 2017'    };
-
+    'Software\Solidworks\SolidWorks 2017',... 
+    'Software\Solidworks\SolidWorks 2019'}; % SolidWorks 2019, added by Hongsun
+ 
 iVersion = -1;
 for iIter=1:length(acVersions)
    try
@@ -799,6 +812,8 @@ switch iVersion
         iErr = fndllSolidWorksRecordingChamber2016(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
     case 8
         iErr = fndllSolidWorksRecordingChamber2017(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
+    case 9 %Added by Hongsun
+        iErr = fndllSolidWorksRecordingChamber2019(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
 end
 
 
@@ -859,3 +874,23 @@ end
 fprintf(hFileID,'</CONTAINER>\n');
 
 fclose(hFileID);
+
+
+function hInnerDiameterEdit_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+%added by Hongsun 2020-11-22
+function hInnerDiameterEdit_Callback(hObject, eventdata, handles)
+fNewInnerDiameter=str2num(get(handles.hInnerDiameterEdit,'string'));
+if (fNewInnerDiameter<0 ||fNewInnerDiameter>200)
+    return;
+end
+
+strctGridModel = getappdata(handles.figure1,'strctGridModel');
+strctGridParam = fnDefineGridModel_Generic_customize(fNewInnerDiameter);
+strctGridModel.m_strctGridParams = strctGridParam;
+strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
+fnUpdateGridModel(handles,strctGridModel);
+return;

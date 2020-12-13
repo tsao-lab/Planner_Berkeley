@@ -64,10 +64,21 @@
                         m_strModelFunc = "fnBuildCannulaChamberModel"
                     > </m_strctModel>
                     
-          <m_strctModel
+                    <m_strctModel
                         m_strModelName = "Kopf 1460 Tip"
                         m_strModelFunc = "fnBuildManipulatorTipModel"
-                    > </m_strctModel>                    
+                    > </m_strctModel>
+
+                    <m_strctModel
+                        m_strModelName = "Crist 0 Deg (customize inner diameter)"
+                        m_strModelFunc = "fnBuildCristChamberModel_CustInnerDiameter(0)"
+                    > </m_strctModel>
+
+                    <m_strctModel
+                        m_strModelName = "Rectangular 20 mm (customize chamber width)"
+                        m_strModelFunc = "fnBuildRectangularChamberModel_CustWidth(20)"
+                    > </m_strctModel>
+                        
             </m_acChamberModels>
             
             
