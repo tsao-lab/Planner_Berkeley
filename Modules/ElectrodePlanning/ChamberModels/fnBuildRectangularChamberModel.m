@@ -5,14 +5,14 @@ function strctModel = fnBuildRectangularChamberModel(fChamberWidthMM)
 %
 % Future versions may automatically do this projection so only the short
 % version will be needed.
-strctModel.m_astrctMeshShort = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 0);
+strctModel.m_astrctMeshShort = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 80); %change from 0 to 80
 strctModel.m_astrctMeshLong = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 80);
 return;
 
 
 function strctParams = fnGetStandardRectChamberParams(fChamberWidthMM)
 % Builds a 3D wire-frame model of a rectangular chamber
-fChamberHeightMM = 20;
+fChamberHeightMM = 20; %change from 20 to 80
 strctParams.m_strManufacterer = 'Rectangular';
 strctParams.m_strName = sprintf('Rect %d mm',fChamberWidthMM);
 strctParams.m_fWidthMM = fChamberWidthMM;

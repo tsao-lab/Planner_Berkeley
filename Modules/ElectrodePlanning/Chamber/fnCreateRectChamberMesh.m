@@ -26,7 +26,8 @@ astrctMesh(1) = strctMesh;
 astrctMesh(2) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, 0, afColor);
 
 if fDepthMM > 0
-    astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, -fHeightMM-fDepthMM, afColor*0.5);
+%     astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, -fHeightMM-fDepthMM, afColor*0.5);
+    astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM+5, -fHeightMM-fDepthMM, 0, afColor*0.5); %modified by Hongsun
 end
 % 
 % a2fT = eye(4);
