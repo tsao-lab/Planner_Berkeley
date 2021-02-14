@@ -41,6 +41,13 @@ int createRecordingChamber(vector<double> x_mm_list,
 
 int _createRealChamber(double innerDiameter, double outerDiameter, double height);
 
+int _createGridwithHoles(vector<double> x_mm_list,
+	vector<double> y_mm_list,
+	vector<double> tilt_degrees_list,
+	vector<double> rotation_degrees_list,
+	vector<double> hole_radius_list,
+	std::string saveFilename, std::string templateFilename, bool bShutdown,
+	double GridInnerD, double GridOuterD, double GridInnerH, double GridOuterH);
 
 void insertGrid(vector<double> x_mm_list,
 				vector<double> y_mm_list,

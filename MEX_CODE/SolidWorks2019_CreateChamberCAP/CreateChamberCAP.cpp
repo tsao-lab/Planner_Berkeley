@@ -17,72 +17,29 @@
 #include "CreateChamberCAP.h"
 
 
-
 //HKEY_LOCAL_MACHINE\SOFTWARE\SolidWorks\SolidWorks 2019
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
+	//copied from 2016/SolidWorksRecordingChamber.cpp/mexFunction
 	debugPrintout("Start creating Chamber and CAP");
 	int Err = 0;
-	if (nlhs != 1 || nrhs != 5) {
-		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(innerDiameter (1x1), outerDiameter (1x1), height (1x1), strOutputFile, bShutdown)");
-		return;
-	}
-
-	const int *dim1 = mxGetDimensions(prhs[0]);
-	const int *dim2 = mxGetDimensions(prhs[1]);
-	const int *dim3 = mxGetDimensions(prhs[2]);
-
-	if (dim1[0] != 1 || dim2[0] != 1 || dim3[0] != 1)
+	if (nlhs != 1 || nrhs != 14)
 	{
-		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(innerDiameter (1x1), outerDiameter (1x1), height (1x1), strOutputFile, bShutdown)");
+		mexErrMsgTxt("Too few or too many parameters");
 		return;
 	}
-
-	double *pInnerDiameter = (double *)mxGetData(prhs[0]);
-	double *pOuterDiameter = (double *)mxGetData(prhs[1]);
-	double *pHeight = (double *)mxGetData(prhs[2]);
-
-	if ((*pInnerDiameter) <= 0 || (*pOuterDiameter) <= 0 || (*pHeight) <= 0 ||
-		(*pInnerDiameter) > (*pOuterDiameter))
-	{
-		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(innerDiameter (1x1), outerDiameter (1x1), height (1x1), strOutputFile, bShutdown)");
-		return;
-	}
-
-	char OutputFile[1000];
-	mxGetString(prhs[4], OutputFile, 999);
-	debugPrintout("Call _createRealChamber");
-	_createRealChamber(*pInnerDiameter, *pOuterDiameter, *pHeight);
-
-	//output
-	int output_dim_array[2] = { 1,1 };
-	plhs[0] = mxCreateNumericArray(2, output_dim_array, mxDOUBLE_CLASS, mxREAL);
-	double *Out = (double*)mxGetPr(plhs[0]);
-	*Out = Err;
-}
-
-
-/*
-void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
-
-	if (nlhs != 1 || nrhs != 7) {
-		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(XY (2xN), Tilt (1xN), Rotation (1xN), Rad (1xN), strTemplate, strOutputFile, bShutdown)");
-		return;
-	} 
 
 	const int *dim1 = mxGetDimensions(prhs[0]);
 	int NumHoles = dim1[1];
 	const int *dim2 = mxGetDimensions(prhs[1]);
 	const int *dim3 = mxGetDimensions(prhs[2]);
 
-	if (dim1[0] != 2 || dim2[0] != 1 || dim1[1] != dim2[1] || dim3[1] != NumHoles) {
+	if (dim1[0] != 2 || dim2[0] != 1 || dim1[1] != dim2[1] || dim3[1] != NumHoles)
+	{
 		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(XY (2xN), Tilt (1xN), Rotation (1xN), Rad (1xN), strTemplate, strOutputFile, bShutdown)");
 		return;
 	}
-
-	//static const double HOLE_RADIUS_M = .375*MM_TO_M;
-
 
 	double *P = (double *)mxGetData(prhs[0]);
 	double *Tilt = (double *)mxGetData(prhs[1]);
@@ -91,53 +48,84 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
 	double *Rad = (double *)mxGetData(prhs[3]);
 
 	char TemplateFile[1000], OutputFile[1000];
-	
+
 	mxGetString(prhs[4], TemplateFile, 999);
 	mxGetString(prhs[5], OutputFile, 999);
 
 	bool bShutdown = (*(char *)mxGetData(prhs[6])) > 0;
 
-        std::string saveFilename(OutputFile);
-		std::string templateFileName(TemplateFile);
+	std::string saveFilename(OutputFile);
+	std::string templateFileName(TemplateFile);
 
-        vector<double> x_mm_list;
-        vector<double> y_mm_list;
-		vector<double> r_mm_list;
+	vector<double> x_mm_list;
+	vector<double> y_mm_list;
+	vector<double> r_mm_list;
 
-        vector<double > tilt_degrees_list;
-        vector<double> rotation_degrees_list;
+	vector<double > tilt_degrees_list;
+	vector<double> rotation_degrees_list;
 
-		for(int i = 0; i< NumHoles;i++) {
+	for (int i = 0; i < NumHoles; i++) {
 
-                        double tilt_degrees = Tilt[i];
-                        double rotation_degrees = Rot[i];
+		double tilt_degrees = Tilt[i];
+		double rotation_degrees = Rot[i];
 
-                        double x = P[2*i+0];
-                        double y = P[2*i+1];
-						double r = Rad[i] ;
+		double x = P[2 * i + 0];
+		double y = P[2 * i + 1];
+		double r = Rad[i];
 
-                        x_mm_list.push_back(x);
-                        y_mm_list.push_back(y);
-						r_mm_list.push_back(r);
-                        tilt_degrees_list.push_back(tilt_degrees);
-                        rotation_degrees_list.push_back(rotation_degrees);
-        }
+		x_mm_list.push_back(x);
+		y_mm_list.push_back(y);
+		r_mm_list.push_back(r);
+		tilt_degrees_list.push_back(tilt_degrees);
+		rotation_degrees_list.push_back(rotation_degrees);
+	}
 
-        int Err = createRecordingChamber(x_mm_list,
-                               y_mm_list,
-							   tilt_degrees_list,
-							   rotation_degrees_list,
-							   r_mm_list,
-							   saveFilename, templateFileName,bShutdown);
 
-		int output_dim_array[2] = {1,1};
+
+	//new added by Hongsun 2021-02-13
+	double *pChamberInnerD = (double *)mxGetData(prhs[7]);
+	double *pChamberOuterD = (double *)mxGetData(prhs[8]);
+	double *pChamberHeight = (double *)mxGetData(prhs[9]);
+	//grid_outerD
+	double *pGridInnerD = (double *)mxGetData(prhs[10]);
+	double *pGridOuterD = (double *)mxGetData(prhs[11]);
+	double *pGridInnerH = (double *)mxGetData(prhs[12]);
+	double *pGridOuterH = (double *)mxGetData(prhs[13]);
+	//
+	if ((*pChamberInnerD) <= 0 || (*pChamberOuterD) <= 0 ||
+		(*pChamberHeight) <= 0 || (*pChamberInnerD) > (*pChamberOuterD))
+	{
+		mexErrMsgTxt("Usage: [Error] = fndllSolidWorks(innerDiameter (1x1), outerDiameter (1x1), height (1x1), strOutputFile, bShutdown)");
+		return;
+	}
+
+	debugPrintout("Call _createRealChamber");
+	//int Err = _createRealChamber(*pChamberInnerD, *pChamberOuterD, *pChamberHeight);
+	debugPrintout("Call _createRealChamber");
+
+	Err = createRecordingChamber(x_mm_list,
+		y_mm_list,
+		tilt_degrees_list,
+		rotation_degrees_list,
+		r_mm_list,
+		saveFilename, templateFileName, bShutdown);
+
+	
+	//Err = _createGridwithHoles(x_mm_list,
+	//	y_mm_list,
+	//	tilt_degrees_list,
+	//	rotation_degrees_list,
+	//	r_mm_list,
+	//	saveFilename, templateFileName, bShutdown,
+	//	*pGridInnerD, *pGridOuterD, *pGridInnerH, *pGridOuterH);
+	//
+
+	//output
+	int output_dim_array[2] = { 1,1 };
 	plhs[0] = mxCreateNumericArray(2, output_dim_array, mxDOUBLE_CLASS, mxREAL);
-	double *Out = (double*) mxGetPr(plhs[0]);
+	double *Out = (double*)mxGetPr(plhs[0]);
 	*Out = Err;
-
 }
-
-*/
 
 
 int _createRealChamber(double innerDiameter, double outerDiameter, double height)
@@ -240,8 +228,140 @@ int _createRealChamber(double innerDiameter, double outerDiameter, double height
 	debugPrintout("Finished creating chamber");
 	//swApp->put_Visible(VARIANT_TRUE);
 
+	long Errors = 0;
+	long Warnings = 0;
+	VARIANT_BOOL Retval = false;
+	swDocExt->SaveAs(_com_util::ConvertStringToBSTR("D:\\test1.SLDPRT"), swSaveAsCurrentVersion,
+		swSaveAsOptions_Silent, NULL, &Errors, &Warnings, &Retval);
+
+	//close document and shutdown solidworks
+	swApp->CloseDoc(_com_util::ConvertStringToBSTR("D:\\test1.SLDPRT"));
+	swApp->ExitApp();
 	::CoUninitialize();
 }
+
+int _createGridwithHoles(vector<double> x_mm_list,
+	vector<double> y_mm_list,
+	vector<double> tilt_degrees_list,
+	vector<double> rotation_degrees_list,
+	vector<double> hole_radius_list,
+	std::string saveFilename, std::string templateFilename, bool bShutdown,
+	double GridInnerD, double GridOuterD, double GridInnerH, double GridOuterH)
+{
+	CoInitialize(NULL);
+	//
+	HRESULT result = NOERROR;
+	VARIANT_BOOL bRetval = VARIANT_FALSE;
+	CComPtr<ISldWorks> swApp;
+	CComPtr<IModelDoc2> swDoc;
+	CComPtr<IModelDocExtension> swDocExt;
+	CComPtr<IFeatureManager> swFeatMgr;
+
+	debugPrintout("Started creating chamber");
+	HRESULT Res = swApp.CoCreateInstance(L"SldWorks.Application", NULL, CLSCTX_LOCAL_SERVER);
+	if (Res == REGDB_E_CLASSNOTREG) {
+		debugPrintout("swApp.coCreateInstance Failed");
+		CoUninitialize();
+		return 2;
+	}
+
+	Sleep(3000);
+
+	CComBSTR _documentType;
+	swApp->GetUserPreferenceStringValue(swUserPreferenceStringValue_e::swDefaultTemplatePart, &_documentType);
+	result = swApp->INewDocument2(_documentType, 0, 0, 0, &swDoc);
+
+	swDoc->get_Extension(&swDocExt);
+	swDoc->get_FeatureManager(&swFeatMgr);
+	swApp->put_UserControl(VARIANT_TRUE);
+	swApp->put_Visible(VARIANT_TRUE);
+
+	//
+	CComPtr<ISketch> swSketch;
+	CComPtr<ISketchManager> swSketchMgr;
+	CComPtr<ISketchSegment> swSkSeg;
+
+	swDoc->IGetActiveSketch2(&swSketch);
+	swDoc->get_SketchManager(&swSketchMgr);
+
+	if (swSketch == NULL)
+	{
+		//release must use _com_util::ConvertStringToBSTR("Top Plane"); release cannot use L("Top Plane"); debug can use L("Top Plane")
+		swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Top Plane"),
+			_com_util::ConvertStringToBSTR("PLANE"), 0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+		if (bRetval == VARIANT_FALSE)
+		{
+			debugPrintout("Select Top Plane successfully");
+		}
+		else
+			debugPrintout("Select Top Plane failed");
+		swSketchMgr->InsertSketch(VARIANT_TRUE);
+	}
+	//
+	swDoc->ICreateCircle2(0.0, 0.0, 0.0, GridOuterD / 2.0*MM_TO_M, 0.0, 0.0, &swSkSeg);
+
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Sketch1"),
+		_com_util::ConvertStringToBSTR("SKETCH"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+
+	CComPtr<IFeature> swFeat;
+	swFeatMgr->FeatureExtrusion3(VARIANT_TRUE, VARIANT_FALSE, VARIANT_FALSE,
+		swEndCondBlind, swEndCondBlind,
+		GridOuterH*MM_TO_M, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		0.0, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE, VARIANT_TRUE,
+		swStartOffset, 0.0, VARIANT_FALSE, &swFeat);
+
+
+	
+	//Create a ref plan to cut
+	CComPtr<IDispatch> retval;
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Top Plane"),
+		_com_util::ConvertStringToBSTR("PLANE"), 0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+	swFeatMgr->InsertRefPlane(swRefPlaneReferenceConstraint_Distance, GridOuterH*MM_TO_M,
+		0, 0, 0, 0, &retval);
+
+	//cut with inner diamter
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Plane1"),
+		_com_util::ConvertStringToBSTR("PLANE"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+	swSketchMgr->InsertSketch(VARIANT_TRUE);
+	swDoc->ICreateCircle2(0.0, 0.0, 0.0, GridInnerD / 2.0*MM_TO_M, 0.0, 0.0, &swSkSeg);
+	swSketchMgr->InsertSketch(VARIANT_FALSE);
+
+
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Sketch2"),
+		_com_util::ConvertStringToBSTR("SKETCH"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+	swFeatMgr->FeatureCut4(VARIANT_TRUE, VARIANT_FALSE, VARIANT_FALSE,
+		swEndCondBlind, swEndCondBlind,
+		(GridOuterH- GridInnerH)*MM_TO_M, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		0.0, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE, //OffsetReverse1, OffsetReverse2
+		VARIANT_FALSE, VARIANT_FALSE,//TranslateSurface1, TranslateSurface2
+		VARIANT_FALSE, //NormalCut
+		VARIANT_FALSE, //UseFeatScope
+		VARIANT_FALSE, //UseAutoSelect
+		VARIANT_FALSE, VARIANT_FALSE, VARIANT_FALSE,
+		swStartSketchPlane, 0.0, VARIANT_FALSE, VARIANT_FALSE, &swFeat);
+
+	swDoc->SetAddToDB(true);
+	insertGrid(x_mm_list, y_mm_list, tilt_degrees_list, rotation_degrees_list, hole_radius_list,
+		swDoc, swDocExt, swFeatMgr, swSketchMgr);
+
+	debugPrintout("Finished creating chamber");
+}
+
+
+
+
+
 
 
 /**  createRecordingChamber - This is the main function for generating
@@ -412,10 +532,6 @@ HRESULT hres = swModel->QueryInterface(__uuidof(IPartDoc), reinterpret_cast<void
 
         return 0;
 }
-
-
-
-
 
 
 /**  insertGrid  - This function will cut out the grid specified by
@@ -869,8 +985,8 @@ CComPtr<ISketchSegment> sketchGridHole(int grid_number,
 									   CComPtr<ISketchManager> swSketchManager, double HoleRadiusMM) {
 
 
-        CComBSTR plane_type(L"PLANE");
-        CComBSTR plane = "Plane";
+        CComBSTR plane_type(_com_util::ConvertStringToBSTR("PLANE"));
+        CComBSTR plane = _com_util::ConvertStringToBSTR("Plane");
         // Append plane number to the end of the 'plane' string
         char buffer [5];
         _itoa_s(grid_number, buffer, 10);
