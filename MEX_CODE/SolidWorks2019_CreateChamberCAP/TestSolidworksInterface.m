@@ -14,9 +14,9 @@ strTemplate = 'C:\Users\Hongsun\Documents\GitHub\Planner\Solidworks\Grid_Templat
 strOutputFile = 'C:\Users\Hongsun\Documents\GitHub\Planner\Solidworks\RecordingChamberMod_aa.SLDPRT';
 
 
-chamber_innerDiameter = 20;
-chamber_outerDiameter = 22;
-chamber_height = 15;
+chamber_innerDiameter = 10;
+chamber_outerDiameter = chamber_innerDiameter+2.5;
+chamber_height = 20;
 % iErr = fndllSolidWorksCreateChamberCAP2019(P, Tilt, Rot, Rad, strTemplate, strOutputFile,false);
 
 grid_outerDiameter = chamber_innerDiameter-0.5;
@@ -31,10 +31,13 @@ iErr = fndllSolidWorksCreateChamberCAP2019(P, Tilt, Rot, Rad, strTemplate, strOu
     grid_innerDiamter, ... %10
     grid_outerDiameter, ... %11
     grid_innerHeight, ... %12
-    grid_outerHeight); %13
+    grid_outerHeight, ... %13
+    'D:\chamber.SLDPRT', ... %14
+    'D:\chamberCap.SLDPRT', ... %15
+    'D:\grid.SLDPRT');  %16
 
 clear all
-% 
+%
 % iErr = fndllSolidWorksRecordingChamber2016(P, Tilt, Rot, Rad, strTemplate, strOutputFile,false);
 % %%
 % addpath('C:\Users\shayo\SkyDrive\Planner\Code\MEX\Win_x64');

@@ -24,7 +24,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	//copied from 2016/SolidWorksRecordingChamber.cpp/mexFunction
 	debugPrintout("Start creating Chamber and CAP");
 	int Err = 0;
-	if (nlhs != 1 || nrhs != 14)
+	if (nlhs != 1 || nrhs != 17)
 	{
 		mexErrMsgTxt("Too few or too many parameters");
 		return;
@@ -49,13 +49,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
 	char TemplateFile[1000], OutputFile[1000];
 
-	mxGetString(prhs[4], TemplateFile, 999);
-	mxGetString(prhs[5], OutputFile, 999);
+	mxGetString(prhs[4], TemplateFile, 999); //obsolete
+	mxGetString(prhs[5], OutputFile, 999); //obsolete
 
-	bool bShutdown = (*(char *)mxGetData(prhs[6])) > 0;
+	bool bShutdown = (*(char *)mxGetData(prhs[6])) > 0; //obsolete
 
-	std::string saveFilename(OutputFile);
-	std::string templateFileName(TemplateFile);
+	std::string saveFilename(OutputFile); //obsolete
+	std::string templateFileName(TemplateFile); //obsolete
 
 	vector<double> x_mm_list;
 	vector<double> y_mm_list;
@@ -99,26 +99,35 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		return;
 	}
 
-	debugPrintout("Call _createRealChamber");
-	//int Err = _createRealChamber(*pChamberInnerD, *pChamberOuterD, *pChamberHeight);
-	debugPrintout("Call _createRealChamber");
+	//get files name to save
+	char chamberFileNameBuf[1000], chamberCapFileNameBuf[1000], gridFileNameBuf[1000];
 
-	Err = createRecordingChamber(x_mm_list,
-		y_mm_list,
-		tilt_degrees_list,
-		rotation_degrees_list,
-		r_mm_list,
-		saveFilename, templateFileName, bShutdown);
+	mxGetString(prhs[14], chamberFileNameBuf, 999);
+	mxGetString(prhs[15], chamberCapFileNameBuf, 999);
+	mxGetString(prhs[16], gridFileNameBuf, 999);
 
-	
-	//Err = _createGridwithHoles(x_mm_list,
+	std::string chamberFilename(chamberFileNameBuf);
+	std::string chamberCapFileName(chamberCapFileNameBuf);
+	std::string gridFileName(gridFileNameBuf);
+
+	debugPrintout("Call _createRealChamber");
+	Err = _createRealChamber(*pChamberInnerD, *pChamberOuterD, *pChamberHeight, chamberFilename);
+
+	Err = _createRealChamberCAP(*pChamberOuterD, chamberCapFileNameBuf);
+	//Err = createRecordingChamber(x_mm_list,
 	//	y_mm_list,
 	//	tilt_degrees_list,
 	//	rotation_degrees_list,
 	//	r_mm_list,
-	//	saveFilename, templateFileName, bShutdown,
-	//	*pGridInnerD, *pGridOuterD, *pGridInnerH, *pGridOuterH);
-	//
+	//	saveFilename, templateFileName, bShutdown);
+
+	Err = _createGridwithHoles(x_mm_list,
+		y_mm_list,
+		tilt_degrees_list,
+		rotation_degrees_list,
+		r_mm_list,
+		gridFileName, templateFileName, bShutdown,
+		*pGridInnerD, *pGridOuterD, *pGridInnerH, *pGridOuterH);
 
 	//output
 	int output_dim_array[2] = { 1,1 };
@@ -128,7 +137,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 }
 
 
-int _createRealChamber(double innerDiameter, double outerDiameter, double height)
+int _createRealChamber(double innerDiameter, double outerDiameter, double height, std::string saveFilename)
 {
 	CoInitialize(NULL);
 	//
@@ -231,11 +240,131 @@ int _createRealChamber(double innerDiameter, double outerDiameter, double height
 	long Errors = 0;
 	long Warnings = 0;
 	VARIANT_BOOL Retval = false;
-	swDocExt->SaveAs(_com_util::ConvertStringToBSTR("D:\\test1.SLDPRT"), swSaveAsCurrentVersion,
+	swDocExt->SaveAs(_com_util::ConvertStringToBSTR(saveFilename.c_str()), swSaveAsCurrentVersion,
 		swSaveAsOptions_Silent, NULL, &Errors, &Warnings, &Retval);
 
 	//close document and shutdown solidworks
-	swApp->CloseDoc(_com_util::ConvertStringToBSTR("D:\\test1.SLDPRT"));
+	swApp->CloseDoc(_com_util::ConvertStringToBSTR(saveFilename.c_str()));
+	swApp->ExitApp();
+	::CoUninitialize();
+}
+
+
+//Inner diameter will be the outer diameter of the chamber.
+int _createRealChamberCAP(double innerDiameter, std::string saveFilename)
+{
+	double capThickness = 2.5; //in mm
+	CoInitialize(NULL);
+	//
+	HRESULT result = NOERROR;
+	VARIANT_BOOL bRetval = VARIANT_FALSE;
+	CComPtr<ISldWorks> swApp;
+	CComPtr<IModelDoc2> swDoc;
+	CComPtr<IModelDocExtension> swDocExt;
+	CComPtr<IFeatureManager> swFeatMgr;
+
+	debugPrintout("Started creating chamber");
+	HRESULT Res = swApp.CoCreateInstance(L"SldWorks.Application", NULL, CLSCTX_LOCAL_SERVER);
+	if (Res == REGDB_E_CLASSNOTREG) {
+		debugPrintout("swApp.coCreateInstance Failed");
+		CoUninitialize();
+		return 2;
+	}
+
+	Sleep(3000);
+
+	CComBSTR _documentType;
+	swApp->GetUserPreferenceStringValue(swUserPreferenceStringValue_e::swDefaultTemplatePart, &_documentType);
+	result = swApp->INewDocument2(_documentType, 0, 0, 0, &swDoc);
+
+	swDoc->get_Extension(&swDocExt);
+	swDoc->get_FeatureManager(&swFeatMgr);
+	swApp->put_UserControl(VARIANT_TRUE);
+	swApp->put_Visible(VARIANT_TRUE);
+
+	//
+	CComPtr<ISketch> swSketch;
+	CComPtr<ISketchManager> swSketchMgr;
+	CComPtr<ISketchSegment> swSkSeg;
+
+	swDoc->IGetActiveSketch2(&swSketch);
+	swDoc->get_SketchManager(&swSketchMgr);
+
+	if (swSketch == NULL)
+	{
+		//release must use _com_util::ConvertStringToBSTR("Top Plane"); release cannot use L("Top Plane"); debug can use L("Top Plane")
+		swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Top Plane"),
+			_com_util::ConvertStringToBSTR("PLANE"), 0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+		if (bRetval == VARIANT_FALSE)
+		{
+			debugPrintout("Select Top Plane successfully");
+		}
+		else
+			debugPrintout("Select Top Plane failed");
+		swSketchMgr->InsertSketch(VARIANT_TRUE);
+	}
+	//
+
+	//Make the thickness of the chamber to be 2.5 mm. so the diamter will be 2.5 + innerDiameter
+	swDoc->ICreateCircle2(0.0, 0.0, 0.0, (capThickness + innerDiameter) / 2.0*MM_TO_M, 0.0, 0.0, &swSkSeg);
+
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Sketch1"),
+		_com_util::ConvertStringToBSTR("SKETCH"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+
+	CComPtr<IFeature> swFeat;
+	//Set inner height of the chamber cap to be 8 mm, so the outer height is 8+2.5
+	swFeatMgr->FeatureExtrusion3(VARIANT_TRUE, VARIANT_FALSE, VARIANT_FALSE,
+		swEndCondBlind, swEndCondBlind,
+		(8 + capThickness)*MM_TO_M, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		0.0, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE, VARIANT_TRUE,
+		swStartOffset, 0.0, VARIANT_FALSE, &swFeat);
+
+	////////
+	//cut with inner diamter
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Top Plane"),
+		_com_util::ConvertStringToBSTR("PLANE"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+	swSketchMgr->InsertSketch(VARIANT_TRUE);
+	swDoc->ICreateCircle2(0.0, 0.0, 0.0, (innerDiameter+0.1) / 2.0*MM_TO_M, 0.0, 0.0, &swSkSeg); //0.1 mm as the tolerance
+	swSketchMgr->InsertSketch(VARIANT_FALSE);
+
+	//
+	swDocExt->SelectByID2(_com_util::ConvertStringToBSTR("Sketch2"),
+		_com_util::ConvertStringToBSTR("SKETCH"),
+		0.0, 0.0, 0.0, VARIANT_FALSE, 0, NULL, swSelectOptionDefault, &bRetval);
+	swFeatMgr->FeatureCut4(VARIANT_TRUE, VARIANT_FALSE, VARIANT_TRUE,
+		swEndCondBlind, swEndCondBlind,
+		8 *MM_TO_M, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE,
+		VARIANT_FALSE, VARIANT_FALSE,
+		0.0, 0.0,
+		VARIANT_FALSE, VARIANT_FALSE, //OffsetReverse1, OffsetReverse2
+		VARIANT_FALSE, VARIANT_FALSE,//TranslateSurface1, TranslateSurface2
+		VARIANT_FALSE, //NormalCut
+		VARIANT_FALSE, //UseFeatScope
+		VARIANT_FALSE, //UseAutoSelect
+		VARIANT_FALSE, VARIANT_FALSE, VARIANT_FALSE,
+		swStartSketchPlane, 0.0, VARIANT_FALSE, VARIANT_FALSE, &swFeat);
+
+	/*
+	*/
+	debugPrintout("Finished creating chamber cap");
+	//swApp->put_Visible(VARIANT_TRUE);
+
+	long Errors = 0;
+	long Warnings = 0;
+	VARIANT_BOOL Retval = false;
+	swDocExt->SaveAs(_com_util::ConvertStringToBSTR(saveFilename.c_str()), swSaveAsCurrentVersion,
+		swSaveAsOptions_Silent, NULL, &Errors, &Warnings, &Retval);
+
+	//close document and shutdown solidworks
+	swApp->CloseDoc(_com_util::ConvertStringToBSTR(saveFilename.c_str()));
 	swApp->ExitApp();
 	::CoUninitialize();
 }
@@ -356,12 +485,18 @@ int _createGridwithHoles(vector<double> x_mm_list,
 		swDoc, swDocExt, swFeatMgr, swSketchMgr);
 
 	debugPrintout("Finished creating chamber");
+
+	long Errors = 0;
+	long Warnings = 0;
+	VARIANT_BOOL Retval = false;
+	swDocExt->SaveAs(_com_util::ConvertStringToBSTR(saveFilename.c_str()), swSaveAsCurrentVersion,
+		swSaveAsOptions_Silent, NULL, &Errors, &Warnings, &Retval);
+
+	//close document and shutdown solidworks
+	swApp->CloseDoc(_com_util::ConvertStringToBSTR(saveFilename.c_str()));
+	swApp->ExitApp();
+	::CoUninitialize();
 }
-
-
-
-
-
 
 
 /**  createRecordingChamber - This is the main function for generating

@@ -5,15 +5,31 @@ function strctModel = fnBuildRectangularChamberModel_CustWidth(fChamberWidthMM)
 %
 % Future versions may automatically do this projection so only the short
 % version will be needed.
-res = inputdlg({'Chamber width (mm)'},'Customer', [1 30], {'20'}); 
-if isempty(res)
+global g_strctModule
+if isempty(g_strctModule.m_acAnatVol)
     fChamberWidthMM = 20;
 else
-    fChamberWidthMM = str2num(res{1});
+    chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
+        m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
+    
+    if ~isfield(chamberParams, 'm_fWidthMM')
+        %not exist. May just changed from a circular chamber
+        fChamberWidthMM = 20;
+    else
+        fChamberWidthMM = chamberParams.m_fWidthMM;
+    end
+ 
+    res = inputdlg({'Chamber width (mm)'},'Customer', [1 30], {num2str(fChamberWidthMM)}); 
+    if isempty(res)
+        ;
+    else
+        fChamberWidthMM = str2num(res{1});
+    end
 end
 
-strctModel.m_astrctMeshShort = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 0);
-strctModel.m_astrctMeshLong = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 80);
+strctModel.strctParams = fnGetStandardRectChamberParams(fChamberWidthMM);
+strctModel.m_astrctMeshShort = fnBuildRectModel( strctModel.strctParams, 80); %change from 0 to 80
+strctModel.m_astrctMeshLong = fnBuildRectModel( strctModel.strctParams, 80);
 return;
 
 

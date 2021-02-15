@@ -748,33 +748,6 @@ function hExportGrid_Callback(hObject, eventdata, handles)
 %added by Hongsun
 global g_strctModule
 
-if ~strcmpi(computer,'PCWIN64') && ~strcmpi(computer,'PCWIN32') 
-    h=msgbox('Automatic model generation with solidworks is only available under Windows platform.');
-    waitfor(h);
-    return;
-end;
-strctGridModel=getappdata(handles.figure1,'strctGridModel');
-
-strctOutput =  SolidWorksExportWizard(strctGridModel);
-if isempty(strctOutput)
-    return;
-end;
-
-%added by Hongsun
-chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
-    m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
-            
-P = [strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm;strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm];
-N = size(P,2);
-Tilt = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg;
-Rot = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg;
-Rad = strctOutput.m_afRad/2;
-
-if ~strcmpi(computer, 'PCWIN64')
-    fprintf('Grid export is only supported on Windows 64 bit machines!\n');
-    return;
-end;
-
 acVersions = {'Software\Solidworks\SolidWorks 2010',...
     'Software\Solidworks\SolidWorks 2011',...
     'Software\Solidworks\SolidWorks 2012',...
@@ -793,6 +766,44 @@ for iIter=1:length(acVersions)
    catch
    end
 end
+
+if ~strcmpi(computer,'PCWIN64') && ~strcmpi(computer,'PCWIN32') 
+    h=msgbox('Automatic model generation with solidworks is only available under Windows platform.');
+    waitfor(h);
+    return;
+end;
+strctGridModel=getappdata(handles.figure1,'strctGridModel');
+
+switch iVersion
+    case -1
+        fprintf('Solidworks is not installed/Version not suported. Cannot proceed!\n');
+        return;
+    case 9
+        strctOutput =  SolidWorks2019ExportWizard(strctGridModel);
+    otherwise
+        strctOutput =  SolidWorksExportWizard(strctGridModel);
+end
+
+if isempty(strctOutput)
+    return;
+end
+
+%added by Hongsun
+chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
+    m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
+
+%
+P = [strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm;strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm];
+N = size(P,2);
+Tilt = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg;
+Rot = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg;
+Rad = strctOutput.m_afRad/2;
+
+if ~strcmpi(computer, 'PCWIN64')
+    fprintf('Grid export is only supported on Windows 64 bit machines!\n');
+    return;
+end;
+
 switch iVersion
     case -1
         fprintf('Solidworks is not installed/Version not suported. Cannot proceed!\n');
@@ -812,13 +823,31 @@ switch iVersion
         iErr = fndllSolidWorksRecordingChamber2016(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
     case 8
         iErr = fndllSolidWorksRecordingChamber2017(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
-    case 9 %Added by Hongsun
-        iErr = fndllSolidWorksRecordingChamber2019(P, Tilt, Rot, Rad, strctOutput.m_strTemplate, strctOutput.m_strOutputFile,strctOutput.m_bCloseSolidworksAfter);
+    case 9
+        %Added by Hongsun; strctOutput.m_strTemplate and
+        %strctOutput.m_strOutputFile are obsolete
+        chamber_innerDiameter = chamberParams.m_fInnerDiameterMM;
+        chamber_outerDiameter = chamberParams.m_fOuterDiameterMM;
+        chamber_height = chamberParams.m_fChamberH1;
+        grid_innerDiamter = strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM;
+        grid_outerDiameter = strctGridModel.m_strctGridParams.m_fGridOuterDiameterMM;
+        grid_outerHeight = strctGridModel.m_strctGridParams.m_fGridHeightMM + ...
+            strctGridModel.m_strctGridParams.m_fGridHeightAboveMM;
+        grid_innerHeight = strctGridModel.m_strctGridParams.m_fGridHeightMM;
+        iErr = fndllSolidWorksCreateChamberCAP2019(P, Tilt, Rot, Rad, '', '', false, ...
+            chamber_innerDiameter, ... %7
+            chamber_outerDiameter, ... %8
+            chamber_height, ... %9
+            grid_innerDiamter, ... %10
+            grid_outerDiameter, ... %11
+            grid_innerHeight, ... %12
+            grid_outerHeight, ... %13
+            strctOutput.m_strChamberFileName, ... %14
+            strctOutput.m_strCAPFileName, ... %15
+            strctOutput.m_strGridFileName);  %16
 end
 
-
 return;
-
 
 function uipanel1_SelectionChangeFcn(hObject, eventdata, handles)
 if get(handles.hSelectHoles,'value')

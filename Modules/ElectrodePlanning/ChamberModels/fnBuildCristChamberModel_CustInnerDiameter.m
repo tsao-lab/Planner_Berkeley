@@ -8,14 +8,29 @@ function strctModel = fnBuildCristChamberModel_CustInnerDiameter(fChamberAngle)
 % version will be needed.
 
 %Added by Hongsun 2020-10-06
-res = inputdlg({'Inner diameter (mm)','Chamber Angle'},...
-              'Customer', [1 30; 1 30], {'19','0'}); 
-if isempty(res)
-    fInnerDiameterMM = 19.00;
+global g_strctModule
+if isempty(g_strctModule.m_acAnatVol)
+    newInnerDiameter = 19;
     fChamberAngle = 0;
 else
-    newInnerDiameter = str2num(res{1});
-    fChamberAngle = str2num(res{2});
+    chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
+        m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
+    
+    if ~isfield(chamberParams, 'm_fInnerDiameterMM')
+        newInnerDiameter = 19;
+        fChamberAngle = 0;
+    else
+        fInnerDiameterMM = chamberParams.m_fInnerDiameterMM;
+        fChamberAngle = chamberParams.m_fChamberAngleDeg;
+        res = inputdlg({'Inner diameter (mm)','Chamber Angle'},...
+                  'Customer', [1 30; 1 30], {num2str(fInnerDiameterMM),num2str(fChamberAngle)});
+        if isempty(res)
+            ; % do nothing
+        else
+            newInnerDiameter = str2num(res{1});
+            fChamberAngle = str2num(res{2});
+        end
+    end
 end
 
 % newInnerDiameter = 20;

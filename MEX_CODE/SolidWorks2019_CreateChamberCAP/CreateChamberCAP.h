@@ -39,7 +39,9 @@ int createRecordingChamber(vector<double> x_mm_list,
 						   std::string saveFilename, std::string templateFilename, bool bShutdown);
 
 
-int _createRealChamber(double innerDiameter, double outerDiameter, double height);
+int _createRealChamber(double innerDiameter, double outerDiameter, double height, std::string saveFilename);
+
+int _createRealChamberCAP(double innerDiameter, std::string saveFilename);
 
 int _createGridwithHoles(vector<double> x_mm_list,
 	vector<double> y_mm_list,

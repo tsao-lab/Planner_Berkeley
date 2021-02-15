@@ -5,8 +5,10 @@ function strctModel = fnBuildRectangularChamberModel(fChamberWidthMM)
 %
 % Future versions may automatically do this projection so only the short
 % version will be needed.
-strctModel.m_astrctMeshShort = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 80); %change from 0 to 80
-strctModel.m_astrctMeshLong = fnBuildRectModel( fnGetStandardRectChamberParams(fChamberWidthMM), 80);
+strctModel.strctParams = fnGetStandardRectChamberParams(fChamberWidthMM);
+strctModel.m_astrctMeshShort = fnBuildRectModel( strctModel.strctParams, 80); %change from 0 to 80
+strctModel.m_astrctMeshLong = fnBuildRectModel( strctModel.strctParams, 80);
+
 return;
 
 
