@@ -142,11 +142,19 @@
                    > </m_strctParams>
                 </m_strctModel>
                 
+            <m_strctModel>
+                   <m_strctParams
+                       m_strModelName = "fUS domino probe"
+                       m_strDefine = "fnDefineGridModel_DominoProbe"
+                       m_strBuildModel = "fnBuildGridModel_DominoProbe"
+                       m_strBuildMesh = "fnBuildGridMesh_DominoProbe"
+                       m_strDraw2D = "fnDraw2DGridModel_DominoProbe"
+                       m_strGUI = "DominoProbeGirdGUI"
+                   > </m_strctParams>
+                </m_strctModel>
                
            </m_acGridModels>
         
-            
-            
         </m_strctModule>
         
         
