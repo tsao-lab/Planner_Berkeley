@@ -7,14 +7,17 @@ end;
 % iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
 astrctMesh = [];
 
-fWidthMM = strctGridModel.m_fWidthMM;
-fLengthMM = strctGridParam.m_fLengthMM;
+fWidthMM = strctGridModel.m_strctGridParams.m_fWidthMM;
+fLengthMM = strctGridModel.m_strctGridParams.m_fLengthMM;
 
+
+fHeightMM = 20; %Height of the flag plane
+fHeightMM_Projection = 60;
 
 strctMesh.m_a2fVertices= [0, 0, 0;
-                          0, +fWidthMM/2, 0;
+                          0, +fLengthMM/2, 0;
                           0, 0, -fHeightMM;
-                          0, +fWidthMM/2, -fHeightMM]';
+                          0, +fLengthMM/2, -fHeightMM]';
                           
 strctMesh.m_a2iFaces = [1, 3;
                         2, 4;
@@ -22,86 +25,36 @@ strctMesh.m_a2iFaces = [1, 3;
 strctMesh.m_afColor = [0 1 1];
 strctMesh.m_fOpacity = 0.4;
 
-astrctMesh(1) = strctMesh;
-
-astrctMesh(2) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, 0, afColor);
-
-if fDepthMM > 0
-%     astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, -fHeightMM-fDepthMM, afColor*0.5);
-    astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM+5, -fHeightMM-fDepthMM, 0, afColor*0.5); %modified by Hongsun
-end
+astrctMesh = [astrctMesh, strctMesh];
+astrctMesh  = [astrctMesh, fnCreateRectChamberMeshAux2(fWidthMM, fLengthMM, -fHeightMM,  0, [0 1 1])];
+astrctMesh  = [astrctMesh, fnCreateRectChamberMeshAux2(fWidthMM, fLengthMM, -fHeightMM-fHeightMM_Projection,  -fHeightMM, [0 1 1])];
 
 
-% for iGroupIter=1:iNumGroups
-%     
-%     iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iGroupIter,1,'first');
-%     afNormal = strctGridModel.m_apt3fGridHolesNormals(:,iHoleInGroup);
-%     afGroupColor = strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iGroupIter);
-%     
-%     % Analyze the sub-groups...
-%     if isfield(strctGridModel,'m_acGroupBoundaries')
-%         iNumSubGroups = length(strctGridModel.m_acGroupBoundaries{iGroupIter});
-%         for iSubGroupIter=1:iNumSubGroups
-%             iNumPts = size(strctGridModel.m_acGroupBoundaries{iGroupIter}{iSubGroupIter},2);
-%             P0=[strctGridModel.m_acGroupBoundaries{iGroupIter}{iSubGroupIter}; zeros(1,iNumPts)]';
-%             if bDrawShort
-%                 P1 = P0 + repmat(afNormal',iNumPts,1) *  strctGridModel.m_strctGridParams.m_fGridHeightMM;
-%             else
-%                 P1 = P0 + repmat(afNormal',iNumPts,1) *  100;
-%             end
-%             strctMesh= fnCreateMeshFromTwoPolygons(P0, P1, afGroupColor);
-%             astrctMesh = [astrctMesh,strctMesh];
-%         end
-%     end
-% 
-% end
-% 
-% % Now place electrodes...
-% if bDrawShort
-%     fAboveGridMM = 0;
-%     fElectrodeLengthMM = 2*fGridHeightMM;
-% else
-%     fAboveGridMM = 25;
-%     fElectrodeLengthMM = 80;
-% end
-% 
-% iNumActiveHoles = sum(strctGridModel.m_strctGridParams.m_abSelectedHoles);
-% aiActiveHoles = find(strctGridModel.m_strctGridParams.m_abSelectedHoles);
-% if iNumActiveHoles > 0
-%     clear astrctMeshElectrode
-%     
-%     if bHighlight
-%         afColor = [1 0 1];
-%     else
-%         afColor = 0.5*[1 0 1];
-%     end
-%     fGridHoleDiameterMM = strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM;
-%     for iHoleIter=1:iNumActiveHoles
-%         afNrm = strctGridModel.m_apt3fGridHolesNormals(:, aiActiveHoles(iHoleIter))';
-%            astrctMeshElectrode(iHoleIter) = fnCreateRotatedCylinderMesh(...
-%             afNrm,...
-%            -strctGridModel.m_afGridHolesX(aiActiveHoles(iHoleIter)),...
-%             strctGridModel.m_afGridHolesY(aiActiveHoles(iHoleIter)),...
-%             fGridHoleDiameterMM, -(fElectrodeLengthMM), fAboveGridMM, 6,afColor);
-%     
-%     end
-% else
-%     astrctMeshElectrode = [];
-% end
-% astrctMesh = [astrctMesh,astrctMeshElectrode];
-% 
+%mid line
+strctMesh.m_a2fVertices= [0, -fLengthMM/2, -fHeightMM;
+                          0, +fLengthMM/2, -fHeightMM;
+                          0, -fLengthMM/2, -fHeightMM-fHeightMM_Projection;
+                          0, +fLengthMM/2, -fHeightMM-fHeightMM_Projection]';
+                          
+strctMesh.m_a2iFaces = [1, 3;
+                        2, 4;
+                        3, 2];
+strctMesh.m_afColor = [0 1 1];
+strctMesh.m_fOpacity = 0.4;
 
+astrctMesh = [astrctMesh, strctMesh]; %add mid line
+astrctMesh = fnShiftXY(astrctMesh, 2, 2);
 return;
 
-function strctMesh = fnCreateRectChamberMeshAux(fWidthMM, fLowZ, fHighZ, afColor)
-strctMesh.m_a2fVertices= [-fWidthMM/2, -fWidthMM/2, fLowZ;
-                          -fWidthMM/2, +fWidthMM/2, fLowZ;
-                          +fWidthMM/2, -fWidthMM/2, fLowZ;
-                          +fWidthMM/2, +fWidthMM/2, fLowZ;
-                          -fWidthMM/2, -fWidthMM/2, fHighZ;
-                          -fWidthMM/2, +fWidthMM/2, fHighZ;
-                          +fWidthMM/2, -fWidthMM/2, fHighZ;
-                          +fWidthMM/2, +fWidthMM/2, fHighZ]';
+function strctMesh = fnCreateRectChamberMeshAux2(fWidthMM, fLengthMM, fLowZ, fHighZ, afColor)
+strctMesh.m_a2fVertices= [-fWidthMM/2, -fLengthMM/2, fLowZ;
+                          -fWidthMM/2, +fLengthMM/2, fLowZ;
+                          +fWidthMM/2, -fLengthMM/2, fLowZ;
+                          +fWidthMM/2, +fLengthMM/2, fLowZ;
+                          -fWidthMM/2, -fLengthMM/2, fHighZ;
+                          -fWidthMM/2, +fLengthMM/2, fHighZ;
+                          +fWidthMM/2, -fLengthMM/2, fHighZ;
+                          +fWidthMM/2, +fLengthMM/2, fHighZ]';
                           
 strctMesh.m_a2iFaces = [1, 1, 1, 3, 3, 3, 2, 4;
                         2, 6, 3, 5, 8, 4, 4, 6;
@@ -110,62 +63,31 @@ strctMesh.m_afColor = afColor;
 strctMesh.m_fOpacity = 0.4;
 return;
 
-% fGridHoleDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'HoleDiam');
-% fOffsetX = fnGetGridParameter(strctGridModel.m_strctGridParams,'OffsetX');
-% fOffsetY = fnGetGridParameter(strctGridModel.m_strctGridParams,'OffsetY');
-% fGridHoleDistanceMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'HoleDist');
-% fGridInnerDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridInnerDiam');
-% fGridThetaRad = fnGetGridParameter(strctGridModel.m_strctGridParams,'Theta') /180*pi;
-% fGridPhiDeg = fnGetGridParameter(strctGridModel.m_strctGridParams,'Phi');
-% fGridHeightMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridHeight');
-% bLongGrid = fnGetGridParameter(strctGridModel.m_strctGridParams,'LongGrid');
-% 
-% if bDrawShort
-%     fAboveGridMM = 0;
-%     bLongGrid = false;
-%     fElectrodeLengthMM = 2*fGridHeightMM;
-% else
-%     fAboveGridMM = 25;
-%     fLongGridMM = 80;
-%     fElectrodeLengthMM = 80;
-% end
-% 
-% iNumActiveHoles = sum(strctGridModel.m_strctGridParams.m_abSelectedHoles);
-% aiActiveHoles = find(strctGridModel.m_strctGridParams.m_abSelectedHoles);
-% 
-% 
-% if iNumActiveHoles > 0
-%     clear astrctMeshElectrode
-%     
-%     if bHighlight
-%         afColor = [1 0 1];
-%     else
-%         afColor = 0.5*[1 0 1];
-%     end
-%     
-%     for iHoleIter=1:iNumActiveHoles
-%           astrctMeshElectrode(iHoleIter) = fnCreateRotatedCylinderMesh(...
-%             strctGridModel.m_apt3fGridHolesNormals(:, aiActiveHoles(iHoleIter))',...
-%             -strctGridModel.m_afGridHolesX(aiActiveHoles(iHoleIter)),...
-%             strctGridModel.m_afGridHolesY(aiActiveHoles(iHoleIter)),...
-%             fGridHoleDiameterMM, -(fElectrodeLengthMM), fAboveGridMM, 6,afColor);
-%     
-%     end
-% else
-%     astrctMeshElectrode = [];
-% end
-% 
-% astrctMeshMaster = fnBuildCylinderWithPlane(fGridHeightMM, fGridInnerDiameterMM, [1 0 0],fGridPhiDeg/180*pi, 0, 0, 0,fGridThetaRad,bLongGrid);
-% astrctMesh=[astrctMeshMaster,astrctMeshElectrode];
-% 
-% if 0
-%     figure(11);
-%     clf;hold on;
-%     H=cla;
-%     fnDrawMeshIn3D(astrctMesh,H);
-%     %
-%     box on
-%     cameratoolbar show
-%     axis equal
-% end
+function astrctMesh = fnShiftXY(astrctMesh, fShiftX, fShiftY)
+for k=1:length(astrctMesh)
+    vertices = astrctMesh(k).m_a2fVertices;
+    shiftMax = [fShiftX.*ones(1, size(vertices, 2)); fShiftY.*ones(1, size(vertices, 2)); zeros(1, size(vertices, 2))];
+    astrctMesh(k).m_a2fVertices = vertices + shiftMax;
+end
+return;
+
+
+% function strctMesh = fnCreateRectChamberMeshAux(fWidthMM, fLowZ, fHighZ, afColor)
+% strctMesh.m_a2fVertices= [-fWidthMM/2, -fWidthMM/2, fLowZ;
+%                           -fWidthMM/2, +fWidthMM/2, fLowZ;
+%                           +fWidthMM/2, -fWidthMM/2, fLowZ;
+%                           +fWidthMM/2, +fWidthMM/2, fLowZ;
+%                           -fWidthMM/2, -fWidthMM/2, fHighZ;
+%                           -fWidthMM/2, +fWidthMM/2, fHighZ;
+%                           +fWidthMM/2, -fWidthMM/2, fHighZ;
+%                           +fWidthMM/2, +fWidthMM/2, fHighZ]';
+%                           
+% strctMesh.m_a2iFaces = [1, 1, 1, 3, 3, 3, 2, 4;
+%                         2, 6, 3, 5, 8, 4, 4, 6;
+%                         6, 5, 5, 7, 7, 8, 6, 8];
+% strctMesh.m_afColor = afColor;
+% strctMesh.m_fOpacity = 0.4;
 % return;
+
+
+

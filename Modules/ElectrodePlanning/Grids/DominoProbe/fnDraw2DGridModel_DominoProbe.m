@@ -1,4 +1,4 @@
-function ahHolesHandles = fnDraw2DGridModel_Generic(strctGridModel, hAxes, strctDisplayParam)
+function ahHolesHandles = fnDraw2DGridModel_DominoProbe(strctGridModel, hAxes, strctDisplayParam)
 cla(hAxes);
 hold(hAxes,'on');
 
