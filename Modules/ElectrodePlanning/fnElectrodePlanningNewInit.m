@@ -10,7 +10,7 @@ bInitOK  = true;
 hSubMenu1 = uimenu(strctParams.m_hMenu,'Label','Electrode Planning Mode','callback',{@fnCallback,'SetNormalMode'});
 hSubMenu2 = uimenu(strctParams.m_hMenu,'Label','Chamber Planning Mode','callback',{@fnCallback,'SetChamberMode'});
 hSubMenu3 = uimenu(strctParams.m_hMenu,'Label','Atlas Planning Mode','callback',{@fnCallback,'SetAtlasMode'});
-g_strctModule.m_strDefaultFilesFolder = fullfile('D:', 'Data', 'Doris', 'Planner',filesep);
+g_strctModule.m_strDefaultFilesFolder = strctParams.m_strctConfig.m_strctGeneral.m_strDefaultFilesFolder;
 
 g_strctModule.m_iCurrAnatVol = 0;
 g_strctModule.m_iCurrFuncVol = 0;
@@ -424,7 +424,7 @@ strctPanel.m_hChamberListText = uicontrol('style','text','String','Chambers',...
     'Position',[10  strctPanel.m_aiRightPanelSize(4)-260 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 strctPanel.m_hChamberList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-320 120 60],'parent',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-360 120 100],'parent',...
     strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectChamber'},...
     'UIcontextmenu',strctPanel.m_hChamberMenu);
 
@@ -458,11 +458,11 @@ uimenu(strctPanel.m_hGridMenu, 'Label', 'Remove Grid','callback',{@fnCallback,'R
 
 
 strctPanel.m_hGridList = uicontrol('style','listbox','String','',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-320 120 60],...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-360 120 100],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectGrid'},'UIContextMenu',strctPanel.m_hGridMenu);
 
 strctPanel.m_hTargetListText = uicontrol('style','text','String','Targets',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-350 100 20],'parent',strctPanel.m_ahRightPanels(1));
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-380 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 strctPanel.m_hTargetListMenu = uicontextmenu;
 uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Rename', 'Callback', {@fnCallback,'TargetRename'});
@@ -477,14 +477,14 @@ uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Remove', 'Callback', {@fnCallback
 
 
 strctPanel.m_hTargetList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-420 120 60],...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-580 120 200],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectTarget'},'UIContextMenu',strctPanel.m_hTargetListMenu);
 
 
 
 
 strctPanel.m_hROIListText = uicontrol('style','text','String','Region of Interest',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-350 100 20],'parent',strctPanel.m_ahRightPanels(1));
+    'Position',[150  strctPanel.m_aiRightPanelSize(4)-380 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 strctPanel.m_hROIListMenu = uicontextmenu;
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI', 'Callback', {@fnCallback,'AddNewROI'});
@@ -497,7 +497,7 @@ uimenu(strctPanel.m_hROIListMenu, 'Label', 'Delete ROI', 'Callback', {@fnCallbac
 
 
 strctPanel.m_hROIList = uicontrol('style','listbox','String','',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-420 120 60],...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-580 120 200],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectROI'},'UIContextMenu',strctPanel.m_hROIListMenu);
 
 strctPanel.m_hSurfaceListMenu = uicontextmenu;
@@ -514,11 +514,11 @@ uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Delete Surface', 'Callback', {@f
 
 
 strctPanel.m_hSurfaceList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-520 120 60],...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-680 120 80],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectSurface'},'UIContextMenu',strctPanel.m_hSurfaceListMenu);
 
 strctPanel.m_hSurfacesListText = uicontrol('style','text','String','Surfaces',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-460 100 20],'parent',strctPanel.m_ahRightPanels(1));
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-600 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 
 
@@ -531,11 +531,11 @@ uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Modify Series Properties', 'Cal
 uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Delete Series', 'Callback', {@fnCallback,'DeleteImageSeries'});
 
 strctPanel.m_hImageSeriesList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-610 120 60],...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-760 120 60],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageSeries'},'UIContextMenu',strctPanel.m_hImageSeriesMenu);
 
 strctPanel.m_hImageSeriesText = uicontrol('style','text','String','Image Series',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-550 100 20],'parent',strctPanel.m_ahRightPanels(1));
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-700 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 
 strctPanel.m_hImageListMenu = uicontextmenu;
@@ -543,11 +543,11 @@ uimenu(strctPanel.m_hImageListMenu , 'Label', 'Add Image(s)', 'Callback', {@fnCa
 uimenu(strctPanel.m_hImageListMenu , 'Label', 'Delete Image(s)', 'Callback', {@fnCallback,'RemoveImagesFromImageSeries'});
 
 strctPanel.m_hImageList = uicontrol('style','listbox','String','',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-610 120 60],...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-760 120 60],...
     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageFromSeries'},'UIContextMenu',strctPanel.m_hImageListMenu);
 
 strctPanel.m_hImageListText = uicontrol('style','text','String','Images',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-550 100 20],'parent',strctPanel.m_ahRightPanels(1));
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-700 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 
 % strctPanel.m_hDerivedSurfaceList = uicontrol('style','listbox','String','',...

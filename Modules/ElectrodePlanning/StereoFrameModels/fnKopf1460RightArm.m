@@ -1,11 +1,11 @@
 function strctArm = fnKopf1460RightArm()
 C1 = 5.39;  % Triky to read out...
-C3 =  12.15;%11.6457; 
+C3 =  12.36;%11.6457; 
 
 INCH_TO_CM = 2.54;
 fDistanceBetweenArmsCM = 7 * INCH_TO_CM ;
 
-fHeightOfManipulatorWhenDV8 = 19;            
+fHeightOfManipulatorWhenDV8 = 18.8;            
 UseDV8Calibration = 1;
 if UseDV8Calibration
     C2 = fHeightOfManipulatorWhenDV8-C1;
