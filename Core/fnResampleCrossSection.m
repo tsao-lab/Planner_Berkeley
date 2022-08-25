@@ -12,7 +12,7 @@ function [a2fCrossSection, apt3fPlanePoints,a2fXmm,a2fYmm,a2fXmmT,a2fYmmT,a2fZmm
 
 a2fZmm = zeros(size(a2fXmm));
 a2fOnes = ones(size(a2fZmm));
-apt3fInVolMM = strctCrossSection.m_a2fM  * [a2fXmm(:), a2fYmm(:),a2fZmm(:),a2fOnes(:)]';
+apt3fInVolMM = strctCrossSection.m_a2fM  * [a2fXmm(:), a2fYmm(:), a2fZmm(:), a2fOnes(:)]';
 a2fXmmT = reshape(apt3fInVolMM(1,:),size(a2fXmm));
 a2fYmmT = reshape(apt3fInVolMM(2,:),size(a2fYmm));
 a2fZmmT = reshape(apt3fInVolMM(3,:),size(a2fZmm));

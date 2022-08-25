@@ -1,17 +1,21 @@
-
-
-function fnApplyAnatTrans()
+function fnApplyAnatTrans(a,b,iAnatVolRef) %#ok
 global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.reg'],'Select transformation file');
 if strFile(1) == 0
     return;
-end;
+end
 a2fTrans = fnReadRegisteration([strPath, strFile]);
- g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg = ...
-     inv(a2fTrans) * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg; %#ok
+% g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg = ...
+%     inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fTk * ...
+%     a2fTrans * ...
+%     inv(g_strctModule.m_acAnatVol{iAnatVolRef}.m_a2fTk)) * ...
+%     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg;
+g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg = ...
+    a2fTrans * ...
+    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg;
 
 fnUpdateSurfacePatch();
 fnSetCurrAnatVol();

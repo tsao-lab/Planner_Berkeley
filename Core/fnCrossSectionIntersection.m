@@ -6,8 +6,8 @@ pt2fPoint = Tmp(1:2);
 Tmp = (strctPlaneA.m_a2fM(1:3,1:3)) \ afLineDir';
 afDir = Tmp(1:2);
 % Kinda silly.... 
-P1 = pt2fPoint-afDir*512;
-P2 = pt2fPoint+afDir*512;
+P1 = pt2fPoint-afDir*510;
+P2 = pt2fPoint+afDir*510;
  [x0,x1,y0,y1,bIntersect]=fndllCohenSutherland(P1(1),P2(1),P1(2),P2(2), -strctPlaneA.m_fHalfWidthMM,strctPlaneA.m_fHalfWidthMM,...
      -strctPlaneA.m_fHalfHeightMM,strctPlaneA.m_fHalfHeightMM);
 afPoint1MM = [x0,y0];

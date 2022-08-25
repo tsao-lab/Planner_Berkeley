@@ -2,10 +2,11 @@
 function fnLoadAnatVol()
 global g_strctModule
     
-[strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.img;*.nii'],'MultiSelect','off');
+[strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.img;*.nii'], ...
+    'MultiSelect','off');
 if strFile(1) == 0
     return;
-end;
+end
 % Start the import process
 strFilename = fullfile(strPath,strFile);
 strctVol=fnQuickAddVolume(strFilename);
@@ -15,7 +16,7 @@ iNumVolumes = length(g_strctModule.m_acAnatVol);
 g_strctModule.m_acAnatVol{iNumVolumes+1} = strctVol;
 g_strctModule.m_iCurrAnatVol = length(g_strctModule.m_acAnatVol);
 g_strctModule.m_bVolumeLoaded = true;
- fnDeleteFreesurferSurface();
+fnDeleteFreesurferSurface();
 fnSetDefaultCrossSections();
 fnUpdateAnatomicalsList();    
 fnUpdateSurfacePatch();

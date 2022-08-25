@@ -19,6 +19,11 @@ if g_strctModule.m_bFirstInvalidate
 end;
 
 a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
+if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}, 'm_a2fTk')
+    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fTk = ...
+        vox2ras_tkreg(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_aiVolSize, ...
+        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing);
+end
 
 if ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g_strctModule.m_strctGUIOptions.m_bShowFunctional
     a2fXYZ_To_CRS_Func = inv(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a2fM) * inv(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a2fReg); %#ok
@@ -32,7 +37,7 @@ if fnSameStruct(strctPrevCrossSectionXY, g_strctModule.m_strctCrossSectionXY) &&
 else
     [a2fCrossSectionXY, apt3fPlanePointsXY] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY);
     
-    Tmp= inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)*[apt3fPlanePointsXY;ones(1,size(apt3fPlanePointsXY,2))];
+    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsXY;ones(1,size(apt3fPlanePointsXY,2))];
     apt3fPlanePointsXY=Tmp(1:3,:);
     
     a2fPrevCrossSectionXY =a2fCrossSectionXY;
@@ -55,7 +60,7 @@ if fnSameStruct(strctPrevCrossSectionYZ, g_strctModule.m_strctCrossSectionYZ) &&
 else
     [a2fCrossSectionYZ, apt3fPlanePointsYZ] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionYZ);
     
-    Tmp= inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)*[apt3fPlanePointsYZ;ones(1,size(apt3fPlanePointsYZ,2))];
+    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsYZ;ones(1,size(apt3fPlanePointsYZ,2))];
     apt3fPlanePointsYZ=Tmp(1:3,:);
     
     a2fPrevCrossSectionYZ =a2fCrossSectionYZ;
@@ -77,7 +82,7 @@ if fnSameStruct(strctPrevCrossSectionXZ, g_strctModule.m_strctCrossSectionXZ) &&
 else
     [a2fCrossSectionXZ, apt3fPlanePointsXZ] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXZ);
     
-    Tmp= inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)*[apt3fPlanePointsXZ;ones(1,size(apt3fPlanePointsXZ,2))];
+    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsXZ;ones(1,size(apt3fPlanePointsXZ,2))];
     apt3fPlanePointsXZ=Tmp(1:3,:);
     
     a2fPrevCrossSectionXZ =a2fCrossSectionXZ;

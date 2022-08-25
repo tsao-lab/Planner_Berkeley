@@ -8,6 +8,7 @@ global g_strctWindows g_strctApp g_strctModule g_acModules g_iCurrModule
 % end;
 warning off
 %clear all
+addpath(genpath('.'))
 addpath(fullfile('.', 'MEX'));
 addpath(genpath(fullfile('.', 'Modules')));
 %addpath(genpath(fullfile('.', 'RegisterationMatrices')));

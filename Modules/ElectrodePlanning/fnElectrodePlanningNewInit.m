@@ -184,7 +184,7 @@ iAxesSize = min(iMaxWindowHeight, iMaxWindowWidth)-iSeparationBetweenWindowsPix;
 strctPanel.m_aiImageRes = [256,256,3];
 strctPanel.m_aiAxesSize = [1 1 iAxesSize,iAxesSize];
 
-strctPanel.m_strct3D.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 5 iAxesSize,iAxesSize];
+strctPanel.m_strct3D.m_aiPos = [1 1 iAxesSize,iAxesSize];
 strctPanel.m_strct3D.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strct3D.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strct3D.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strct3D.m_hPanel,...
     'XTickLabel',[],'YTickLabel',[],'ZTickLabel',[],'FontName',g_strctWindows.m_strDefaultFontName);
@@ -220,7 +220,7 @@ set(strctPanel.m_strctTimeCourse.m_hPanel,'visible','off');
 
 
 
-strctPanel.m_strctXY.m_aiPos = [1 1 iAxesSize,iAxesSize];
+strctPanel.m_strctXY.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 1 iAxesSize,iAxesSize];
 strctPanel.m_strctXY.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXY.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctXY.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXY.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXY.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
@@ -228,10 +228,10 @@ strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'pare
 set(strctPanel.m_strctXY.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXY.m_hAxes,'on');
 
-strctPanel.m_strctXY.m_ahTextHandles(1) = text(5,  128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXY.m_ahTextHandles(2) = text(235,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXY.m_ahTextHandles(3) = text(128,15,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXY.m_ahTextHandles(4) = text(128,235,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctXY.m_ahTextHandles(1) = text(8,  128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(3) = text(128,8,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(4) = text(128,248,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 strctPanel.m_strctXY.m_ahMouseRadiusSelect =[];
 strctPanel.m_strctYZ.m_ahMouseRadiusSelect =[];
@@ -239,7 +239,7 @@ strctPanel.m_strctXZ.m_ahMouseRadiusSelect =[];
 
 
 
-strctPanel.m_strctYZ.m_aiPos = [5 strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35,iAxesSize,iAxesSize];
+strctPanel.m_strctYZ.m_aiPos = [1 strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35,iAxesSize,iAxesSize];
 strctPanel.m_strctYZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctYZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctYZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctYZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctYZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
@@ -247,10 +247,10 @@ strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'pare
 set(strctPanel.m_strctYZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctYZ.m_hAxes,'on');
 
-strctPanel.m_strctYZ.m_ahTextHandles(1) = text(5,  128,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(2) = text(235,128,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(3) = text(128,15,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(4) = text(128,235,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(1) = text(8,  128,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(2) = text(248,128,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 
 
@@ -261,10 +261,10 @@ set(strctPanel.m_strctXZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1
 strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'parent',strctPanel.m_strctXZ.m_hAxes);
 set(strctPanel.m_strctXZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXZ.m_hAxes,'on');
-strctPanel.m_strctXZ.m_ahTextHandles(1) = text(5,128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXZ.m_ahTextHandles(2) = text(235,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXZ.m_ahTextHandles(3) = text(128,15,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctXZ.m_ahTextHandles(4) = text(128,235,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctXZ.m_ahTextHandles(1) = text(8,128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 
 strctPanel.m_strctYZ.m_ahTextHandles(5) = text(5,20,'AP 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
@@ -357,8 +357,10 @@ uimenu(strctPanel.m_hAnatMenu, 'Label', 'Add Blood Vessels','Callback', {@fnCall
 
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameAnat'});
 %uimenu(strctPanel.m_hAnatMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformAnat',0});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
+% uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
+% uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
+strctPanel.m_hAnatTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform');
+strctPanel.m_hAnatInvTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform');
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportAnatRegMatrix',0});
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportAnatVol'});
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoAnat'});
@@ -600,9 +602,9 @@ uimenu(strctPanel.m_hMenu, 'Label', 'Zoom (Linked)', 'Callback', {@fnCallback,'S
 
 strctPanel.m_hZoomMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Zoom (Accurate)');
 
-uimenu(strctPanel.m_hZoomMenu, 'Label', '10 mm', 'Callback', {@fnCallback,'SetFixedZoom',10});
-uimenu(strctPanel.m_hZoomMenu, 'Label', '50 mm', 'Callback', {@fnCallback,'SetFixedZoom',50});
-uimenu(strctPanel.m_hZoomMenu, 'Label', '100 mm', 'Callback', {@fnCallback,'SetFixedZoom',100});
+uimenu(strctPanel.m_hZoomMenu, 'Label', '20 mm', 'Callback', {@fnCallback,'SetFixedZoom',20});
+uimenu(strctPanel.m_hZoomMenu, 'Label', '30 mm', 'Callback', {@fnCallback,'SetFixedZoom',30});
+uimenu(strctPanel.m_hZoomMenu, 'Label', '40 mm', 'Callback', {@fnCallback,'SetFixedZoom',40});
 uimenu(strctPanel.m_hZoomMenu, 'Label', 'Other', 'Callback', {@fnCallback,'SetFixedZoom'});
 %            g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = max(1,g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM + fDiff);
 

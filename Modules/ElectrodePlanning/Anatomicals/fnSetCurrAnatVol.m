@@ -1,14 +1,13 @@
-
 function fnSetCurrAnatVol()
 global g_strctModule
 if isfield(g_strctModule.m_strctPanel,'m_hMainVolSurface') && ~isempty(g_strctModule.m_strctPanel.m_hMainVolSurface) && ishandle(g_strctModule.m_strctPanel.m_hMainVolSurface)
     delete(g_strctModule.m_strctPanel.m_hMainVolSurface);
     g_strctModule.m_strctPanel.m_hMainVolSurface = [];
-end;
+end
 if isfield(g_strctModule.m_strctPanel,'m_hBloodSurface')  && ~isempty(g_strctModule.m_strctPanel.m_hBloodSurface) && ishandle(g_strctModule.m_strctPanel.m_hBloodSurface)
     delete(g_strctModule.m_strctPanel.m_hBloodSurface);
     g_strctModule.m_strctPanel.m_hBloodSurface = [];
-end;
+end
 
 %fnDeleteChamberContours(); 
 fnDeleteMarkerContours();

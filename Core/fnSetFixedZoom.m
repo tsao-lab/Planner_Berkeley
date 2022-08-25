@@ -27,15 +27,19 @@ else
     fScaleMM = varargin{1};
 end
 
-switch g_strctModule.m_strctMouseOpMenu.m_hAxes
-    case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
-        g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = fScaleMM;
-        g_strctModule.m_strctCrossSectionXY.m_fHalfWidthMM =fScaleMM;
-    case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
-        g_strctModule.m_strctCrossSectionYZ.m_fHalfHeightMM = fScaleMM;
-        g_strctModule.m_strctCrossSectionYZ.m_fHalfWidthMM =fScaleMM;
-    case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
-        g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM = fScaleMM;
-        g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM =fScaleMM;
+if iscell(fScaleMM)
+    fScaleMM = fScaleMM{1};
 end
+
+% switch g_strctModule.m_strctMouseOpMenu.m_hAxes
+%     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
+        g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = fScaleMM;
+        g_strctModule.m_strctCrossSectionXY.m_fHalfWidthMM = fScaleMM;
+%     case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
+        g_strctModule.m_strctCrossSectionYZ.m_fHalfHeightMM = fScaleMM;
+        g_strctModule.m_strctCrossSectionYZ.m_fHalfWidthMM = fScaleMM;
+%     case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
+        g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM = fScaleMM;
+        g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM = fScaleMM;
+% end
 fnInvalidate(1);

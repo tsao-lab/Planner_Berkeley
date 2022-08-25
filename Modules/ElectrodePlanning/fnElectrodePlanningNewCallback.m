@@ -419,7 +419,7 @@ switch strCallback
     case 'SetScaleBarLength'
         fnSetScaleBarLength(varargin{1});
     case 'SetFixedZoom'
-        fnSetFixedZoom(varargin);
+        fnSetFixedZoom(varargin{1});
     case 'MoveAnatDown'
         fnMoveAnatInList('Down');
     case 'MoveAnatUp'
@@ -1172,8 +1172,8 @@ else
     if (strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes)
         fnZoom3DAxes(strctMouseOp.m_iScroll);
     else
-        if strctMouseOp.m_hAxes  == g_strctModule.m_strctPanel.m_strctXY.m_hAxes
-%             strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
+        if strctMouseOp.m_hAxes  == g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
+             strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
         end;
         
         fnShiftPlane(strctMouseOp.m_hAxes , min(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing)*strctMouseOp.m_iScroll)
