@@ -4,12 +4,12 @@ function fnMoveMarkerAux(strctMouseOp, afDelta)
 global g_strctModule
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers )
     return;
-end;
+end
 
 strctCrossSection=fnAxesHandleToStrctCrossSection(strctMouseOp.m_hAxes);
 if isempty(strctCrossSection)
     return;
-end;
+end
 
 iCurrMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iCurrMarker).m_strctCrossSectionXY = ...

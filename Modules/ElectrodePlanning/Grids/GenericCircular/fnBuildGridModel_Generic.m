@@ -48,7 +48,7 @@ for iGroupIter=1:iNumGroups
  
     if isempty(aiRelevantHoles)
         continue;
-    end;
+    end
     if length(aiRelevantHoles) == 1
         % Just one region, which is the hole itself
             Xc = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(1));

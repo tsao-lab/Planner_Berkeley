@@ -91,7 +91,7 @@ strctCurrGrid =  g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid};
 [strFile, strPath] = uiputfile([strctCurrGrid.m_strName,'.mat']);
 if strFile(1) == 0
     return;
-end;
+end
 
 abValid = sqrt(strctCurrGrid.m_afFrontHoleX.^2 + strctCurrGrid.m_afFrontHoleY.^2) <=  strctCurrGrid.m_fRadiusMM;
 iNumGridHoles = sum(abValid);
@@ -148,7 +148,7 @@ switch g_strctModule.m_strctMouseOpMenu.m_hAxes
                 delete(g_strctModule.m_hCurrHole);
                 g_strctModule.m_hCurrHole = [];
             end
-        end;
+        end
     case g_strctModule.m_strctPanel.m_strctBack.m_hAxes
         iSelectedHole = find(sqrt((strctCurrGrid.m_afFrontBackX-pt2fPosMM(1)).^2 + (strctCurrGrid.m_afFrontBackY-pt2fPosMM(2)).^2) < (strctCurrGrid.m_fHoleDiameterMM/2));
         if ~isempty(iSelectedHole)
@@ -187,7 +187,7 @@ switch g_strctModule.m_strctMouseOpMenu.m_hAxes
         fnResetAxis(1,0);
     case g_strctModule.m_strctPanel.m_strctBack.m_hAxes
         fnResetAxis(0,1);
-end;
+end
 
 
 return;
@@ -198,7 +198,7 @@ strOldName = g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_strName;
 answer=inputdlg({'New Grid Name:'},'Change Grid Name',1,{strOldName});
 if isempty(answer)
     return;
-end;
+end
 g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_strName = answer{1};
 fnUpdateGridList();
 return;
@@ -240,7 +240,7 @@ switch g_strctModule.m_strctMouseOpMenu.m_hAxes
             'Metric!',1,{num2str(fDefaultInnerRadiusMM)});
         if isempty(answer)
             return;
-        end;
+        end
         fDiameterMM = str2num(answer{1});
        a3fNewImage=fnResampleEllipse(iNewResolution,...
           g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_strctFrontEllipse,...
@@ -264,7 +264,7 @@ switch g_strctModule.m_strctMouseOpMenu.m_hAxes
             'Metric!',1,{num2str(fDefaultOuterDiameterMM)});
         if isempty(answer)
             return;
-        end;
+        end
         fDiameterMM = str2num(answer{1});
          
        a3fNewImage=fnResampleEllipse(iNewResolution,...
@@ -279,7 +279,7 @@ switch g_strctModule.m_strctMouseOpMenu.m_hAxes
       g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_a3fBackImage = a3fNewImage;
       g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_strctBackEllipse = strctNewEllipse;
       g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange = [0 iNewResolution 0 iNewResolution];
-end;
+end
     
 
 fnInvalidate(1);
@@ -299,7 +299,7 @@ fDefaultHoleDistanceMM = 1;
             'Metric!',1,{num2str(fDefaultHoleDiameterMM),num2str(fDefaultHoleDistanceMM)});
         if isempty(answer)
             return;
-        end;
+        end
         fHoleDiameterMM = str2num(answer{1});
         fHoleDistanceMM = str2num(answer{2});
         
@@ -330,7 +330,7 @@ global g_strctModule
 [strFile,strPath] = uiputfile('GridMeasureSession.mat','Select file to save session');
 if strFile(1) == 0
     return;
-end;
+end
 
 save([strPath,strFile],'g_strctModule');
 return;
@@ -340,7 +340,7 @@ global g_strctModule
 [strFile,strPath] = uigetfile('*.mat','Select file to load session');
 if strFile(1) == 0
     return;
-end;
+end
 strctTmp = load([strPath,strFile]);
 g_strctModule.m_acGrids = strctTmp.g_strctModule.m_acGrids();
 g_strctModule.m_iCurrGrid = strctTmp.g_strctModule.m_iCurrGrid;
@@ -483,7 +483,7 @@ if bFront
     set(g_strctModule.m_strctPanel.m_strctFront.m_hAxes, 'Xlim',...
         g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiFrontAxisRange(1:2),...
         'ylim',g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiFrontAxisRange(3:4));
-end;
+end
 
 if bBack
     aiBackSize = size(g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_a3fBackImage);
@@ -494,7 +494,7 @@ if bBack
     set(g_strctModule.m_strctPanel.m_strctBack.m_hAxes, 'Xlim',...
         g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(1:2),...
         'ylim',g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(3:4));
-end;
+end
 
 return;
 
@@ -513,12 +513,12 @@ strList = '';
 iNumGrids = length(g_strctModule.m_acGrids);
 for iGridIter=1:iNumGrids
     strList = [strList,'|',g_strctModule.m_acGrids{iGridIter}.m_strName];
-end;
+end
 if iNumGrids == 0
     set(g_strctModule.m_strctPanel.m_hGridList,'string','','value',1);
 else
     set(g_strctModule.m_strctPanel.m_hGridList,'string',strList(2:end),'value',g_strctModule.m_iCurrGrid);
-end;
+end
 return;
 
 function fnPanImage(hAxes, afDelta)
@@ -544,7 +544,7 @@ set(g_strctModule.m_strctPanel.m_strctFront.m_hAxes, 'Xlim',...
         'ylim',g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiFrontAxisRange(3:4));
            
     
-end;
+end
 
 if g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(2) > g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(1) && ...
    g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(4) > g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(3) 
@@ -552,7 +552,7 @@ if g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(2) > g_s
 set(g_strctModule.m_strctPanel.m_strctBack.m_hAxes, 'Xlim',...
         g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(1:2),...
         'ylim',g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid}.m_aiBackAxisRange(3:4));
-end;
+end
 return;
 
 
@@ -654,7 +654,7 @@ afDiff = g_strctModule.m_strctLastMouseDown.m_pt2fPos - strctMouseOp.m_pt2fPos;
             fnPanGridAux(strctMouseOp.m_hAxes,afDelta/20);
         case 'MoveHole'
             fnMoveHoleAux(strctMouseOp.m_hAxes,g_strctModule.m_iSelectedHoleOnDown,afDelta/40);
-    end;
+    end
 return;
 
 function fnMoveHoleAux(hAxes,iSelectedHoleOnDown,afDelta)
@@ -699,7 +699,7 @@ function fnMouseMove(strctMouseOp)
 global g_strctModule
 if isempty(g_strctModule.m_strctPrevMouseOp)
     g_strctModule.m_strctPrevMouseOp = strctMouseOp;
-end;
+end
 
 %%
 if ~isempty( strctMouseOp.m_hAxes) && ~isempty(g_strctModule.m_iCurrGrid) && ~isempty(g_strctModule.m_acGrids)
@@ -733,15 +733,15 @@ if ~isempty( strctMouseOp.m_hAxes) && ~isempty(g_strctModule.m_iCurrGrid) && ~is
                         % create
                         g_strctModule.m_hCurrHole = plot(g_strctModule.m_strctPanel.m_strctFront.m_hAxes,...
                             afCoordX,afCoordY,'color',[1 0 0],'visible','on');
-                    end;
+                    end
                 else
                     if isfield(g_strctModule,'m_hCurrHole') && ~isempty(g_strctModule.m_hCurrHole) && ishandle(g_strctModule.m_hCurrHole)
                         set( g_strctModule.m_hCurrHole,'visible','off');
-                    end;
-                end;
-            end;
-    end;
-end;
+                    end
+                end
+            end
+    end
+end
 
 %%
 
@@ -750,8 +750,8 @@ if  ~isempty(strctMouseOp.m_hAxes)
         fnHandleMouseMoveWhileDown(g_strctModule.m_strctPrevMouseOp, strctMouseOp);
     else
         fnUpdateStatusLine(strctMouseOp);
-    end;
-end;
+    end
+end
 g_strctModule.m_strctPrevMouseOp = strctMouseOp;
 return;
 
@@ -778,7 +778,7 @@ switch hAxes
              set(g_strctModule.m_strctPanel.m_strctBack.m_hPanel,'Position',g_strctModule.m_strctPanel.m_strctBack.m_aiPos,'visible','on');
             set(g_strctModule.m_strctPanel.m_strctBack.m_hAxes,'Position',g_strctModule.m_strctPanel.m_aiAxesSize);
             set(g_strctModule.m_strctPanel.m_strctFront.m_hPanel,'visible','on');
-        end;
+        end
         
     case g_strctModule.m_strctPanel.m_strctFront.m_hAxes
         aiCurrPosition = get(g_strctModule.m_strctPanel.m_strctFront.m_hPanel,'Position');
@@ -792,9 +792,9 @@ switch hAxes
             set(g_strctModule.m_strctPanel.m_strctFront.m_hPanel,'Position',g_strctModule.m_strctPanel.m_strctFront.m_aiPos,'visible','on');
             set(g_strctModule.m_strctPanel.m_strctFront.m_hAxes,'Position',g_strctModule.m_strctPanel.m_aiAxesSize);
             set(g_strctModule.m_strctPanel.m_strctBack.m_hPanel,'visible','on');
-        end;
+        end
 
-end;
+end
 return;
 
 function iSelectedHole = fnGetSelectedHole(strctMouseOp)
@@ -811,7 +811,7 @@ if ~isempty( strctMouseOp.m_hAxes) && ~isempty(g_strctModule.m_iCurrGrid) && ~is
                 pt2fPosMM =  [strctMouseOp.m_pt2fPos(1) - pt2fCenter(1), ...
                     strctMouseOp.m_pt2fPos(2)-pt2fCenter(2) ] / strctCurrGrid.m_MM_To_Pix;
                 iSelectedHole = find(sqrt((strctCurrGrid.m_afFrontHoleX-pt2fPosMM(1)).^2 + (strctCurrGrid.m_afFrontHoleY-pt2fPosMM(2)).^2) < (strctCurrGrid.m_fHoleDiameterMM/2));
-            end;
+            end
         case g_strctModule.m_strctPanel.m_strctBack.m_hAxes
             if ~isempty(strctCurrGrid.m_afBackHoleX)
                 aiSize = size(strctCurrGrid.m_a3fBackImage);
@@ -820,13 +820,13 @@ if ~isempty( strctMouseOp.m_hAxes) && ~isempty(g_strctModule.m_iCurrGrid) && ~is
                     strctMouseOp.m_pt2fPos(2)-pt2fCenter(2) ] / strctCurrGrid.m_MM_To_Pix;
                 iSelectedHole = find(sqrt((strctCurrGrid.m_afBackHoleX-pt2fPosMM(1)).^2 + ...
                     (strctCurrGrid.m_afBackHoleY-pt2fPosMM(2)).^2) < (strctCurrGrid.m_fHoleDiameterMM/2));
-            end;
+            end
             
-    end;
+    end
     
     
     
-end;
+end
 
 return;
 
@@ -838,13 +838,13 @@ global g_strctModule
 if strcmpi(strctMouseOp.m_strButton,'DoubleClick') && ~isempty(strctMouseOp.m_hAxes)
     fnZoomAxes(strctMouseOp.m_hAxes);
     return;
-end;
+end
 % 
 % if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctGrid.m_hAxes
 %     
 %     fnSelectGridHole(strctMouseOp);
 %     fnHandleMouseMoveOnGridAxes(strctMouseOp);
-% end;
+% end
 
 g_strctModule.m_iSelectedHoleOnDown = fnGetSelectedHole(strctMouseOp);
 
@@ -897,7 +897,7 @@ for k=1:length(strctCurrGrid.m_afFrontHoleX)
         fDiameterMM/2 * fMM_To_Pix,...
         afHolePixY + strctCurrGrid.m_afFrontHoleY(k) * fMM_To_Pix + ...
         fDiameterMM/2 * fMM_To_Pix,'color',[0 0.5 0]);
-end;
+end
 return;
 
 
@@ -911,12 +911,12 @@ function fnInvalidate(bRedrawImages)
 global g_strctModule
 if ~exist('bRedrawImages','var')
     bRedrawImages = false;
-end;
+end
 
 if g_strctModule.m_iCurrGrid == 0
     % Black out screens
     return;
-end;
+end
 
 strctCurrGrid = g_strctModule.m_acGrids{g_strctModule.m_iCurrGrid};
 

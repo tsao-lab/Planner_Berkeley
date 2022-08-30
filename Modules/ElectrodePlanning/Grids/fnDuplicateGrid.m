@@ -4,7 +4,7 @@ global g_strctModule
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
     return;
-end;
+end
 
 strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 

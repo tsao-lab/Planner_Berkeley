@@ -7,7 +7,7 @@ strctMRI.vol = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol;
 [strFile,strPath]=uiputfile([strOrigFileName,'.nii']);
 if strFile(1) == 0
     return;
-end;
+end
 MRIwrite(strctMRI,fullfile(strPath,strFile));
 return;
         

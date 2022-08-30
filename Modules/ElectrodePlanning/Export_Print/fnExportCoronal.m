@@ -4,7 +4,7 @@ global g_strctModule
 strFolderName = uigetdir('.','Where to export images?');
 if strFolderName(1) == 0
     return;
-end;
+end
   
 % Resample coronal atlas slice from volume...
 afMLrange = g_strctModule.m_strctAtlas.m_afXPixelToMM;

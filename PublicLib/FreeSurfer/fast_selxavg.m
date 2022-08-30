@@ -782,7 +782,7 @@ if(s.spmhrf > -1) % Hack
   hd.GammaFit = s.spmhrf + 1;
   hd.gfDelta = -1*ones(1,s.spmhrf + 1);
   hd.gfTau   = -1*ones(1,s.spmhrf + 1);
-end;
+end
 %hd.gfAlpha      = gfAlpha; % This is not saved yet
 hd.NullCondId    = 0;
 hd.SumXtX        = SumXtXTmp;

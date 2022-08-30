@@ -55,7 +55,7 @@ acIgnoreFiles = {'fnBuildCannulaChamberModel',...
         pcode(acAvailFiles{k},'-inplace');
         delete(acAvailFiles{k});
      end
- end;
+ end
  
 pcode('EntryPoint.m','-inplace');
 delete('EntryPoint.m');

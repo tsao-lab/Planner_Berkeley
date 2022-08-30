@@ -28,7 +28,7 @@ for iHoleIter=1:iNumHoles
     afDirection = -a2fTrans(1:3,3);
     [afMinDistToTarget(iHoleIter), pt3fClosestPointOnLine, afDepth(iHoleIter)] = fnPointLineDist3D(pt3fStart, afDirection, pt3fTargetPosMM(1:3)); %#ok
    
-end;
+end
 
 %
 % figure(2);

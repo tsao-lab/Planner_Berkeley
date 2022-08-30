@@ -1,6 +1,5 @@
 function fnFirstInvalidate()
 global g_strctModule
-g_strctModule.m_bFirstInvalidate = false;
 a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
 [a2fCrossSectionXY, apt3fPlanePointsXY] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY); %#ok
 [a2fCrossSectionYZ, apt3fPlanePointsYZ] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionYZ); %#ok
@@ -54,4 +53,4 @@ axes(g_strctModule.m_strctPanel.m_strct3D.m_hAxes); %#ok
 camlight('right')
 lighting('gouraud');
 
- return;
+g_strctModule.m_bFirstInvalidate = false;

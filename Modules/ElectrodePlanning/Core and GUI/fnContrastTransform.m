@@ -7,5 +7,5 @@ if strcmp(strctTransform.m_strType,'Linear');
     a2fTranI(a2fI >=(strctTransform.m_fCenter+strctTransform.m_fWidth)) = 1;
     a2fTranI(a2fTranI < 0) = 0;
     a2fTranI(a2fTranI > 1) = 1;
-end;
+end
 return;

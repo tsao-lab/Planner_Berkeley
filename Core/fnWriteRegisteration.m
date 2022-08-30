@@ -8,7 +8,7 @@ fprintf(hFileID,'%f\n',afVoxelSpacing(3));
 
 for k=1:4
     fprintf(hFileID,'%e %e %e %e \n',T(k,1),T(k,2),T(k,3),T(k,4));
-end;
+end
 
 fprintf(hFileID,'%s\n',strVolType);
 

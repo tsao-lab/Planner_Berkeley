@@ -15,7 +15,7 @@ switch hAxes
         fnZoomAxesAux('m_strctStereoTactic');
         
 end;   
-end;
+end
     
 return;
 

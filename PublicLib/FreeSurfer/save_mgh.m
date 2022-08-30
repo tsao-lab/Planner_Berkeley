@@ -129,7 +129,7 @@ if (strcmpi(fname((length(fname)-3):length(fname)), '.MGZ') || ...
         new_fname = sprintf('/tmp/tmp%d.mgh', gzipped);
         unix(sprintf('mv %s %s ; gzip %s ; mv %s.gz %s', fname, new_fname, new_fname, new_fname, fname)) ;
         fname = new_fname ;
-    end;
+    end
 end	
 return;
 

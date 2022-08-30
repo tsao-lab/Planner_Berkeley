@@ -1,5 +1,11 @@
 function fnElectrodePlanningNewCallback(strCallback, varargin)
 global g_strctWindows g_strctModule %#ok
+
+if g_strctModule.m_bFirstInvalidate && ~ismember(strCallback, ...
+        {'LoadAnatVol', 'SetNormalMode', 'SetAtlasMode', 'SetChamberMode', 'ModuleSwitch'})
+    return
+end
+
 switch strCallback
     case 'StereotaxHelper'
         fnStereotaxHelper();
@@ -170,9 +176,9 @@ switch strCallback
     case 'RemoveChamber'
         fnRemoveChamber();
     case 'fnApplyAnatTrans'
-        fnApplyAnatTrans();
+        fnApplyAnatTrans([], [], varargin{1});
     case 'fnApplyAnatInvTrans'
-        fnApplyAnatInvTrans();
+        fnApplyAnatInvTrans([], [], varargin{1});
     case 'fnApplyFuncTrans'
         fnApplyFuncTrans();
     case 'fnApplyFuncInvTrans'
@@ -543,7 +549,7 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
                     strctCrossSection = g_strctModule.m_strctCrossSectionYZ;
                 case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
                     strctCrossSection = g_strctModule.m_strctCrossSectionXZ;
-            end;
+            end
             fDistXMM = afDiff(1) / strctCrossSection.m_iResWidth * (2*strctCrossSection.m_fHalfWidthMM);
             fDistYMM = afDiff(2) / strctCrossSection.m_iResHeight * (2*strctCrossSection.m_fHalfHeightMM);
             
@@ -582,11 +588,11 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
             g_strctModule.m_strctLastMouseDown.m_pt2fPos(2)-5,...
             '0 mm','color','g','parent',g_strctModule.m_strctLastMouseDown.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
         
-    end;
+    end
     
     
     return;
-end;
+end
 
 if strcmp(g_strctModule.m_strMouseMode,'WaitForTwoClickEndPoint') && ...
         ((g_strctModule.m_strctLastMouseDown.m_hAxes == strctMouseOp.m_hAxes))
@@ -598,7 +604,7 @@ if strcmp(g_strctModule.m_strMouseMode,'WaitForTwoClickEndPoint') && ...
         g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine = plot(g_strctModule.m_strctLastMouseDown.m_hAxes,...
             [g_strctModule.m_strctLastMouseDown.m_pt2fPos(1),strctMouseOp.m_pt2fPos(1)],...
             [g_strctModule.m_strctLastMouseDown.m_pt2fPos(2),strctMouseOp.m_pt2fPos(2)],'r','LineWidth',2);
-    end;
+    end
 end
 
 if strcmp(g_strctModule.m_strMouseMode,'ModifyController')
@@ -616,16 +622,16 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxesSelected)
     else
         fnRotatePlane(g_strctModule.m_strctLastMouseDown.m_hAxesLineSelected, sum(-afDelta .* g_strctModule.m_strctLastMouseDown.m_afAxesPen));
         %fnRotatePlaneExact(g_strctModule.m_strctLastMouseDown, strctMouseOp);
-    end;
+    end
     fnInvalidate();
     return;
-end;
+end
 
 if g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
     fnUpdateOverlayTransform();
     fnUpdateChamberMIP();
     return;
-end;
+end
 
 % 3D Operation
 
@@ -680,7 +686,7 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && (g_strctModule.m_strc
             %        fnSetNewZoomLevel(handles, afDelta);
         case 'Pan'
             %        fnSetNewPanLevel(handles, afDiff);
-    end;
+    end
     
 else
     switch g_strctModule.m_strMouseMode
@@ -757,8 +763,8 @@ else
         case 'ScaleImageInImageSeriesKeepAspect'
             fnScaleImageInImageSeries(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta,true);
             
-    end;
-end;
+    end
+end
 return;
 
 
@@ -767,15 +773,15 @@ function fnMouseMove(strctMouseOp)
 global g_strctModule g_strctWindows
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if isempty(g_strctModule.m_strctPrevMouseOp)
     g_strctModule.m_strctPrevMouseOp = strctMouseOp;
-end;
+end
 if ~g_strctModule.m_bFirstInvalidate && g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
     fnIntersectAxis(strctMouseOp);  % Change mouse cursor
     
-end;
+end
 if  ~g_strctModule.m_bFirstInvalidate &&  ~isempty(strctMouseOp.m_hAxes)
     [bIntersects, strctObject, strWhat] = fnIntersectsControllableObject(strctMouseOp); %#ok
     if bIntersects
@@ -787,12 +793,12 @@ end
 if  ~isempty(strctMouseOp.m_hAxes)
     if g_strctModule.m_bMouseDown
         fnHandleMouseMoveWhileDown(g_strctModule.m_strctPrevMouseOp, strctMouseOp);
-    end;
-end;
+    end
+end
 
 if strcmpi(g_strctModule.m_strMouseMode,'AddTwoClickObject')
     set(g_strctWindows.m_hFigure,'Pointer','fleur');
-end;
+end
 
 g_strctModule.m_strctPrevMouseOp = strctMouseOp;
 
@@ -879,7 +885,7 @@ function fnMouseDown(strctMouseOp)
 global g_strctModule g_strctWindows
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 
 
@@ -892,7 +898,7 @@ if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
             strctMouseOp.m_strAxisOp = 'Pan';
         else
             strctMouseOp.m_strAxisOp = 'Rotate';
-        end;
+        end
     end
     strctMouseOp.m_afAxesPen = afPenDir; % Penpendicular direction to selected axes
 else
@@ -900,7 +906,7 @@ else
     strctMouseOp.m_hAxesLineSelected = [];
     strctMouseOp.m_afAxesPen = [];
     strctMouseOp.m_strAxisOp = '';
-end;
+end
 
 if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
     Tmp = get(g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes,'CurrentPoint');
@@ -927,13 +933,13 @@ if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
         end
     end
     
-end;
+end
 %
 % if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctGrid.m_hAxes
 %
 %     fnSelectGridHole(strctMouseOp);
 %     fnHandleMouseMoveOnGridAxes(strctMouseOp);
-% end;
+% end
 
 
 
@@ -1040,10 +1046,10 @@ end
 
 if strcmpi(g_strctModule.m_strMouseMode,'VoxelEraseMode2D') && strcmpi(strctMouseOp.m_strButton,'Left')
     fnEraseVoxels(strctMouseOp, true)
-end;
+end
 if strcmpi(g_strctModule.m_strMouseMode,'VoxelEraseMode3D') && strcmpi(strctMouseOp.m_strButton,'Left')
     fnEraseVoxels(strctMouseOp, false)
-end;
+end
 
 
 if strcmpi(g_strctModule.m_strMouseMode,'ROI_Add_3D') && strcmpi(strctMouseOp.m_strButton,'Left')
@@ -1116,12 +1122,12 @@ g_strctModule.m_bMouseDown = false;
 if ishandle(g_strctModule.m_strctPanel.m_hMeasureLine)
     delete(g_strctModule.m_strctPanel.m_hMeasureLine)
     g_strctModule.m_strctPanel.m_hMeasureLine = [];
-end;
+end
 
 if ishandle(g_strctModule.m_strctPanel.m_hMeasureText)
     delete(g_strctModule.m_strctPanel.m_hMeasureText);
     g_strctModule.m_strctPanel.m_hMeasureText = [];
-end;
+end
 
 if  strcmp(g_strctModule.m_strMouseMode, 'ModifyController');
     % restore mouse op
@@ -1155,7 +1161,7 @@ function fnMouseWheel(strctMouseOp)
 global g_strctModule
 if isempty(strctMouseOp.m_hAxes) || ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 if (strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes)
     
     g_strctModule.m_strctOverlay.m_afPvalueRange = g_strctModule.m_strctOverlay.m_afPvalueRange + ...
@@ -1174,10 +1180,10 @@ else
     else
         if strctMouseOp.m_hAxes  == g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
              strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
-        end;
+        end
         
         fnShiftPlane(strctMouseOp.m_hAxes , min(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing)*strctMouseOp.m_iScroll)
-    end;
+    end
 end
 fnUpdatePos();
 
@@ -1311,7 +1317,7 @@ if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
     h=msgbox('Please add an ROI first');
     waitfor(h);
     return;
-end;
+end
 
 
 if b2D
@@ -1328,7 +1334,7 @@ if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
     h=msgbox('Please add an ROI first');
     waitfor(h);
     return;
-end;
+end
 
 if b2D
     fnChangeMouseMode('ROI_Sub_2D','Subtract Voxels From ROI 2D','Radius2D');

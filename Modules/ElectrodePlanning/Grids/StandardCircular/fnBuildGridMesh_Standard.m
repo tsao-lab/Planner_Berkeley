@@ -2,7 +2,7 @@ function astrctMesh = fnBuildGridMesh_Standard(strctGridModel, bDrawShort,bHighl
 clear astrctMesh
 if ~exist('bHighlight','var')
     bHighlight = false;
-end;
+end
 
 fGridHoleDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'HoleDiam');
 fOffsetX = fnGetGridParameter(strctGridModel.m_strctGridParams,'OffsetX');

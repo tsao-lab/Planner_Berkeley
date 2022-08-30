@@ -1,4 +1,5 @@
-function [a2fCrossSection, apt3fPlanePoints,a2fXmm,a2fYmm,a2fXmmT,a2fYmmT,a2fZmmT,apt3fInVolMM] = fnResampleCrossSection(a3fVol, a2fXYZ_To_CRS, strctCrossSection)
+function [a2fCrossSection, apt3fPlanePoints, a2fXmm, a2fYmm, a2fXmmT, a2fYmmT, a2fZmmT, apt3fInVolMM] =...
+    fnResampleCrossSection(a3fVol, a2fXYZ_To_CRS, strctCrossSection)
 % resamples a cross-section (plane) of a volume.
 % Cross section is defined by a 3x3 rotation and position, emmbeded in a 4x4 matrix
 % 

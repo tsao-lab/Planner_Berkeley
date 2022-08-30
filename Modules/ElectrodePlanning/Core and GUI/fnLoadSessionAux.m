@@ -211,6 +211,6 @@ if ~g_strctModule.m_strctGUIOptions.m_bShow3DPlanes
     set(g_strctModule.m_strctPanel.m_hPlaneXY,'visible','off');
     set(g_strctModule.m_strctPanel.m_hPlaneYZ,'visible','off');
     set(g_strctModule.m_strctPanel.m_hPlaneXZ,'visible','off');
-end;
+end
 
 return;

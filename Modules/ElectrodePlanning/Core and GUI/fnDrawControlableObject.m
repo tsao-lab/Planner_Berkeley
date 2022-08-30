@@ -5,7 +5,7 @@ global g_strctModule
 
 if isfield(g_strctModule,'m_ahControllableObjects')
     delete(g_strctModule.m_ahControllableObjects(ishandle(g_strctModule.m_ahControllableObjects)));
-end;
+end
 
 ahRulerHandles = [];
 if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_acControllableObjects')

@@ -35,7 +35,7 @@ switch strctMouseDown.m_hAxesLineSelected
         fRotationAngle=fnRotatePlaneExactAuxComputeRotationAngle(pt3fPosIn3DSpace,g_strctModule.m_strctCrossSectionYZ,g_strctModule.m_strctCrossSectionXZ,g_strctModule.m_strctCrossSectionXY, g_strctModule.m_strctPanel.m_strctYZ.m_hAxes);
         g_strctModule.m_strctCrossSectionXZ = fnRotateCrossSectionAux(...
             g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctCrossSectionXY, fRotationAngle);
-end;
+end
 fnInvalidate();
 
 return;

@@ -4,7 +4,7 @@ global g_strctModule
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if length(iSelectedMarker) > 1 || g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
     if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
         strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
@@ -18,7 +18,7 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
     iNewArmIndex = find(ismember(acArmsName,strctMarker.m_strArmType));
     if isempty(iNewArmIndex)
         return;
-    end;
+    end
     
 
 iCombinedIndex = find(g_strctModule.m_strctPanel.m_aiModelIndex == iNewModelIndex & g_strctModule.m_strctPanel.m_aiArmIndex == iNewArmIndex);
@@ -49,6 +49,6 @@ end
     fnInvalidateStereotactic();
     fnInvalidate();
     end
-end;
+end
 
 return;

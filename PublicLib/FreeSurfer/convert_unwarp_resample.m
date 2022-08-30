@@ -260,7 +260,7 @@ elseif isdir(dcm)
 else
   qoe('dcm was neither a dicom file nor a directory.');
   error('dcm was neither a dicom file nor a directory.');
-end;
+end
 
 if(isempty(vol)) return; end
 

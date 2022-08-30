@@ -99,7 +99,7 @@ return;
 function fnFirstInvalidate(handles)
 strctVol = getappdata(handles.figure1,'strctVol');
 
-[strctHist.m_afHist,strctHist.m_afRange]=hist(strctVol.m_a3fVol(:),500);
+[strctHist.m_afHist,strctHist.m_afRange]=hist(double(strctVol.m_a3fVol(:)),500);
 fWidth = strctHist.m_afRange(end)-strctHist.m_afRange(1);
 set(handles.hHistHorizSlider,'min',strctHist.m_afRange(1),'max',strctHist.m_afRange(end),'value',strctHist.m_afRange(250));
 set(handles.hHistVertSlider,'min',50,'max',fWidth,'value',fWidth);

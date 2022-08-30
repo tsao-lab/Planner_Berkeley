@@ -23,7 +23,7 @@ a3bVol = zeros(length(afDVrange),length(afMLrange), iNumAPslices,'uint8')>0;
 if isempty(aiRelevantSlicesInd)
     a3bOut = [];
     return;
-end;
+end
 
 for iSliceIter=1:length(aiRelevantSlicesInd)
     iNumRegionsInSlice = length(astrctSortedSlices(aiRelevantSlicesInd(iSliceIter)).m_acRegions);

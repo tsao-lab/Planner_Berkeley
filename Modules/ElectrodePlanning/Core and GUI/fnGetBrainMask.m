@@ -3,7 +3,7 @@ global g_strctModule
 
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_a2fAtlasReg')
     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = eye(4);
-end;
+end
 
 iMetaRegionAll = 1;
 P = [g_strctModule.m_strctAtlas.m_astrctMesh(iMetaRegionAll).vertices'; ...

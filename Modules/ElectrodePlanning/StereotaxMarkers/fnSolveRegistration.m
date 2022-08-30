@@ -5,12 +5,12 @@ bSolved = false;
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
     errordlg('Please add markers first!');
     return;
-end;
+end
 iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
 if iNumMarkers < 4
     errordlg('Need at least 3 markers to solve this problem.');
     return;
-end;
+end
 
 %% Forward Kinematics. Compute coordinates from read out values
 [apt3fMarkersStereoTaticCoord, apt3fMarkersMRIMetricCoord]=fnSolveRegistrationAux();
@@ -33,7 +33,7 @@ iNumMarkers = size(apt3fMarkersMRIMetricCoord,2);
 if iNumMarkers < 4
    errordlg('Need at least 3 markers to solve this problem.');
     return;
-end;
+end
 
 % Plot the problem.
 hfig = figure(11);
@@ -43,7 +43,7 @@ plot3(apt3fMarkersStereoTaticCoord(1,:),apt3fMarkersStereoTaticCoord(2,:),apt3fM
 hold on;
 for k=1:size(apt3fMarkersStereoTaticCoord,2)
     text(apt3fMarkersStereoTaticCoord(1,k),apt3fMarkersStereoTaticCoord(2,k),apt3fMarkersStereoTaticCoord(3,k),num2str(k));
-end;
+end
 axis equal
 cameratoolbar(hfig);
 title('Stereotactic Markers');
@@ -54,7 +54,7 @@ plot3(apt3fMarkersMRIMetricCoord(1,:),apt3fMarkersMRIMetricCoord(2,:),apt3fMarke
 hold on;
 for k=1:size(apt3fMarkersMRIMetricCoord,2)
     text(apt3fMarkersMRIMetricCoord(1,k),apt3fMarkersMRIMetricCoord(2,k),apt3fMarkersMRIMetricCoord(3,k),num2str(k));
-end;
+end
 axis equal
 %cameratoolbar(12);
 title('MRI Markers');
@@ -113,7 +113,7 @@ plot3(apt3fMarkersStereoTaticCoord2(1,:),apt3fMarkersStereoTaticCoord2(2,:),apt3
 
 for k=1:size(apt3fMarkersStereoTaticCoord,2)
     text(apt3fMarkersStereoTaticCoord(1,k),apt3fMarkersStereoTaticCoord(2,k),apt3fMarkersStereoTaticCoord(3,k),num2str(k));
-end;
+end
 axis equal
 % cameratoolbar(13);
 title(sprintf('Registration Error (mm) is : %.3f ',err*10));

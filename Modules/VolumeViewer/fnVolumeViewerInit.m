@@ -31,7 +31,7 @@ g_strctModule.m_strctLastMouseUp = [];
 fnCreatePanels(); 
 if ~isempty(strctParams)
     fnCreateInitialCrossSections(strctParams);
-end;
+end
 
 return;
 

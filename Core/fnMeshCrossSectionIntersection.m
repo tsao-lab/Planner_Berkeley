@@ -15,7 +15,7 @@ afPlane = [strctCrossSection.m_a2fM(1:3,3); -strctCrossSection.m_a2fM(1:3,3)' * 
 if isempty(a2fLines3D)
     a2fLinesPix = [];
     return;
-end;
+end
 
 % Rotate coordinates back to [0,0,1] plane
 iNumLines = size(a2fLines3D,2);
@@ -66,14 +66,14 @@ return;
 % patch(A,'facecolor','none','edgecolor','b')
 % for k=1:size(a2fLines3D,2)
 %     plot3([a2fLines3D(1,k) a2fLines3D(4,k)], [a2fLines3D(2,k) a2fLines3D(5,k)],[a2fLines3D(3,k) a2fLines3D(6,k)],'c');
-% end;
+% end
 % 
 % figure(5);
 % clf;
 % hold on;
 % for k=1:size(apt2fP1,2)
 % plot([apt2fP1(1,k) apt2fP2(1,k)],[apt2fP1(2,k) apt2fP2(2,k)],'b');
-% end;
+% end
 % 
 % plot([-strctCrossSection.m_fHalfWidthMM -strctCrossSection.m_fHalfWidthMM],...
 %      [-strctCrossSection.m_fHalfHeightMM strctCrossSection.m_fHalfHeightMM],'g');
@@ -91,5 +91,5 @@ return;
 % for k=1:size(apt2fP1,2)
 %     if abIntersect(k)
 %         plot([afX0(k) afX1(k)],[afY0(k) afY1(k)],'r');
-%     end;
-% end;
+%     end
+% end

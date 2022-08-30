@@ -31,7 +31,7 @@ for iHoleIter=1:iNumHoles
             'color',[0.5 0.5 0.5],'uicontextmenu',hContextMenu);
          
     end;    
-end;
+end
 
 % Plot inner diameters...
 fInnerDiameterMM0 = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridInnerDiam0');

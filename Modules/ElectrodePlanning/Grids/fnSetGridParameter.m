@@ -5,21 +5,21 @@ for k=1:length(strctGridParams.m_acParam)
             case 'Discrete'
                 if ischar(Value)
                     Value = str2num(Value);
-                end;
+                end
             case 'Logical'
                 if ischar(Value)
                     Value = str2num(Value)>0;
-                end;
+                end
             case 'Continuous'
                 if ischar(Value)
                     Value = str2num(Value);
-                end;
+                end
             case 'String'
                 % Do nothing.
         end
         strctGridParams.m_acParam{k}.m_Value = Value;
         return;
-    end;
-end;
+    end
+end
 fprintf('WARNING! Failed to find field %s in grid sub model adjustments\n',strName);
 return;

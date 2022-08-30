@@ -14,7 +14,7 @@ as arguments the volume grid. It is assumed that input volume coordinates are 1.
 % Output type is float
 */
 
-template<class T> void CalcInterpolation(T* input_volume, float *output_vector, 
+template<class T, class T1> void CalcInterpolation(T* input_volume, T1* output_vector, 
 										 int iNumPoints, double *rows, double *cols, double *slices,int in_rows,int in_cols,int in_slices  ) {
 	float V000,V001,V010,V011,V100,V101,V110,V111;
 	int curr_row, curr_col, curr_slice;
@@ -45,7 +45,7 @@ template<class T> void CalcInterpolation(T* input_volume, float *output_vector,
 		V011 = ACCESS_VOLUME(input_volume,in_curpos+in_sliceoffset+1, num_input_voxels);
 		V101 = ACCESS_VOLUME(input_volume,in_curpos+in_sliceoffset+in_rows, num_input_voxels);
 		V111 = ACCESS_VOLUME(input_volume,in_curpos+in_sliceoffset+in_rows+1, num_input_voxels);
-		output_vector[iPointIter] = float(TRI(dx, dy, dz, V000,V010,V100,V110,V001,V011,V101,V111));
+		output_vector[iPointIter] = (T1)(TRI(dx, dy, dz, V000,V010,V100,V110,V001,V011,V101,V111));
 	}
 }
 
@@ -61,7 +61,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
 		return;
 	}
 
-	const int *input_dim_array = mxGetDimensions(prhs[0]);
+	const int *input_dim_array = (int *)mxGetDimensions(prhs[0]);
 	int in_rows = input_dim_array[0];
 	int in_cols = input_dim_array[1];
 	int in_slices = input_dim_array[2];
@@ -70,37 +70,43 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
 	double *cols = (double *)mxGetData(prhs[1]);
 	double *slices = (double *)mxGetData(prhs[3]);
 
-	const int *tmp = mxGetDimensions(prhs[1]);
-	int iNumPoints = MAX(tmp[0], tmp[1]);
+	const mwSize *tmp = mxGetDimensions(prhs[1]);
+	mwSize iNumPoints = MAX(tmp[0], tmp[1]);
 
 	if (iNumPoints == 0) {
 		mexErrMsgTxt("Please provide at least one coordinate. ");
 		return;
 	}
 
-	int output_dim_array[2];
+	mwSize output_dim_array[2];
 	output_dim_array[0] = iNumPoints;
 	output_dim_array[1] = 1;
-	plhs[0] = mxCreateNumericArray(2, output_dim_array, mxSINGLE_CLASS, mxREAL);
-	float *output_vector = (float*)mxGetPr(plhs[0]);
 
 	
 	if (mxIsSingle(prhs[0])) {
+	    plhs[0] = mxCreateNumericArray(2, output_dim_array, mxSINGLE_CLASS, mxREAL);
+	    float *output_vector = (float*)mxGetPr(plhs[0]);
 		float *input_volume = (float*)mxGetData(prhs[0]);
 		CalcInterpolation(input_volume, output_vector,iNumPoints, rows, cols, slices,in_rows,in_cols, in_slices);
 	}
 
 	if (mxIsDouble(prhs[0])) {
+	    plhs[0] = mxCreateNumericArray(2, output_dim_array, mxSINGLE_CLASS, mxREAL);
+	    float *output_vector = (float*)mxGetPr(plhs[0]);
 		double *input_volume = (double*)mxGetData(prhs[0]);
 		CalcInterpolation(input_volume, output_vector,iNumPoints, rows, cols, slices,in_rows,in_cols, in_slices);
 	}
 
-	if (mxIsUint16(prhs[0]) || mxIsInt16(prhs[0])) {
-		short *input_volume = (short*)mxGetData(prhs[0]);
+	if (mxIsUint16(prhs[0])) {
+	    plhs[0] = mxCreateNumericArray(2, output_dim_array, mxUINT16_CLASS, mxREAL);
+	    float *output_vector = (float*)mxGetPr(plhs[0]);
+		unsigned short *input_volume = (unsigned short*)mxGetData(prhs[0]);
 		CalcInterpolation(input_volume, output_vector,iNumPoints, rows, cols, slices,in_rows,in_cols, in_slices);
 	}
 
 	if ( mxIsUint8(prhs[0]) || mxIsLogical(prhs[0])) {
+	    plhs[0] = mxCreateNumericArray(2, output_dim_array, mxUINT8_CLASS, mxREAL);
+	    float *output_vector = (float*)mxGetPr(plhs[0]);
 		unsigned char *input_volume = (unsigned char *)mxGetData(prhs[0]);
 		CalcInterpolation(input_volume, output_vector,iNumPoints, rows, cols, slices,in_rows,in_cols, in_slices);
 	}

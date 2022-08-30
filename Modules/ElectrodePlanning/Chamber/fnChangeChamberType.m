@@ -3,7 +3,7 @@ global g_strctModule
 iSelectedChamber = get(g_strctModule.m_strctPanel.m_hChamberList,'value');
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
     return;
-end;
+end
 
 
 iNumChamberModels = length(g_strctModule.m_strctParams.m_strctConfig.m_acChamberModels.m_strctModel);

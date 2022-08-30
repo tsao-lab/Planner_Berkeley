@@ -44,7 +44,7 @@ for vert = 1:1:(numvert),
     s = fgetl(fid);
     vertx_coordinates = sscanf(s,'%f');
     vertx_list(vert,:) = [vertx_coordinates(1:2)' vertx];
-end;
+end
 toc
 tic;
 for face = 1:1:(numquad),
@@ -53,7 +53,7 @@ for face = 1:1:(numquad),
     s = fgetl(fid);
     face_vertx = sscanf(s,'%d');
     face_list(face,:) = [face_vertx' facenum];
-end;
+end
 toc
 fclose(fid);
 full_vertx=zeros(max(max(vertx_list))+1,3);
@@ -99,7 +99,7 @@ maxiter=2;
 for niter=1:maxiter,
   zmat_imag_smooth = filter2(smooth_filt,zmat_imag_smooth);
   zmat_real_smooth = filter2(smooth_filt,zmat_real_smooth);
-end;
+end
 zmat_smooth_freq = angle(zmat_real_smooth + (i*zmat_imag_smooth));
 zmat_smooth_freq_cplx = zmat_real_smooth + (i*zmat_imag_smooth);
 subplot(4,3,nfig+5);

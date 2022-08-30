@@ -13,7 +13,7 @@ afDesiredDirection = pt3fEndPoint-pt3fStartPoint;
 afDesiredDirection = afDesiredDirection / norm(afDesiredDirection);
 if acos(dot(afDesiredDirection, a2fChamber(1:3,3)))/pi*180 < 90
     afDesiredDirection = -afDesiredDirection;
-end;
+end
 afChamberZ = a2fChamber(1:3,3);
 afChamberX = a2fChamber(1:3,1);
 afChamberY = a2fChamber(1:3,2);

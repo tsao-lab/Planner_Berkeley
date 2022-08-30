@@ -8,7 +8,7 @@ if ~exist(  strctParams.m_strctConfig.m_strctDirectories.m_strSPM_Folder,'dir')
     return;
 else
     addpath(strctParams.m_strctConfig.m_strctDirectories.m_strSPM_Folder);
-end;
+end
 fnCreatePanels(); 
 bInitOK  = true;
 return;

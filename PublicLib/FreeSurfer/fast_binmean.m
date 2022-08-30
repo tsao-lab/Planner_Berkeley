@@ -20,7 +20,7 @@ if(nargin ~= 2 & nargin ~= 3)
   return;
 end
 
-if(nargin ~= 3) y = x; end;
+if(nargin ~= 3) y = x; end
 if(length(x) ~= length(y))
   fprintf('ERROR: x and y have different lengths\n');
   return;

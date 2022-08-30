@@ -43,7 +43,7 @@ for vert = 1:1:(numvert),
     s = fgetl(fid);
     vertx_coordinates = sscanf(s,'%f');
     vertx_list(vert,:) = [vertx_coordinates(1:2)' vertx];
-end;
+end
 toc
 tic;
 for face = 1:1:(numquad),
@@ -52,7 +52,7 @@ for face = 1:1:(numquad),
     s = fgetl(fid);
     face_vertx = sscanf(s,'%d');
     face_list(face,:) = [face_vertx' facenum];
-end;
+end
 toc
 fclose(fid);
 full_vertx=zeros(max(max(vertx_list))+1,3);

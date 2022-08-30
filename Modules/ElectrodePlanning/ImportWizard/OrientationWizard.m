@@ -137,7 +137,7 @@ if bMouseDown
     end
     if get(handles.hMoveVolume,'value')
         afDelta = -afDelta;
-    end;
+    end
  
     % Handle mouse move while clicked.
     strctMouseDownOp = getappdata(handles.figure1,'strctMouseDownOp');

@@ -6,7 +6,7 @@ abROIHit = zeros(1,iNumVertices);
 for iVertexIter=1:iNumVertices
     if mod(iVertexIter,10000)==0
         fprintf('%.1f%% ',iVertexIter/iNumVertices*1e2);
-    end;
+    end
     afLine = 0:0.1: afThicknessMM(iVertexIter);
     % Build the coordinates to sample.
     apt3fLineMM = [strctMesh.m_a2fVertices(1,iVertexIter) + a2fVerticesNormals(1,iVertexIter) * afLine;

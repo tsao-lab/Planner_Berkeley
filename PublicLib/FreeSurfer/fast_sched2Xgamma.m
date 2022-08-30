@@ -67,7 +67,7 @@ end
 
 % Compute the X for an FIR %
 Xfir = fast_sched2Xfir(tPres,ntrs,TR,Tres,0,TimeWindow,W);
-if(isempty(Xfir)) return; end;
+if(isempty(Xfir)) return; end
 
 % Multiply the assumed shape with the FIR %
 X = Xfir*a;

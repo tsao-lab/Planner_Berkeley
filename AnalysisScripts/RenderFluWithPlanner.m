@@ -210,7 +210,7 @@ hold on;
 % for k=1:size(afYRangeSmall,2)
 %     plot(afXRangeSmall-22,a2fHistSmall(k,:),'color',a2fColors(k,:),'linewidth',2);
 %     acY{k}=afYRangeSmall(k);
-% end;
+% end
 % set(gca,'xlim',[0 10]);
 % legend(acY);
 

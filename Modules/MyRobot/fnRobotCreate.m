@@ -2,10 +2,10 @@ function strctRobot = fnRobotCreate(a2fDH, a2fBase, a2fTool,strName,astrctJointD
 strctRobot.m_a2fDH = a2fDH;
 if ~exist('a2fBase','var')
     a2fBase = eye(4);
-end;
+end
 if ~exist('a2fTool','var')
     a2fTool = eye(4);
-end;
+end
 
 strctRobot.m_a2fBase = a2fBase;
 strctRobot.m_a2fTool = a2fTool;

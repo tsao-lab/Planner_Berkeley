@@ -2,11 +2,11 @@ function fnUpdateTargetContours()
 global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0 || ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTargets')
     return;
-end;
+end
 if isfield(g_strctModule.m_strctPanel,'m_ahTargets')
     delete(g_strctModule.m_strctPanel.m_ahTargets);
     g_strctModule.m_strctPanel.m_ahTargets = [];
-end;
+end
 iNumTargets = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets);
 ahHandles = [];
 ahAxes = [g_strctModule.m_strctPanel.m_strctXY.m_hAxes,...
@@ -33,10 +33,10 @@ for iTargetIter=1:iNumTargets
             a2fLinesPix = fnMeshCrossSectionIntersection(astrctMesh(iMeshIter), astrctCrossSection(iAxesIter) );
             if ~isempty(a2fLinesPix)
                 ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, astrctMesh(iMeshIter).m_afColor); %#ok
-            end;
-        end;
+            end
+        end
         
-    end;
+    end
     pt3fTarget3D = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM) *a2fCRS_To_XYZ*[strctTarget.m_pt3fPositionVoxel;1];
     
     % Draw target in 3D
@@ -44,12 +44,12 @@ for iTargetIter=1:iNumTargets
         iSize = 21;
     else
         iSize = 11;
-    end;
+    end
     
     hTargetin3D = plot3(pt3fTarget3D(1),pt3fTarget3D(2),pt3fTarget3D(3),'b.','MarkerSize',iSize,'parent',...
         g_strctModule.m_strctPanel.m_strct3D.m_hAxes);
     ahHandles = [ahHandles,hTargetin3D]; %#ok
-end;
+end
 
 g_strctModule.m_strctPanel.m_ahTargets = ahHandles;
 return;

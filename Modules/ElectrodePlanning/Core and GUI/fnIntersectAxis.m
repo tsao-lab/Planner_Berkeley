@@ -21,15 +21,15 @@ if ~isempty(strctMouseOp.m_hAxes)
                     %bCloseToCenter = fDistFromCenterXZ < fCenterDist;
                     afPenDir = afPenDirXZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ;
-                end;
+                end
             else
                 if fDistYZ < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctYZ.m_hAxes;
                     %bCloseToCenter = fDistFromCenterYZ < fCenterDist;
                     afPenDir = afPenDirYZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ;
-                end;
-            end;
+                end
+            end
          case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
             [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ);  %#ok
             [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY); %#ok
@@ -39,15 +39,15 @@ if ~isempty(strctMouseOp.m_hAxes)
                     %bCloseToCenter = fDistFromCenterXZ < fCenterDist;
                     afPenDir = afPenDirXZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ;
-                end;
+                end
             else
                 if fDistXY < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctXY.m_hAxes;
                     %bCloseToCenter = fDistFromCenterXY < fCenterDist;
                     afPenDir = afPenDirXY;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY;
-                end;
-            end;
+                end
+            end
         case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
             [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ); %#ok
             [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY); %#ok
@@ -57,17 +57,17 @@ if ~isempty(strctMouseOp.m_hAxes)
                     %bCloseToCenter = fDistFromCenterYZ < fCenterDist;
                     afPenDir = -afPenDirYZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ;
-                end;
+                end
             else
                 if fDistXY < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctXY.m_hAxes;
                    % bCloseToCenter = fDistFromCenterXY < fCenterDist;
                     afPenDir = -afPenDirXY;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY;
-                end;
+                end
             end;            
-    end;
-end;
+    end
+end
 
 if ~isempty(hAxes)
     if bCloseToCenter
@@ -78,7 +78,7 @@ if ~isempty(hAxes)
         strPrev = get(g_strctWindows.m_hFigure,'Pointer');
         g_strctModule.m_strPrevMouseIcon = strPrev;
         set(g_strctWindows.m_hFigure,'Pointer','topl');
-    end;
+    end
 else
     if isfield(g_strctModule,'m_strPrevMouseIcon') && ~isempty(g_strctModule.m_strPrevMouseIcon)
         set(g_strctWindows.m_hFigure,'Pointer',g_strctModule.m_strPrevMouseIcon);
@@ -87,7 +87,7 @@ else
         set(g_strctWindows.m_hFigure,'Pointer','arrow');
         g_strctModule.m_strPrevMouseIcon = 'arrow';
     end
-end;
+end
 %topl - diagonal
 
 %       rosshair | {arrow} | watch | topl | 

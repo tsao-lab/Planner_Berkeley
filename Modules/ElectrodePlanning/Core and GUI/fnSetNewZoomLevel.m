@@ -13,8 +13,8 @@ if ~isempty(hAxes)
         case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
             g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM = max(1,g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM + fDiff);
             g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM = max(1,g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM + fDiff);
-    end;
-end;
+    end
+end
 
 fnInvalidate();
 return;

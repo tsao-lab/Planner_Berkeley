@@ -87,7 +87,7 @@ function fnPrintTab(hFileHandle,Depth)
 iTabLength = 10;
 for k=1:Depth*iTabLength
     fprintf(hFileHandle,' ');
-end;
+end
 function bHasMoreRecursion = fnOnlyAttributes(Tmp)
 bHasMoreRecursion = false;
 if iscell(Tmp)

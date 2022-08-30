@@ -44,7 +44,7 @@ if ((m==1) & (n==3)) | ((m==3) & (n==1)) %% it is a rotation vector
 	       -1 0 0;
           0 0 0];
        
-       %end;
+       %end
 	 
    else
       if n==length(in)  in=in'; end; 	%% make it a column vec. if necess.
@@ -96,7 +96,7 @@ if ((m==1) & (n==3)) | ((m==3) & (n==1)) %% it is a rotation vector
 	 dRdin = dRdm1 * dm1dm2 * dm2dm3 * dm3din;
 	 
 	 
-      end;
+      end
       out = R;
       dout = dRdin;
       
@@ -166,13 +166,13 @@ if ((m==1) & (n==3)) | ((m==3) & (n==1)) %% it is a rotation vector
 	    if nargout > 1,
 	       fprintf(1,'WARNING!!!! Jacobian domdR undefined!!!\n');
 		 	dout = NaN*ones(3,9);
-	    end;
+	    end
 	 end; 
-      end;
+      end
       
    else
       error('Neither a rotation matrix nor a rotation vector were provided');
-   end;
+   end
 
 return;
 

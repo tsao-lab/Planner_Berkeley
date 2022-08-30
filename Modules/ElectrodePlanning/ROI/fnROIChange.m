@@ -2,11 +2,11 @@ function fnROIChange(strctMouseOp,bAdd, b2D)
 global g_strctModule
 if isempty(strctMouseOp.m_hAxes)
     return;
-end;
+end
 strctCrossSection =fnAxesToCrossSection(strctMouseOp.m_hAxes);
 if  isempty(strctCrossSection)
     return;
-end;
+end
     
 if b2D
      fnROIChange2D(strctCrossSection,strctMouseOp,bAdd)

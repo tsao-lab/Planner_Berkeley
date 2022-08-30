@@ -48,7 +48,7 @@ if iNumArg == 2
     assert( all(size(a3bMaskVolume) == size(a3MainVolume)),'Mask volume must have same size as main volume');  
 else
     a3bMaskVolume = [];
-end;
+end
 
 try
     A=fndllFastInterp3(rand(10,10,10),5,5,5);
@@ -87,16 +87,16 @@ function strMouseClick = fnGetClickType(hFigure)
 strMouseType = get(hFigure,'selectiontype');
 if (strcmp( strMouseType,'alt'))
     strMouseClick = 'Right';
-end;
+end
 if (strcmp( strMouseType,'normal'))
     strMouseClick = 'Left';
-end;
+end
 if (strcmp( strMouseType,'extend'))
     strMouseClick = 'Both';
-end;
+end
 if (strcmp( strMouseType,'open'))
     strMouseClick = 'DoubleClick';
-end;
+end
 return;
 
 
@@ -193,7 +193,7 @@ elseif isa(a3Volume,'uint16') || isa(a3Volume,'uint32')
     strColorScheme = 'Label3D';
 else % default
     strColorScheme = 'Grey';
-end;
+end
 setappdata(handles.figure1,'strColorScheme',strColorScheme);
 return;
 
@@ -204,7 +204,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 function fnPrintMouseOp(strctMouseOp)
@@ -220,7 +220,7 @@ if (fnInsideImage(handles,handles.axes1))
 else
     hAxes = [];
     strActiveWindow = [];
-end;
+end
 
 return;
 
@@ -230,7 +230,7 @@ if ~isempty(strctMouseOp.m_hAxes) && strctMouseOp.m_hAxes == handles.axes1 && ..
 
     fnSetNewCrossHair(handles, strctMouseOp);
     fnInvalidate(handles);
-end;
+end
 return;
 
 function fnMouseDown(obj,eventdata,handles)
@@ -265,8 +265,8 @@ if  ~isempty(strctMouseOp.m_hAxes)
         fnHandleMouseMoveWhileDown(strctPrevMouseOp, strctMouseOp, handles);
     else
         fnUpdateStatusLine(handles);
-    end;
-end;
+    end
+end
 
 return;
 
@@ -288,7 +288,7 @@ if ~isempty(strSavedMouseMode)
     fprintf('Setting Mouse mode back to %s\n',strSavedMouseMode);
     setappdata(handles.figure1,'strMouseMoveMode',strSavedMouseMode);
     setappdata(handles.figure1,'strSavedMouseMode',[]);
-end;
+end
 set(handles.figure1, 'Pointer', 'arrow');
 
 return;
@@ -313,7 +313,7 @@ function a2I = fnGetVolSlice(iRotationAxis, a3Vol, iSlice)
 if isempty(a3Vol)
     a2I = [];
     return;
-end;
+end
 
 switch (iRotationAxis)
     case 3 
@@ -322,7 +322,7 @@ switch (iRotationAxis)
         a2I = squeeze(a3Vol(:,iSlice,:))';
     case 1
         a2I = squeeze(a3Vol(iSlice,:,:))';
-end;
+end
 return;
 
 
@@ -374,7 +374,7 @@ switch strColorScheme
         if ~isempty(a2bMask) && bShowHighlights
             a3fCdata(:,:,2)=(1 - 0.4 * single(a2bMask)) .* a2fSliceTrans;
             a3fCdata(:,:,3)=(1 - 0.4 * single(a2bMask)) .* a2fSliceTrans;
-        end;
+        end
         
     case 'Jet'
         colormapjet = colormap('jet');
@@ -425,7 +425,7 @@ switch iRotationAxis
     case 3
         set(hCrossHairVert,'xdata',[pt3fCrosshair(1) pt3fCrosshair(1)]); 
         set(hCrossHairHoriz,'ydata',[pt3fCrosshair(2) pt3fCrosshair(2)]); 
-end;
+end
 
 if bShowHighlights
     set(hCrossHairHoriz,'visible','on');
@@ -433,11 +433,11 @@ if bShowHighlights
 else
     set(hCrossHairHoriz,'visible','off');
     set(hCrossHairVert,'visible','off');    
-end;
+end
 
 if (ishandle(hImage))
     set(hImage,'CData',min(1,max(0,a3fCdata)));
-end;
+end
 
 strctHistogramStretch = getappdata(handles.figure1,'strctHistogramStretch');
 
@@ -468,7 +468,7 @@ if abs(afDelta(2)) < 200
     afYlim = get(handles.axes1,'ylim');
     set(handles.axes1,'xlim',[afXlim(1)+afDelta(2), afXlim(2)-afDelta(2)]);
     set(handles.axes1,'ylim',[afYlim(1)+afDelta(2), afYlim(2)-afDelta(2)]);
-end;
+end
 return;
 
 function fnSetNewPanLevel(handles, afDelta)
@@ -494,7 +494,7 @@ switch iRotationAxis
     case 1
          pt3fCrosshair(3) = strctMouseOp.m_pt2fPos(1);         
          pt3fCrosshair(2) = strctMouseOp.m_pt2fPos(2);
-end;
+end
 setappdata(handles.figure1,'pt3fCrosshair',pt3fCrosshair);
 fprintf('%.2f %.2f %.2f\n',pt3fCrosshair(1),pt3fCrosshair(2),pt3fCrosshair(3));
 return;
@@ -529,7 +529,7 @@ strctMouseDown = getappdata(handles.figure1,'strctMouseDown');
          fnSetNewPanLevel(handles, afDiff);
      case 'Crosshair'
          fnSetNewCrossHair(handles, strctMouseOp);
- end;
+ end
 fnInvalidate(handles);
 return;
 
@@ -550,7 +550,7 @@ switch iRotationAxis
         pt3iPos = [pt3fCrosshair(1), pt2fMousePos(1), pt2fMousePos(2)];
     case 1
         pt3iPos = [pt2fMousePos(1), pt3fCrosshair(2), pt2fMousePos(2)];
-end;
+end
 a3MainVolume = getappdata(handles.figure1,'a3MainVolume');
 sz = size(a3MainVolume);
 if length(sz) < 3
@@ -561,7 +561,7 @@ if fnInsideImage(handles,handles.axes1) && all(pt3iPos >= 1) && all(pt3iPos([2,1
         fValue = fndllFastInterp3(a3MainVolume, pt3iPos(1),pt3iPos(2),pt3iPos(3));
     else
         fValue = a3MainVolume(round(pt3iPos(2)),round(pt3iPos(1)), round(pt3iPos(3)));
-    end;
+    end
 else
     fValue = NaN;
 end

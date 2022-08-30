@@ -5,7 +5,7 @@ global g_strctModule %#ok
 [strFile,strPath]=uiputfile('PlannerSession.mat');
 if strFile(1) == 0
     return;
-end;
+end
 if exist([strPath,strFile],'file') && fnFileSize([strPath,strFile]) > 0
     % Generate a backup (only if the current file is not empty...)
     fprintf('Generating a backup file before saving...\n');

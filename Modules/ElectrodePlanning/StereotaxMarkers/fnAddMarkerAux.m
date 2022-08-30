@@ -5,7 +5,7 @@ a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2
 strctCrossSection=fnAxesHandleToStrctCrossSection(strctMouseOp.m_hAxes);
 if isempty(strctCrossSection)
     return;
-end;
+end
 
 pt2fPosMM = fnCrossSection_Image_To_MM(strctCrossSection, strctMouseOp.m_pt2fPos);
 pt3fPosMMOnPlane = [pt2fPosMM,0,1]';

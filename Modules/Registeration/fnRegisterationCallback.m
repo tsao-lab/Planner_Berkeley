@@ -121,7 +121,7 @@ global g_strctModule
 
 if ~isfield(g_strctModule,'m_bToggleFlip')
     g_strctModule.m_bToggleFlip = false;
-end;
+end
 g_strctModule.m_bToggleFlip = ~g_strctModule.m_bToggleFlip;
 if g_strctModule.m_bToggleFlip
     % Just turned on. Start timer
@@ -138,7 +138,7 @@ function fnFlipAndInvalidate(a,b)
 global g_strctModule
 if ~isfield(g_strctModule,'m_bDrawMovInStat')
     g_strctModule.m_bDrawMovInStat = false;
-end;
+end
 g_strctModule.m_bDrawMovInStat = ~g_strctModule.m_bDrawMovInStat;
 fnInvalidate(1);
 drawnow
@@ -176,7 +176,7 @@ iNumEntries = size(g_strctModule.m_a2fMarkersStat,1);
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if iNumEntries == 0
     return;
-end;
+end
 
 g_strctModule.m_a2fMarkersStat(iSelectedMarker,:) = [];
 g_strctModule.m_a2fMarkersMov(iSelectedMarker,:) = [];
@@ -211,7 +211,7 @@ iNumEntries = size(g_strctModule.m_a2fMarkersStat,1);
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if iNumEntries == 0
     return;
-end;
+end
 
 a2fReg = fnGetCurrentReg();
 
@@ -253,7 +253,7 @@ iNumEntries = size(g_strctModule.m_a2fMarkersStat,1);
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if iNumEntries == 0
     return;
-end;
+end
 pt3fStatIntersectionXYZ_MM = ThreePlaneIntersection(g_strctModule.m_astrctStatCrossSection);
 pt3fMovIntersectionXYZ_MM = ThreePlaneIntersection(g_strctModule.m_astrctMovCrossSection);
 % Transform to volume coordinates
@@ -272,7 +272,7 @@ function fnAddMarker()
 global g_strctModule
 if isempty(g_strctModule.m_strctStationaryVol) || isempty(g_strctModule.m_strctMovableVol) 
     return;
-end;
+end
 pt3fStatIntersectionXYZ_MM = ThreePlaneIntersection(g_strctModule.m_astrctStatCrossSection);
 pt3fMovIntersectionXYZ_MM = ThreePlaneIntersection(g_strctModule.m_astrctMovCrossSection);
 % Transform to volume coordinates
@@ -297,7 +297,7 @@ iNumMarkers = size(g_strctModule.m_a2fMarkersStat,1);
 acMarkerName = cell(1,iNumMarkers);
 for k=1:iNumMarkers
     acMarkerName{k} = sprintf('Marker %d',k);
-end;
+end
 set(g_strctModule.m_strctPanel.m_hMarkersList,'string',char(acMarkerName),'value',iNumMarkers);
 return;
 
@@ -310,13 +310,13 @@ function fnSaveReg()
 global g_strctModule
 if isempty(g_strctModule.m_strctMovableVol) || isempty(g_strctModule.m_strctStationaryVol)
     return;
-end;
+end
 [strPath,strMovName] = fileparts(g_strctModule.m_strctMovableVol.m_strFileName);
 [strPath,strStatName] = fileparts(g_strctModule.m_strctStationaryVol.m_strFileName);
 [strFile,strPath] = uiputfile(['Reg_',strMovName,'_To_',strStatName,'.reg']);
 if strFile(1) == 0
     return;
-end;
+end
 a2fReg = fnGetCurrentReg();
 fnWriteRegisteration([strPath, strFile],a2fReg,'Subject-Unknown',...
     'round',g_strctModule.m_strctMovableVol.m_afVoxelSpacing);
@@ -327,7 +327,7 @@ global g_strctModule
 [strFile,strPath] = uigetfile('*.reg');
 if strFile(1) == 0
     return;
-end;
+end
 a2fReg = fnReadRegisteration([strPath, strFile]);
 fnModifyReg(a2fReg);
 fnInvalidate(1);
@@ -344,7 +344,7 @@ return;
 % hAxes  = g_strctModule.m_strctMouseOpMenu.m_hAxes;
 % if isempty(hAxes)
 %     return;
-% end;
+% end
 % 
 % switch hAxes 
 %     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
@@ -361,7 +361,7 @@ return;
 %          pt2fPosMM = fnCrossSection_Image_To_MM(g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctMouseOpMenu.m_pt2fPos);
 %         pt3fPosMMOnPlane = [pt2fPosMM,0,1]';
 %         pt3fPosInVol = g_strctModule.m_strctCrossSectionXZ.m_a2fM*pt3fPosMMOnPlane;
-% end;
+% end
 %  g_strctModule.m_strctCrossSectionXY.m_fHalfWidthMM = 15;
 %  g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = 15;
 %  g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM = 15;
@@ -384,7 +384,7 @@ global g_strctModule
 [strFile,strPath]=uiputfile('RegisterationSession.mat');
 if strFile(1) == 0
     return;
-end;
+end
 save([strPath,strFile],'g_strctModule');
 msgbox('Session Saved');
 return;
@@ -394,7 +394,7 @@ global g_strctModule
 [strFile,strPath]=uigetfile('*.mat');
 if strFile(1) == 0
     return;
-end;
+end
 strctSavedSession= load([strPath,strFile]);
 fnUpdateMarkersList();
 fnInvalidate(true);
@@ -438,7 +438,7 @@ if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
     set(g_strctModule.m_strctPanel.m_a2hStatCrossHairLines(:),'visible','on')
 else
     set(g_strctModule.m_strctPanel.m_a2hStatCrossHairLines(:),'visible','off')
-end;
+end
 
 fnInvalidate();
 return;
@@ -547,7 +547,7 @@ global g_strctModule
 [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.nii']);
 if strFile(1) == 0
     return;
-end;
+end
 strInputfile = [strPath,strFile];
 g_strctModule.m_strctStationaryVol = fnCreateAnatVolStructure(strInputfile);
 set(g_strctModule.m_strctPanel.m_hLoadMovableVolBut,'enable','on');
@@ -591,11 +591,11 @@ global g_strctModule
 % if isfield(g_strctModule,'m_strctStationaryVol') && isempty(g_strctModule.m_strctStationaryVol)
 %     msgbox('Please load the stationary volume first.');
 %     return;
-% end;
+% end
 [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.nii']);
 if strFile(1) == 0
     return;
-end;
+end
 strInputfile = [strPath,strFile];
 g_strctModule.m_strctMovableVol = fnCreateAnatVolStructure(strInputfile);
 g_strctModule.m_bVolumeLoaded = true;
@@ -656,7 +656,7 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxesSelected) && isfield(g_str
     end;   
     fnInvalidate();
     return;
-end;
+end
 
 ahAxes = cat(1,g_strctModule.m_strctPanel.m_astrctCrossSection.m_hAxes);
 iAxesIndex = find(ahAxes == strctMouseOp.m_hAxes);
@@ -697,7 +697,7 @@ switch g_strctModule.m_strMouseMode
                 % Do not move stationary....
             end
         end
-end;
+end
 return;
 
 
@@ -736,7 +736,7 @@ a2fReg(1:3,4) = pt3fNewPos;
 %                 -afDelta(1) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,1) + ...
 %                 -afDelta(2) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,2);
 %             g_strctModule.m_strctMovableVol.m_a2fReg(1:3,4) = pt3fNewPos;
-%     end;
+%     end
 
 
 
@@ -777,7 +777,7 @@ if ~isempty(hAxes)
                
         end
     end
-end;
+end
 
 fnInvalidate();
 return;
@@ -806,10 +806,10 @@ switch hAxes
         -afDelta(1) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,1) + ...
         -afDelta(2) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,2);
         g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,4) = pt3fNewPos;
-end;
+end
 
 fnInvalidate();
-end;
+end
 return;
 
 function fnSetNewContrastLevelStationary(afDelta)
@@ -850,7 +850,7 @@ global g_strctModule
 % if ~isempty(strctMouseOp.m_pt2fPos)
 %     set(g_strctModule.m_strctPanel.m_hStatusLine,'string',sprintf('Mouse at [%.0f %.0f] in %.5f',...
 %         strctMouseOp.m_pt2fPos(1),strctMouseOp.m_pt2fPos(2), strctMouseOp.m_hAxes));
-% end;
+% end
 
 return;
 
@@ -909,10 +909,10 @@ if ~isempty(hAxes)
        set(g_strctWindows.m_hFigure,'Pointer','crosshair');
     else
         set(g_strctWindows.m_hFigure,'Pointer','topl');
-    end;
+    end
 else
     set(g_strctWindows.m_hFigure,'Pointer','arrow');
-end;
+end
 %topl - diagonal
 
 %       rosshair | {arrow} | watch | topl | 
@@ -936,21 +936,21 @@ function fnMouseMove(strctMouseOp)
 global g_strctModule g_strctWindows
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if isempty(g_strctModule.m_strctPrevMouseOp)
     g_strctModule.m_strctPrevMouseOp = strctMouseOp;
-end;
+end
  
 % if strcmp(g_strctModule.m_strMouseMode,'TranslateMovable')
 %     set(g_strctWindows.m_hFigure,'Pointer','fleur');
 % else
 %     set(g_strctWindows.m_hFigure,'Pointer','arrow');
-% end;
+% end
 
  if ~g_strctModule.m_bFirstInvalidate && g_strctModule.m_strctGUIOptions.m_bShow2DPlanes && ~g_strctModule.m_bMouseDown
      fnIntersectAxis(strctMouseOp);  % Change mouse cursor
- end;
+ end
 
 
 if  ~isempty(strctMouseOp.m_hAxes) 
@@ -958,8 +958,8 @@ if  ~isempty(strctMouseOp.m_hAxes)
         fnHandleMouseMoveWhileDown(g_strctModule.m_strctPrevMouseOp, strctMouseOp);
 %     else
 %         fnUpdateStatusLine(strctMouseOp);
-    end;
-end;
+    end
+end
 g_strctModule.m_strctPrevMouseOp = strctMouseOp;
 return;
 
@@ -991,7 +991,7 @@ else
    set(strctAxes.m_hPanel,'Position',strctAxes.m_aiPos,'visible','on');
     set(strctAxes.m_hAxes,'Position',g_strctModule.m_strctPanel.m_aiAxesSize);
     
- end;
+ end
 return;
 
 function fnZoomAxes(hAxes)
@@ -1007,7 +1007,7 @@ switch hAxes
     case g_strctModule.m_strctPanel.m_strctDF.m_hAxes
         fnZoomAxesAux('m_strctDF');
 end;   
-end;
+end
     
 return;
 
@@ -1015,7 +1015,7 @@ function fnMouseDown(strctMouseOp)
 global g_strctModule
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if strcmpi(strctMouseOp.m_strButton,'DoubleClick') && strcmpi(g_strctModule.m_strMouseMode,'Scroll');
     % Move all cross hairs to this position
@@ -1039,7 +1039,7 @@ if strcmpi(strctMouseOp.m_strButton,'DoubleClick') && strcmpi(g_strctModule.m_st
         fnInvalidate(1);
     end
     return;
-end;
+end
 
 if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
     [strctMouseOp.m_hAxesSelected,bCloseToCenter,afPenDir,strctMouseOp.m_iLineIndexSelected] = fnIntersectAxis(strctMouseOp);
@@ -1053,13 +1053,13 @@ if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
             fnTinyPlaneRotate(strctMouseOp.m_hAxesSelected,strctMouseOp.m_iLineIndexSelected,strctMouseOp);
         end
         
-    end;
+    end
     strctMouseOp.m_afAxesPen = afPenDir; % Penpendicular direction to selected axes
 else
     strctMouseOp.m_hAxesSelected = [];
     strctMouseOp.m_hAxesLineSelected = [];
     strctMouseOp.m_afAxesPen = [];
-end;
+end
 
 g_strctModule.m_strctLastMouseDown = strctMouseOp;
 g_strctModule.m_bMouseDown = true;
@@ -1079,19 +1079,19 @@ function fnMouseWheel(strctMouseOp)
 global g_strctModule
 if isempty(strctMouseOp.m_hAxes) || ~g_strctModule.m_bVolumeLoaded || isempty(g_strctModule.m_strctMovableVol)
     return;
-end;
+end
 % g_strctModule.m_iDisplayMode = g_strctModule.m_iDisplayMode + strctMouseOp.m_iScroll;
 % if g_strctModule.m_iDisplayMode > g_strctModule.m_iNumDisplayModes 
 %     g_strctModule.m_iDisplayMode = 1;
-% end;
+% end
 % if g_strctModule.m_iDisplayMode <= 0
 %     g_strctModule.m_iDisplayMode = g_strctModule.m_iNumDisplayModes;
-% end;
+% end
 
 fnInvalidate();
 % if strctMouseOp.m_hAxes  == g_strctModule.m_strctPanel.m_strctXY.m_hAxes
 %     strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
-% end;
+% end
 % 
 % fnShiftPlane(strctMouseOp.m_hAxes , 0.5*strctMouseOp.m_iScroll)
 
@@ -1149,7 +1149,7 @@ return;
 %     case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
 %         g_strctModule.m_strctCrossSectionXZ = ...
 %             fnRotateInPlaneCrossSectionAux(g_strctModule.m_strctCrossSectionXZ, -afDelta(1)/100*pi);
-% end;
+% end
 
 fnInvalidate();
 
@@ -1186,7 +1186,7 @@ return;
 %     case g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ % top left, green
 %         g_strctModule.m_strctCrossSectionXZ = fnRotateCrossSectionAux(...
 %             g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctCrossSectionXY, -fDiff/100/2*pi);
-% end;
+% end
 % fnInvalidate();
 % 
 % return;
@@ -1424,13 +1424,13 @@ global g_strctModule
 % persistent a2fPrevCrossSectionXY_Func a2fPrevCrossSectionYZ_Func a2fPrevCrossSectionXZ_Func
 if ~exist('bForceInvalidate','var')
     bForceInvalidate = false;
-end;
+end
 if isempty(g_strctModule.m_strctStationaryVol) || isempty(g_strctModule.m_strctMovableVol)
     return;
-end;
+end
 if g_strctModule.m_bFirstInvalidate
   fnFirstInvalidate();
-end;
+end
 
 % First thing first, resample cross sections and redraw on screen
 
@@ -1483,7 +1483,7 @@ if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
         
     end
 %       
-end;
+end
 return
 
 function Y=fnDup3(X)
@@ -1502,7 +1502,7 @@ if strcmp(strctTransform.m_strType,'Linear');
     a2fTranI(a2fI >=(strctTransform.m_fCenter+strctTransform.m_fWidth)) = 1;
     a2fTranI(a2fTranI < 0) = 0;
     a2fTranI(a2fTranI > 1) = 1;
-end;
+end
 return;
 
 function pt2iIntersectPix = fnIntersect2D(pt2fP1_1, pt2fP1_2, pt2fP2_1, pt2fP2_2)
@@ -1581,7 +1581,7 @@ return;
 %         g_strctModule.m_strctMovableVol.m_a2fReg = g_strctModule.m_strctMovableVol.m_a2fReg * a2fTrans;
 %         
 % 
-% end;
+% end
 % 
 % fnInvalidate();
 % 

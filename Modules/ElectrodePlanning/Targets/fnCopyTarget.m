@@ -15,8 +15,8 @@ for k=1:length(aiCurrTarget)
         g_strctModule.m_acAnatVol{iAnatVolTo}.m_astrctTargets = astrctTarget(1);
     else
         g_strctModule.m_acAnatVol{iAnatVolTo}.m_astrctTargets(end+1) = astrctTarget(k);
-    end;
-end;
+    end
+end
 fnUpdateTargetList();
 return;
 

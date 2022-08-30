@@ -4,7 +4,7 @@ global g_strctModule
 strctIsoCRS = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctBloodSurface;
 if isfield(g_strctModule.m_strctPanel,'m_hBloodSurface') && ~isempty(g_strctModule.m_strctPanel.m_hBloodSurface) && ishandle(g_strctModule.m_strctPanel.m_hBloodSurface)
     delete(g_strctModule.m_strctPanel.m_hBloodSurface);
-end;
+end
 
 if ~isempty(strctIsoCRS)
     iNumVertices = size(strctIsoCRS.vertices,1);

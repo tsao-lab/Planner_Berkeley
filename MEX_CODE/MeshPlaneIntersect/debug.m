@@ -23,5 +23,5 @@ for k=1:size(lines,2)
     plot3([lines(1,k) lines(4,k)],...
            [lines(2,k) lines(5,k)],...
            [lines(3,k) lines(6,k)],'b','LineWidth',2);
-end;
+end
   

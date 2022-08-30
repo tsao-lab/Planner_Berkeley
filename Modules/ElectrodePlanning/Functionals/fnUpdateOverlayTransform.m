@@ -31,7 +31,7 @@ if ~isempty(g_strctModule.m_strctLastMouseDown) && ~isempty(g_strctModule.m_strc
             fnInvalidateOverlayAxes();
             fnInvalidate();
          
-    end;
-end;
+    end
+end
 
 return;

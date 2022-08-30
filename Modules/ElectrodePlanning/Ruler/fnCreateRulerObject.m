@@ -5,7 +5,7 @@ global g_strctModule
 
 if isempty(strctCrossSection)
     return;
-end;
+end
 strctObject.m_strAxes = strName;
 
 strctObject.m_strctCrossSection = strctCrossSection;

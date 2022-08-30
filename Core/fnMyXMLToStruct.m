@@ -2,7 +2,7 @@ function strctConfig = fnMyXMLToStruct(strXMLFile,bWarning)
 global g_bWarning 
 if ~exist('bWarning','var')
     g_bWarning = true;
-end;
+end
 strctRAW = xml2struct(strXMLFile);
 strctConfig = fnRecursiveParse(strctRAW,[],'strctConfig');
 clear global g_bWarning 
@@ -15,7 +15,7 @@ iNumElements = length(strctRAW);
 for iElementIter=1:iNumElements
     if strcmpi(strctRAW(iElementIter).Name,'#comment')  || strcmpi(strctRAW(iElementIter).Name,'#text')
         continue;
-    end;
+    end
     
     iNumAttributes = length(strctRAW(iElementIter).Attributes);
     if iNumAttributes > 0

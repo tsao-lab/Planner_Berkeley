@@ -4,7 +4,7 @@ global g_strctModule
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if length(iSelectedMarker) > 1 || g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
     if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
         strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
@@ -81,7 +81,7 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
         acJointsNamesAndValues{k} = sprintf('%-10.3f %s',...
             strctMarker.m_astrctJointDescirptions(k).m_fValue,...
             strctMarker.m_astrctJointDescirptions(k).m_strName);
-    end;
+    end
     set(g_strctModule.m_strctPanel.m_hStereoJointsList,'String',acJointsNamesAndValues,'value',g_strctModule.m_iJointSelected);
     
     set(g_strctModule.m_strctPanel.m_hJointEdit,'String',...
@@ -92,6 +92,6 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
     fnInvalidateStereotactic();
     fnInvalidate();
     end
-end;
+end
 
 return;

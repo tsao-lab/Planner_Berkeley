@@ -71,7 +71,7 @@ switch strCommand
         else
             fnLoadSessionAux(strSessionName);
              varargout{1} = 1;
-        end;
+        end
     case 'GetFuncVol'
         SelectedFunctional = varargin{1};
         if isnumeric(SelectedFunctional)
@@ -133,7 +133,7 @@ switch strCommand
             strctOverlay.m_pt2fRightPos  = [varargin{5}(4) 1];
        else
             strctOverlay = g_strctModule.m_strctOverlay;
-       end;
+       end
        
        strctCrossSection.m_a2fM = a2fM;
        strctCrossSection.m_fHalfWidthMM = fHalfWidthMM;

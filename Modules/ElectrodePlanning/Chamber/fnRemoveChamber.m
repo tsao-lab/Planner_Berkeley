@@ -15,5 +15,5 @@ if strcmpi(strAnswer,'yes')
     fnUpdateGridList();
     fnUpdateGridAxes();
     fnInvalidate(1);
-end;
+end
 return;

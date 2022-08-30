@@ -4,7 +4,7 @@ global g_strctModule
 hAxes  = strctMouseOp.m_hAxes;
 if isempty(hAxes)
     return;
-end;
+end
 
 switch hAxes 
     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
@@ -30,7 +30,7 @@ switch hAxes
         g_strctModule.m_strctCrossSectionXY.m_a2fM(3,4) = pt3fPosInVol(3);
         g_strctModule.m_strctCrossSectionYZ.m_a2fM(1,4) = pt3fPosInVol(1);
 
-end;
+end
 
 fnInvalidate(1);
 return;

@@ -21,7 +21,7 @@ if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChamb
     g_strctModule.m_iCurrChamber = 1;
 else
     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(end+1) = strctChamber;
-end;
+end
 
 fnUpdateChamberList();
 fnUpdateGridList();

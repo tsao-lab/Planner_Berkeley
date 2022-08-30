@@ -15,16 +15,16 @@ else
         else
             strName = [strName,'|',num2str(k),': DISABLED(',g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_strName,')']; %#ok
         end
-    end;
+    end
     iValue = min(iNumMarkers,get(g_strctModule.m_strctPanel.m_hMarkersList,'value'));
     if isempty(iValue)
         iValue = iNumMarkers;
-    end;
+    end
     if iNumMarkers == 0
         iValue = 1;
     end;    
     set(g_strctModule.m_strctPanel.m_hMarkersList,'String',strName(2:end),'value',iValue,'min',1,'max',max(1,iNumMarkers));
-end;
+end
 
 % Update Markers axes
 %fnUpdateMarkerAxes();

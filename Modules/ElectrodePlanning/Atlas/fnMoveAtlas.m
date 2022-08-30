@@ -2,7 +2,7 @@ function fnMoveAtlas(hAxes, afDelta)
 global g_strctModule
 if isempty(hAxes)
     return;
-end;
+end
 fScale = 2*fnGetAxesScaleFactor(g_strctModule.m_strctLastMouseDown.m_hAxes);
 
 switch hAxes

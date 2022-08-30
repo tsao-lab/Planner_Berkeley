@@ -433,7 +433,7 @@ hModelAxes = getappdata(handles.figure1,'hModelAxes');
 fNewValue = get(strctControllers.m_ahLinkEdit(iLinkIndex),'string');
 if ischar(fNewValue)
     fNewValue= str2num(fNewValue);
-end;
+end
 
 if isempty(fNewValue) || ~isreal(fNewValue)
     % recover old value...

@@ -145,12 +145,12 @@ g_strctModule.m_hMouseHook.m_fnfnMouseWheel = get(g_strctWindows.m_hFigure,'Wind
 
 for k=1:length(g_strctModule.m_strctPanel.m_ahPanels)
     set(g_strctModule.m_strctPanel.m_ahPanels(k),'visible','off');
-end;
+end
 
-return;
+%% Init global crosssections (JL)
+fnInitCrossSections();
 
-
-
+end
 
 function fnCreatePanels()
 global g_strctModule g_strctWindows
@@ -224,7 +224,7 @@ strctPanel.m_strctXY.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 1 iAxesSi
 strctPanel.m_strctXY.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXY.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctXY.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXY.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXY.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'parent',strctPanel.m_strctXY.m_hAxes);
+strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXY.m_hAxes);
 set(strctPanel.m_strctXY.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXY.m_hAxes,'on');
 
@@ -243,7 +243,7 @@ strctPanel.m_strctYZ.m_aiPos = [1 strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-3
 strctPanel.m_strctYZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctYZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctYZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctYZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctYZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'parent',strctPanel.m_strctYZ.m_hAxes);
+strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctYZ.m_hAxes);
 set(strctPanel.m_strctYZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctYZ.m_hAxes,'on');
 
@@ -258,7 +258,7 @@ strctPanel.m_strctXZ.m_aiPos =[iAxesSize+iSeparationBetweenWindowsPix strctPanel
 strctPanel.m_strctXZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctXZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes),'parent',strctPanel.m_strctXZ.m_hAxes);
+strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXZ.m_hAxes);
 set(strctPanel.m_strctXZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXZ.m_hAxes,'on');
 strctPanel.m_strctXZ.m_ahTextHandles(1) = text(8,128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
@@ -348,7 +348,8 @@ strctPanel.m_hLoadFuncVolBut =  uicontrol('style','pushbutton','String','Load Ov
 
 strctPanel.m_hAnatMenu = uicontextmenu;
 %uimenu(strctPanel.m_hAnatMenu, 'Label', 'Correct Orientation','Callback', {@fnCallback,'CorrectOrientation'});
-strctPanel.m_hAnatOriCopySubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Copy orientation from');
+% JL: no more copy of orientation as orientation is always the same
+% strctPanel.m_hAnatOriCopySubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Copy orientation from');
 
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Stereotax Helper','Callback', {@fnCallback,'StereotaxHelper'});
 
@@ -357,10 +358,10 @@ uimenu(strctPanel.m_hAnatMenu, 'Label', 'Add Blood Vessels','Callback', {@fnCall
 
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameAnat'});
 %uimenu(strctPanel.m_hAnatMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformAnat',0});
-% uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
-% uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
-strctPanel.m_hAnatTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform');
-strctPanel.m_hAnatInvTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform');
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
+strctPanel.m_hAnatTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform To');
+strctPanel.m_hAnatInvTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform To');
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportAnatRegMatrix',0});
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportAnatVol'});
 uimenu(strctPanel.m_hAnatMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoAnat'});
@@ -695,10 +696,12 @@ uimenu(strctPanel.m_hMarkerMenu, 'Label', 'Add Marker (with direction)', 'Callba
 uimenu(strctPanel.m_hMarkerMenu, 'Label', 'Move Marker', 'Callback', {@fnCallback,'MoveMarker'});
 uimenu(strctPanel.m_hMarkerMenu, 'Label', 'Rotate Marker', 'Callback', {@fnCallback,'RotateMarker'});
 
+% strctPanel.m_hViewMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Reset View', 'Callback', {@fnCallback,'SetDefaultView'}, 'Separator','on');
+
 strctPanel.m_hViewMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Reset View', 'Separator','on');
 uimenu(strctPanel.m_hViewMenu, 'Label', 'Default View', 'Callback', {@fnCallback,'SetDefaultView'}, 'Separator','on');
 % uimenu(strctPanel.m_hViewMenu, 'Label', 'Stereotax View', 'Callback', {@fnCallback,'SetStereotaxView'}, 'Separator','on');
-uimenu(strctPanel.m_hViewMenu, 'Label', 'Atlas View', 'Callback', {@fnCallback,'SetAtlasView'}, 'Separator','on');
+% uimenu(strctPanel.m_hViewMenu, 'Label', 'Atlas View', 'Callback', {@fnCallback,'SetAtlasView'}, 'Separator','on');
 uimenu(strctPanel.m_hViewMenu, 'Label', 'Set this as default view', 'Callback', {@fnCallback,'SetNewDefaultView'}, 'Separator','on');
 
 
@@ -826,7 +829,7 @@ for k=1:iNumJoints
     acJointsNamesAndValues{k} = sprintf('%-10.3f %s',...
         g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_astrctArms(g_strctModule.m_iStereoArmSelected).m_strctRobot.m_astrctJointsDescription(k).m_fValue,...
         g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_astrctArms(g_strctModule.m_iStereoArmSelected).m_strctRobot.m_astrctJointsDescription(k).m_strName);
-end;
+end
 
 strctPanel.m_hStereoJointsList = uicontrol('style','listbox','String',char(acJointsNamesAndValues),...
     'Position',[5  strctPanel.m_aiRightPanelSize(4)-320 strctPanel.m_aiRightPanelSize(3)-15 140],'parent',...
@@ -1023,7 +1026,7 @@ g_strctModule.m_strctPanel = strctPanel;
 
 fnUpdateAtlasTable();
 
-return;
+end
 
 function pt2fMouseDownPosition = fnGetMouseCoordinate(hAxes)
 pt2fMouseDownPosition = get(hAxes,'CurrentPoint');
@@ -1031,14 +1034,14 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
-return;
+end
+end
 
 function pt2fMouseDownPosition = fnGetMouseCoordinateScreen()
 global g_strctWindows
 pt2fMouseDownPosition = get(g_strctWindows.m_hFigure,'CurrentPoint');
 %pt2fMouseDownPosition = pt2fMouseDownPosition(3:4)
-return;
+end
 
 function fnMouseDownEmulator(a,b)
 global g_strctModule g_strctWindows
@@ -1050,12 +1053,12 @@ g_strctModule.m_strctMouseOpMenu = strctMouseOp;
 % strctMouseOp.m_pt2fPosScr = fnGetMouseCoordinateScreen();
 % strctMouseOp.m_hObjectSelected = [];
 % feval(g_strctModule.m_hCallbackFunc,'MouseDown',strctMouseOp);
-return;
+end
 
 function fnCallback(a,b,strEvent,varargin)
 global g_strctModule
 feval(g_strctModule.m_hCallbackFunc,strEvent,varargin{:});
-return;
+end
 
 function strctPanel=  fnAddAtlasButtons(strctPanel, strWhat, fOffset, strCallback)
 acCtrlName = {'AP','ML','DV'};
@@ -1078,8 +1081,7 @@ strctPanel.m_ahMoveAtlaspos(k)= uicontrol('style','pushbutton','String','+',...
     strctPanel.m_ahRightPanels(3),'callback',...
     {@fnCallback,strCallback,acCtrlName{k},-1},'FontSize',15);
 end
-
-
+end
 
 function fnConditionCellSelectCallback(hTable,Tmp)
 global g_strctModule
@@ -1093,7 +1095,7 @@ if size(aiIndices,1) == 1 && aiIndices(2) == 3
         feval(g_strctModule.m_hCallbackFunc,'Invalidate');
      end
 end
-return;
+end
 
 function fnConditionCellEditCallback(hTable,Tmp)
 global g_strctModule
@@ -1105,5 +1107,5 @@ if size(aiIndices,1) == 1 && aiIndices(2) == 2
      fnUpdateAtlasTable;
     feval(g_strctModule.m_hCallbackFunc,'Invalidate');
 end
-return;
+end
 

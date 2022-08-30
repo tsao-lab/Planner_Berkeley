@@ -75,5 +75,5 @@ a3fHeat(:,:,3) = T3;
  if size(a2fI,1) == 1
      a3fHeat = squeeze(a3fHeat);
      a2fAlpha = squeeze(a2fAlpha);
- end;
+ end
 return;

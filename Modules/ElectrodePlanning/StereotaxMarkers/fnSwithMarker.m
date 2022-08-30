@@ -3,7 +3,7 @@ global g_strctModule
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
     errordlg('Please add markers first!');
     return;
-end;
+end
 
 aiCurrMarkers = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(1),'m_bEnabled')

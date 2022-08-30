@@ -4,7 +4,7 @@ global g_strctModule
 
 if isfield(g_strctModule,'m_ahChamberHandles')
     delete(g_strctModule.m_ahChamberHandles(ishandle(g_strctModule.m_ahChamberHandles)));
-end;
+end
 
 g_strctModule.m_ahChamberHandles = [];
 if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) && g_strctModule.m_iCurrChamber ~= 0

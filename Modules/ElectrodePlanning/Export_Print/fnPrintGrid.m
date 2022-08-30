@@ -3,7 +3,7 @@ function fnPrintGrid()
 global g_strctModule
 if g_strctModule.m_iCurrChamber == 0
     return;
-end;
+end
 hFig = figure; %#ok
 clf;
 hAxes = gca;

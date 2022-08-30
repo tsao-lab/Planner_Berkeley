@@ -89,7 +89,7 @@ strctGridModel.m_apt3fGridHolesNormals = [];
 strctGridModel.m_strctGridParams.m_abSelectedHoles = [];
    
     return;
-end;
+end
 
     
 % Now, Rotate the grid by theta

@@ -59,7 +59,7 @@ strctAnatVol = fnQuickAddVolume(strFileName);
 [strFolder,strFile]=fileparts(strctAnatVol.m_strFileName);
 if strFolder(end) ~= filesep
     strFolder(end+1) = filesep;
-end;
+end
 
 strctAnatVol.m_a2fAtlasReg(1:3,1:3)=2*strctAnatVol.m_a2fAtlasReg(1:3,1:3);
 
@@ -138,7 +138,7 @@ switch strWhat
         setappdata(handles.figure1,'strMouseMode','PanVolume');
     case 'SetRotatePivot'
         setappdata(handles.figure1,'strMouseMode','SetRotationPivot');
-end;
+end
 
 return;
 
@@ -152,7 +152,7 @@ fDiff =  eventdata.VerticalScrollCount * 0.5;
  hAxes = fnGetActiveAxes(handles, pt2fFigure);
  if isempty(hAxes)
      return;
- end;
+ end
 a2fTransMatrix = eye(4);
 switch hAxes
     case handles.hHorizAxes
@@ -260,7 +260,7 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 3;
 afDelta = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
@@ -288,7 +288,7 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 strctRotationPoints = getappdata(handles.figure1,'strctRotationPoints');
 fScale = 0.01;
@@ -296,7 +296,7 @@ afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 
 if max(abs(afDiff)) > 10
     return;
-end;
+end
 
 fRotAngleRad = afDiff(1);
 switch strctMouseDown.m_hAxes
@@ -340,14 +340,14 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 0.01;
 afDiff = -fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 
 if max(abs(afDiff)) > 10
     return;
-end;
+end
 
 fScale1 = 1+ afDiff(1);
 fScale2 =1+afDiff(2);
@@ -388,14 +388,14 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 1;
 afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 fDiff = -afDiff(2);
 if abs(fDiff) > 10
     return;
-end;
+end
 
     switch strctMouseDown.m_hAxes
         
@@ -409,7 +409,7 @@ end;
         case  handles.hSaggitalAxes
             strctAnatVol.m_strctCrossSectionSaggital.m_fHalfWidthMM =max(1,strctAnatVol.m_strctCrossSectionSaggital.m_fHalfWidthMM + fDiff);
             strctAnatVol.m_strctCrossSectionSaggital.m_fHalfHeightMM =max(1,strctAnatVol.m_strctCrossSectionSaggital.m_fHalfHeightMM + fDiff);
-    end;
+    end
 setappdata(handles.figure1,'strctAnatVol',strctAnatVol);
 
 fnInvalidate(handles);
@@ -427,13 +427,13 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 1;
 afDiff = -fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 if max(abs(afDiff)) > 30
     return;
-end;
+end
 
     switch strctMouseDown.m_hAxes
         
@@ -456,7 +456,7 @@ end;
         -afDiff(1) * strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,1) + ...
         -afDiff(2) * strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,2);
         strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,4) = pt3fNewPos;
-    end;
+    end
 setappdata(handles.figure1,'strctAnatVol',strctAnatVol);
 
 fnInvalidate(handles);
@@ -471,7 +471,7 @@ strctRotationPoints = getappdata(handles.figure1,'strctRotationPoints');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 
 switch strctMouseDown.m_hAxes
@@ -496,13 +496,13 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 0.3;
 afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 if max(abs(afDiff)) > 30
     return;
-end;
+end
 a2fTransMatrix = eye(4);
 switch strctMouseDown.m_hAxes
     case handles.hHorizAxes
@@ -533,7 +533,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 
@@ -552,8 +552,8 @@ bInside =  (MousePos(1) > aiAxesRect(1) && ...
     if bInside
         hAxes = ahAxes(k);
         return;
-    end;
-end;
+    end
+end
 
 return;
 
@@ -827,8 +827,8 @@ for iRegionIter=1:length(aiVisibleRegions)
             if ~isempty(a2fLinesPix)
                 ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, ...
                     strctAtlas.m_astrctMesh(iRegion).color); %#ok
-            end;
-        end;
+            end
+        end
     end
 end
 
@@ -912,7 +912,7 @@ strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 [strFolder,strFile]=fileparts(strctAnatVol.m_strFileName);
 if strFolder(end) ~= filesep
     strFolder(end+1) = filesep;
-end;
+end
 fnUpdateControlPointList(handles); % write to disk
 strNormCmd =['mri_normalize -f ',strFolder,'control.dat ',strctAnatVol.m_strFileName,' ',strFolder,'T1.mgz'];
 strMaskCmd = ['mri_mask ',strFolder,'T1.mgz ',strFolder,'brainmask.mgz ',strFolder,'brain.mgz'];
@@ -939,7 +939,7 @@ strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 a2fXYZ_To_CRS = inv(strctAnatVol.m_a2fM) * inv(strctAnatVol.m_a2fReg);  
 if isempty(strctMouseDown.m_hAxes)
     return;
-end;
+end
 switch strctMouseDown.m_hAxes
     case handles.hHorizAxes
         strctCrossSection= strctAnatVol.m_strctCrossSectionHoriz;
@@ -970,7 +970,7 @@ apt3fControlPoints=getappdata(handles.figure1,'apt3fControlPoints');
 aiSelected = get(handles.hControlPointList,'value');
 if aiSelected == 0
     return;
-end;
+end
 apt3fControlPoints(aiSelected,:) = [];
 setappdata(handles.figure1,'apt3fControlPoints',apt3fControlPoints);
 fnUpdateControlPointList(handles);
@@ -989,13 +989,13 @@ set(handles.hControlPointList,'string',acControlCoord,'min',1,'max',iNumPoints,'
 % Write this to disk as well!
 if ~exist('bWriteToDisk','var')
     bWriteToDisk = true;
-end;
+end
 if bWriteToDisk
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 [strFolder,strFile]=fileparts(strctAnatVol.m_strFileName);
 if strFolder(end) ~= filesep
     strFolder(end+1) = filesep;
-end;
+end
 hFileID=fopen([strFolder,'control.dat'],'w+');
 for k=1:iNumPoints
     fprintf(hFileID,'%d %d %d\n',apt3fControlPoints(k,1),apt3fControlPoints(k,2),apt3fControlPoints(k,3));

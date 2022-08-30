@@ -4,7 +4,7 @@ global g_strctModule
 iSelectedChamber = get(g_strctModule.m_strctPanel.m_hChambersList,'value');
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
     return;
-end;
+end
 
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 a2fChamberInMRI = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iSelectedChamber).m_a2fM_vox;
@@ -151,7 +151,7 @@ t = uitable('Data',a2cData,'RowName',acRowNames,...
 %  
 % if isempty(iSelectedConf)
 %     return;
-% end;
+% end
 
 % Update Virtual arm and controllers with proposed solution
 

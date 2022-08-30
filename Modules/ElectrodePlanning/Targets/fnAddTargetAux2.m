@@ -13,7 +13,7 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTar
 else
     iNumTargets = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets);    
     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iNumTargets+1) = strctTarget;
-end;
+end
 fnUpdateTargetList();
 return;
 

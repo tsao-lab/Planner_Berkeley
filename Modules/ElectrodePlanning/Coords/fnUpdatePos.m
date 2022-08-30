@@ -74,5 +74,5 @@ set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(7),'String', sprintf('D
          end
          
     end
-end;
+end
 return;

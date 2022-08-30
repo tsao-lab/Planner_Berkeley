@@ -3,7 +3,7 @@ global g_strctModule
 
 if isempty(g_strctModule.m_acAnatVol)
     return;
-end;
+end
 
 if ~isfield(g_strctModule,'m_astrctImageSeries')
     set(g_strctModule.m_strctPanel.m_hImageSeriesList,'String','');

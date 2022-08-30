@@ -7,6 +7,6 @@ if ~isempty(iNewVolSelected)
     
     g_strctModule.m_iCurrFuncVol = iNewVolSelected;
     fnInvalidate(true);
-end;
+end
 
 return;

@@ -5,7 +5,7 @@ global g_strctWindows g_strctApp g_strctModule g_acModules g_iCurrModule
 % if ishandle(1,'figure')
 %     close(1);
 %     drawnow
-% end;
+% end
 warning off
 %clear all
 addpath(genpath('.'))
@@ -42,7 +42,7 @@ iStartY = a2iMonitors(iSelectedMonitor,4);
 
 if ishandle(1)
     delete(1)
-end;
+end
 %strctOpenGL = opengl('Data');
 %if isfield(strctOpenGL,'Renderer') && strcmpi(strctOpenGL.Renderer,'ATI Radeon HD 5800 Series')
 %    fprintf('Detected ATI Radeon HD 5800 series card\n');
@@ -108,7 +108,7 @@ if ~exist(strConfigFile,'file')
     fprintf('ABORTING!\n');
     close(g_strctWindows.m_hFigure);
     return;
-end;
+end
 try
     strctConfig = fnMyXMLToStruct(strConfigFile);
 catch
@@ -141,7 +141,7 @@ for iModuleIter=1:iNumModules
             delete(hMenu);
             continue;
             %return;
-        end;
+        end
     end
     g_strctModule.m_bInitialized = true;
     g_strctModule.m_strctConfig = strctConfig.m_acModules.m_strctModule{iModuleIter};
@@ -201,7 +201,7 @@ function fnMouseMove(obj,eventdata)
 global g_strctModule g_strctWindows
 if isempty(g_strctModule) || ~g_strctModule.m_bInitialized
     return;
-end;
+end
 
 strctMouseOp.m_strButton = []; 
 strctMouseOp.m_strAction = 'Move';
@@ -265,10 +265,10 @@ if ~isempty(g_iCurrModule)
     if isfield(g_strctModule,'m_strctPanel')
         for k=1:length(g_strctModule.m_strctPanel.m_ahPanels)
             set(g_strctModule.m_strctPanel.m_ahPanels(k),'visible','off');
-        end;
+        end
     end
     g_acModules{g_iCurrModule} =  g_strctModule;
-end;
+end
 
 set(g_strctWindows.m_hFigure,'Name',['Planner - ',g_acModules{iNewModule}.m_strName]);
 g_iCurrModule = iNewModule;
@@ -276,7 +276,7 @@ g_strctModule = g_acModules{iNewModule};
 if isfield(g_strctModule,'m_strctPanel')
     for k=1:length(g_strctModule.m_strctPanel.m_ahPanels)
         set(g_strctModule.m_strctPanel.m_ahPanels(k),'visible','on');	
-    end;
+    end
 end
 
 feval(g_strctModule.m_hCallbackFunc,'Invalidate');
@@ -300,7 +300,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 

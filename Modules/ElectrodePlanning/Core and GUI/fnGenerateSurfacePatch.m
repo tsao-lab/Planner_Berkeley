@@ -4,7 +4,7 @@ global g_strctModule
 strctIsoCRS = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctSurface;
 if isfield(g_strctModule.m_strctPanel,'m_hMainVolSurface') && ~isempty(g_strctModule.m_strctPanel.m_hMainVolSurface) &&  ishandle(g_strctModule.m_strctPanel.m_hMainVolSurface)
     delete(g_strctModule.m_strctPanel.m_hMainVolSurface);
-end;
+end
 
 if ~isempty(strctIsoCRS)
     iNumVertices = size(strctIsoCRS.vertices,1);

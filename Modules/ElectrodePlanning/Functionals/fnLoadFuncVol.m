@@ -5,7 +5,7 @@ global g_strctModule
 [strFuncFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.bhdr;*.nii'],'Select Functional Volume');
 if strFuncFile(1) == 0
     return;
-end;
+end
 strInputVolfile = [strPath,strFuncFile];
 % 
 % [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.reg;*.dat'],'Select registeration');
@@ -20,7 +20,7 @@ strInputVolfile = [strPath,strFuncFile];
 % else
 %     strInputRegfile = [strPath,strFile];
 %     [a2fRegisteration, strSubjectName, strVolType,afVoxelSpacing] = fnReadRegisteration(strInputRegfile);    
-% end;
+% end
 
 strctVol = MRIread(strInputVolfile);
 
@@ -28,7 +28,7 @@ if size(strctVol.vol,4) > 1 %#ok
    strAnswer= questdlg('You cannot load a 4D volumes (time series) into planner (usually you overlay 3D statistical maps). Do you want to take just the first time frame instead?','Important Question','Yes','No (Cancel)','No (Cancel)');
    if ~strcmpi(strAnswer,'Yes')
        return;
-   end;
+   end
     strctVol.vol = strctVol.vol(:,:,:,1);
 end
 
@@ -42,7 +42,7 @@ strctFuncVol.m_a3fVol = strctVol.vol;
 % strctTransform = QuickOrientationWizard();
 % if isempty(strctTransform)
 %     return;
-% end;
+% end
 
 %a2fM = fnFreesurferToPlanner(strctVol);
 a2fM=strctVol.tkrvox2ras;
@@ -62,7 +62,7 @@ fnUpdateFunctionalsList();
 
 if ~g_strctModule.m_bFuncVolLoaded 
     g_strctModule.m_bFuncVolLoaded  = true;
-end;
+end
 fnInvalidate(true);
 return;
 

@@ -1,7 +1,7 @@
 function acFiles = fnGetAllFiles(acPaths, strFilter)
 if ~iscell(acPaths)
     acPaths = {acPaths};
-end;
+end
 acFiles = cell(0);
 for k=1:length(acPaths)
      

@@ -22,6 +22,6 @@ switch iIndex
         P = [strctPlaneA.m_a2fM(1:2,3)';
              strctPlaneB.m_a2fM(1:2,3)'] \ [fPlaneAcoeff;fPlaneBcoeff];
         pt3iPointOnLine = [P(1), P(2),0];
-end;
+end
 afLineDir = afLineDir' ./ norm(afLineDir);
 return;

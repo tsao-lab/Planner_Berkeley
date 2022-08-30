@@ -13,7 +13,7 @@ strctMesh.m_fOpacity = 0.6;
 for k=1:iNumVertices-1
     strctMesh.m_a2iFaces(:,2*(k-1)+1) = [k, k+iNumVertices,k+iNumVertices+1];
     strctMesh.m_a2iFaces(:,2*(k-1)+2) = [k+iNumVertices+1, k,k+1];
-end;
+end
 
 % A.vertices = strctMesh.m_a2fVertices'; A.faces = strctMesh.m_a2iFaces'; 
 % figure(10);clf;patch(A,'facecolor','r','edgecolor','b')

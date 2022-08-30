@@ -2,7 +2,7 @@ function fnMoveTarget(hAxes, afDelta)
 global g_strctModule
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets ) || isempty(hAxes)
     return;
-end;
+end
 iCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_strctCrossSectionXY = ...
     g_strctModule.m_strctCrossSectionXY;

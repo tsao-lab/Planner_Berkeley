@@ -31,7 +31,7 @@ strctMesh.m_afColor = afColor;
 for k=1:iQuat-1
     strctMesh.m_a2iFaces(:,2*(k-1)+1) = [k, k+iQuat,k+iQuat+1];
     strctMesh.m_a2iFaces(:,2*(k-1)+2) = [k+iQuat+1, k,k+1];
-end;
+end
 
 strctMesh.m_fOpacity = 0.4;
 

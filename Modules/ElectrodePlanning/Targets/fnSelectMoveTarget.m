@@ -5,7 +5,7 @@ aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
 if length(aiCurrTarget) > 1
     msgbox('This option is available only for one target');
     return;
-end;
+end
             
 fnChangeMouseMode('MoveTarget');
 return;

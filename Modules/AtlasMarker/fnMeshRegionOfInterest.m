@@ -19,7 +19,7 @@ aiRelevantSlicesInd = find(abRelevantSlices);
 if isempty(aiRelevantSlicesInd)
     strctMesh = [];
     return;
-end;
+end
 
 
 a3bVol = zeros(length(afDVrange)*fScaleDownFactor,length(afMLrange)*fScaleDownFactor, iNumAPslices,'uint8')>0;

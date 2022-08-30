@@ -28,7 +28,7 @@ while (1)
     
     if fNorm < fStopCondition
         break;
-    end;
+    end
     iIterationCounter = iIterationCounter + 1;
     afNorm(iIterationCounter) = fNorm;
     if iIterationCounter > iNumIterations % Did not converge!
@@ -42,10 +42,10 @@ for k=1:iNumJoints
     if strctRobot.m_a2fDH(k, 5) == 0 % i.e., rotatory
         while afConf(k) > pi
             afConf(k) = afConf(k)-pi;
-        end;
+        end
         while afConf(k) < -pi
             afConf(k) = afConf(k)+pi;
-        end;
+        end
     end
 end
 

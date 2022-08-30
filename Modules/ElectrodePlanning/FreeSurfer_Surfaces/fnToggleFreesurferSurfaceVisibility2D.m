@@ -2,7 +2,7 @@ function fnToggleFreesurferSurfaceVisibility2D()
  global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 
 aiSelectedSurfaces = get(g_strctModule.m_strctPanel.m_hSurfaceList,'value');
 for k=1:length(aiSelectedSurfaces)

@@ -19,5 +19,5 @@ switch hAxes
     otherwise
         strctCrossSection =[];
         strName=[];
-end;
+end
 return;

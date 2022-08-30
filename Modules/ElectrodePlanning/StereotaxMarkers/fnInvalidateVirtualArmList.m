@@ -9,7 +9,7 @@ iNumSavedArms = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m
 if iNumSavedArms == 0
     set(g_strctModule.m_strctPanel.m_hVirtualArmList,'string','','value',1);
     return;
-end;
+end
 acSavedNames = cell(1,iNumSavedArms);
 for iArmIter=1:iNumSavedArms
     acSavedNames{iArmIter}=g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_acSavedVirtualArms{iArmIter}.m_strName;

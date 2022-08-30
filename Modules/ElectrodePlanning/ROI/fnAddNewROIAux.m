@@ -12,7 +12,7 @@ end
 strctCrossSection =fnAxesToCrossSection(strctMouseOp.m_hAxes);
 if  isempty(strctCrossSection)
     return;
-end;
+end
     
 pt3fPosMM = fnCrossSection_Image_To_MM_3D(strctCrossSection, strctMouseOp.m_pt2fPos);
 
@@ -32,13 +32,13 @@ iSelectedComponent = mode(a3iLocal(a3iLocal>0));
 if iSelectedComponent == 0
     fprintf('Nothing found?!?!?\n');
     return;
-end;
+end
 a3bVolume = a3iL == iSelectedComponent;
 aiInd = find(a3bVolume(:));
 fprintf('Found %d voxels\n',length(aiInd));
 if length(aiInd) == 0
     return;
-end;
+end
  % Now, transform these back to i,j,k
  [aiI,aiJ,aiK]=ind2sub(size(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a3fVol),aiInd);
  % Back to MM and then back to voxels in anatomical space.

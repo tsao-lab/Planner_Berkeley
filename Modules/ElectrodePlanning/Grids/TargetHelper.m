@@ -129,14 +129,14 @@ if iNumParamToOpt == 0
     h=msgbox('Please select which parameter to optimize on');
     waitfor(h);
     return;
-end;
+end
 for k=1:iNumParamToOpt
     % Make sure it is continous
     if ~strcmpi(strctGrid.m_strctModel.m_strctGridParams.m_acParam{aiOptimize(k)}.m_strType,'Continuous')
      h=msgbox('Can not optimize on a parameter that is not continuous');
     waitfor(h);
     return;
-    end;
+    end
 end
 
 afInitialValues = zeros(1,iNumParamToOpt);
@@ -161,7 +161,7 @@ strctGridParams = strctGrid.m_strctModel.m_strctGridParams;
 % Apply the parameters...
 for iParamIter=1:iNumParamToOpt
     strctGridParams.m_acParam{  aiOptimize(iParamIter)}.m_Value = afOptParam(iParamIter);%a2fCombinations(iBestModel,iParamIter);
-end;
+end
 
 strctModel = feval(strctGrid.m_strctGeneral.m_strBuildModel,strctGridParams);
 [fError, afMinDistToTarget, aiBestHoleInThisModel]=fnGridErrorFunction(strctModel,apt3fTargetsPosMM, a2fM_WithMeshOffset);
@@ -223,7 +223,7 @@ handles = get(source,'UserData');
 iNewParameterIndex = eventdata.Indices(1,1);
 if eventdata.Indices(1,2) ~= 2
     return;
-end;
+end
 setappdata(handles.figure1,'iCurrentParameter',iNewParameterIndex);
 % Update scroll bar...
 %set(handles.    ,'iCurrentParameter',eventdata.Indices(1));

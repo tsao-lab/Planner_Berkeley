@@ -3,13 +3,13 @@ global g_strctModule
 
 if isempty(g_strctModule.m_acAnatVol)
     return;
-end;
+end
 
 
 strctImageSeries = ImageSeriesInfoGUI();
 if isempty(strctImageSeries)
     return;
-end;
+end
 
 if strcmpi(strctImageSeries.m_strOrientation,'coronal')
     strctImageSeries.m_a2fImagePlaneTo3D = g_strctModule.m_strctCrossSectionXZ.m_a2fM;

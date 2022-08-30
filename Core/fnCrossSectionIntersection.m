@@ -43,9 +43,9 @@ afPoint2MM = [x1,y1];
 % %             t = (afRangeMM(k,j) - pt3iPointOnLine(k)) / afLineDir(k);
 % %             apt3fIntersections(iIndex,:)  = pt3iPointOnLine + t * afLineDir;
 % %             abIntersecting(iIndex) = all(apt3fIntersections(iIndex,:) >= (afRangeMM(:,1)-fEps)' & apt3fIntersections(iIndex,:) <= (afRangeMM(:,2)+fEps)');
-% %         end;
-% %     end;
-% % end;
+% %         end
+% %     end
+% % end
 % % aiIndices = find(abIntersecting,2,'first');
 % % assert(length(aiIndices)>=2);
 % % pt3fP1 =apt3fIntersections(aiIndices(1),:);

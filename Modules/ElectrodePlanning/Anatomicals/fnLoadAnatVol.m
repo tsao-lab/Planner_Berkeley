@@ -8,8 +8,8 @@ if strFile(1) == 0
     return;
 end
 % Start the import process
-strFilename = fullfile(strPath,strFile);
-strctVol=fnQuickAddVolume(strFilename);
+strFileName = fullfile(strPath,strFile);
+strctVol=fnQuickAddVolume(strFileName);
 
 % Add the new volume to planner
 iNumVolumes = length(g_strctModule.m_acAnatVol);

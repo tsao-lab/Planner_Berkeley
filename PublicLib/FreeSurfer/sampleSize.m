@@ -38,19 +38,19 @@ function N = sampleSize(stdS, effectsize, alpha, targetPOWER, alternative);
 if nargin < 2,
     error('Insufficient Inputs');
     return;
-end;
+end
 
 if nargin < 3,
    alpha = 0.01;
-end;
+end
 
 if nargin < 4
     targetPOWER = 0.8;
-end;
+end
 
 if nargin < 5,
     alternative = 'two-sided';
-end;
+end
     
 if strcmp(alternative, 'one-sided'),
     disp('assuming one-sided t-test');
@@ -58,7 +58,7 @@ if strcmp(alternative, 'one-sided'),
 else,
     disp('assuming two-sided t-test');
     alpha = 0.5*alpha;
-end;
+end
     
 N1 = 1;
 N2 = 1000;
@@ -73,7 +73,7 @@ noncentrality = effectsize*sqrt(0.5*N2)/stdS;
 %    disp(sprintf('Requires more than %d subjects for each group.', N2));
 %    N = N2;
 %    return;
-%end;
+%end
 
 %if the following test is true, then the power level won't be achieved
 power_N2 = 1 - nctcdf(t_alpha, N2 + N2 -2, noncentrality);
@@ -81,7 +81,7 @@ if power_N2 < targetPOWER,
     disp(sprintf('Requires more than %d subjects for each group.', N2));
     N = N2;
     return; 
-end;
+end
 
 N = ceil((N1+N2)*0.5);
 
@@ -98,10 +98,10 @@ while N2 - N1 > 1,
         N2 = N;
     else
         N1 = N;
-    end;
+    end
 
     N = ceil((N1+N2)*0.5);
-end;
+end
 
 %requires N samples for each group
 disp(sprintf('The required sample size for each group is %d.',N));

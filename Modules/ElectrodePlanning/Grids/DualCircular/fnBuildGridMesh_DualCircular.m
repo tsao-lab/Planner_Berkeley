@@ -3,7 +3,7 @@ clear astrctMesh
 
 if ~exist('bHighlight','var')
     bHighlight = false;
-end;
+end
 
 iNumActiveHoles = sum(strctGridModel.m_strctGridParams.m_abSelectedHoles);
 aiActiveHoles = find(strctGridModel.m_strctGridParams.m_abSelectedHoles);

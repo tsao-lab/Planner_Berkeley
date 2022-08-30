@@ -136,7 +136,7 @@ function ud = redraw(ud)
      %axiimg = flipud(squeeze(ud.cor(:,:,ud.curss(3)))'); %'
 
      axes(ud.hsag);
-     if(~ud.zoom) zoom(1); end;
+     if(~ud.zoom) zoom(1); end
      set(gca,'Interruptible','Off');
      set(gca,'BusyAction','Cancel');
      %set(gca,'DrawMode','Fast');
@@ -149,7 +149,7 @@ function ud = redraw(ud)
      axis image; set(gca,'XTick',[]); set(gca,'YTick',[]);
 
      axes(ud.hcor);
-     if(~ud.zoom) zoom(1); end;
+     if(~ud.zoom) zoom(1); end
      set(gca,'Interruptible','Off');
      set(gca,'BusyAction','Cancel');
      set(gca,'DrawMode','Fast');
@@ -162,7 +162,7 @@ function ud = redraw(ud)
      axis image; set(gca,'XTick',[]); set(gca,'YTick',[]);
 
      axes(ud.haxial);
-     if(~ud.zoom) zoom(1); end;
+     if(~ud.zoom) zoom(1); end
      set(gca,'Interruptible','Off');
      set(gca,'BusyAction','Cancel');
      set(gca,'DrawMode','Fast');

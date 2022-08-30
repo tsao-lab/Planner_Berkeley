@@ -14,7 +14,7 @@ if ~exist(strMatFile,'file')
     for iChannel=1:meta.channels
         vol = imreadBF(strFileName, 1:meta.zsize, 1, iChannel);
         a4fData(:,:,iChannel,:) = vol;
-    end;
+    end
     fprintf('Done!\n');
     % Save a matlab file for faster access....
     fprintf('Dumping data to a matlab file for faster read access!\n');

@@ -230,7 +230,7 @@ switch (cbflag)
     r = round(y);
 
     [nrows ncols nplanes] = size(ud.DisplayImg);
-    if (r<1 | r > nrows | c < 1 | c > ncols) return; end;
+    if (r<1 | r > nrows | c < 1 | c > ncols) return; end
 
     if(~isempty(ud.ActImg))
       [rf cf] = sind2find(r,c,ud);

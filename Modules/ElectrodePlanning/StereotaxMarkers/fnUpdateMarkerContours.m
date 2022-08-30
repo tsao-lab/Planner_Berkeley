@@ -2,11 +2,11 @@ function fnUpdateMarkerContours()
 global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0 || ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
     return;
-end;
+end
 if isfield(g_strctModule.m_strctPanel,'m_ahMarkers')
     delete(g_strctModule.m_strctPanel.m_ahMarkers);
     g_strctModule.m_strctPanel.m_ahMarkers = [];
-end;
+end
 iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
 ahHandles = [];
 ahAxes = [g_strctModule.m_strctPanel.m_strctXY.m_hAxes,...
@@ -29,11 +29,11 @@ for iMarkerIter=1:iNumMarkers
             if ~isempty(a2fLinesPix)
                 ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, astrctMesh(iMeshIter).m_afColor); %#ok
                 ahHandles(end+1) = text(mean(a2fLinesPix(:,1))+5,mean(a2fLinesPix(:,2))-5, strctMarker.m_strName,'parent',ahAxes(iAxesIter),'color','r');
-            end;
-        end;
+            end
+        end
         
-    end;
-end;
+    end
+end
 
 
 
@@ -55,7 +55,7 @@ for k=1:iNumMarkers
         pt3fMarkerPosMM(2),...
         pt3fMarkerPosMM(3),...
         sprintf('#%d',k),'parent',g_strctModule.m_strctPanel.m_strct3D.m_hAxes,'color','r');
-end;
+end
 
 
 g_strctModule.m_strctPanel.m_ahMarkers = [ahHandles,ahHandlesMarkers,ahHandlesMarkersText];

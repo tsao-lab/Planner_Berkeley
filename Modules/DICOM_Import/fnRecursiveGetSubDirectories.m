@@ -9,10 +9,10 @@ iNumSubDirs = length(aiIndices)-1;
 acstrResult = cell(1,iNumSubDirs);
 for iIter=1:iNumSubDirs
     acstrResult{iIter} = fnDirSlash(strAllSubPaths(aiIndices(iIter)+1:aiIndices(iIter+1)-1));
-end;
+end
 
 return;
 function strDir = fnDirSlash(strDir)
 if (strDir(end) ~= '\')
     strDir(end+1) = '\';
-end;
+end

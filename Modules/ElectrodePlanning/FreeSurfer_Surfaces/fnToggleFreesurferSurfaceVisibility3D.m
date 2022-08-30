@@ -2,7 +2,7 @@ function fnToggleFreesurferSurfaceVisibility3D()
  global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 
 % 
 % 

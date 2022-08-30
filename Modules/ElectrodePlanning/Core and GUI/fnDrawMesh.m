@@ -16,8 +16,8 @@ for iAxesIter=1:3
             a2fLinesPix = fnMeshCrossSectionIntersection(strctMesh, astrctCrossSection(iAxesIter));
             if ~isempty(a2fLinesPix)
                 ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, strctMesh.m_afColor(:)'); %#ok
-            end;
-%        end;
-    end;
+            end
+%        end
+    end
 end
 return;

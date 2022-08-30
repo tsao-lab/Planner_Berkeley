@@ -14,5 +14,5 @@ for iChannel=1:6
     end
     if ~bFound
         return;
-    end;
+    end
 end

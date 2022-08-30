@@ -18,5 +18,5 @@ else
    set(strctAxes.m_hPanel,'Position',strctAxes.m_aiPos,'visible','on');
     set(strctAxes.m_hAxes,'Position',g_strctModule.m_strctPanel.m_aiAxesSize);
     
- end;
+ end
 return;

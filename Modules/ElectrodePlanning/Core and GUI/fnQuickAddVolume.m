@@ -4,6 +4,7 @@ strctMRI = MRIread(strFileName);
 if size(strctMRI.vol,4) > 1
     strctMRI.vol = strctMRI.vol(:,:,:,1);
 end
+% strctMRI.vol = single(strctMRI.vol);
 [strctCrossSectionHoriz,strctCrossSectionSaggital,strctCrossSectionCoronal] =...
     fnSetDefaultCrossSectionsCorrect(strctMRI.volsize, strctMRI.tkrvox2ras,...
     strctMRI.vox2ras0, aiImageRes(1),aiImageRes(2));

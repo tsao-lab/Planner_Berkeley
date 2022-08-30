@@ -4,16 +4,16 @@ function fnTargetFindHole()
 global g_strctModule
 if isempty(g_strctModule.m_acAnatVol) || g_strctModule.m_iCurrChamber == 0
     return;
-end;
+end
 iNumGrids = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
 if iNumGrids == 0
     return;
-end;
+end
 aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
 if length(aiCurrTarget) > 1
     msgbox('This option is available only for one target');
     return;
-end;
+end
 iCurrTarget = aiCurrTarget(1);
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 

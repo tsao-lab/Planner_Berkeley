@@ -4,11 +4,11 @@ global g_strctModule
 if isempty(g_strctModule.m_iCurrChamber)
     set(g_strctModule.m_strctPanel.m_hGridList,'string','','value',1);
     return;
-end;
+end
 if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
     set(g_strctModule.m_strctPanel.m_hGridList,'string','','value',0);
     return;
-end;
+end
 if g_strctModule.m_iCurrChamber > length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
     g_strctModule.m_iCurrChamber = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers);
 end
@@ -28,8 +28,8 @@ if iNumGrids == 0
             strGrids = [strGrids,'|','Unknown']; %#ok
         end
         
-    end;
+    end
     set(g_strctModule.m_strctPanel.m_hGridList,'string',strGrids(2:end),'value',g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected);
-end;
+end
 
 return;

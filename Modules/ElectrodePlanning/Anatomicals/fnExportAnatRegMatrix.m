@@ -3,11 +3,11 @@ function fnExportAnatRegMatrix()
 global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 [strFile, strPath] = uiputfile([g_strctModule.m_strDefaultFilesFolder,'*.reg'],'Select transformation file');
 if strFile(1) == 0
     return;
-end;
+end
 strFilename =fullfile(strPath,strFile);
 strVolType = 'round'; % make it compatible with FSL ?!?!??!
 afVoxelSpacing = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing;

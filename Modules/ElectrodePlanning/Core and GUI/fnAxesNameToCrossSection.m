@@ -13,5 +13,5 @@ switch strName
     otherwise
         strctCrossSection =[];
         hAxes=[];
-end;
+end
 return;

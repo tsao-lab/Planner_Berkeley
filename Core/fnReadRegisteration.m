@@ -19,8 +19,8 @@ strVolType = fgets(hFileID); % float2int
 afVoxelSpacing = [fdC, fdR, fdS]; % ???
 fclose(hFileID);
 
-m2tk = [1 0 0 0;
-        0 0 1 0;
-        0 1 0 0;
-        0 0 0 1];
-T = m2tk\T*m2tk;
+% m2tk = [1 0 0 0;
+%         0 0 1 0;
+%         0 1 0 0;
+%         0 0 0 1];
+% T = m2tk\T*m2tk;

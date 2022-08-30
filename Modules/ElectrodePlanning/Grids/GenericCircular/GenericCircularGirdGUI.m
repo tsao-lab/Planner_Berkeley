@@ -189,7 +189,7 @@ aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 if isempty(aiSelectedHoles)
     return;
-end;
+end
 strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles);
 setappdata(handles.figure1,'aiSelectedHoles',[]);
 fnUpdateGridModel(handles,strctGridModel);
@@ -203,7 +203,7 @@ aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 if isempty(aiSelectedHoles)
     return;
-end;
+end
 
 iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup,1,'first');
 if ~isempty(iHoleInGroup)
@@ -381,7 +381,7 @@ switch strMouseMode
         if ~ishandle(hContourObject)
             setappdata(handles.figure1,'hContourObject',[]);
             return;
-        end;
+        end
         afX = get(hContourObject,'xdata');
         afY = get(hContourObject,'ydata');
          bControlDown = getappdata(handles.figure1,'bControlDown');
@@ -443,7 +443,7 @@ switch strMouseMode
                 hContourObject = plot(handles.axes1,pt2fMousePosition(1),pt2fMousePosition(2),'r','LineWidth',2);
                 setappdata(handles.figure1,'hContourObject',hContourObject);
                 
-            end;
+            end
         end
 end
 
@@ -454,7 +454,7 @@ return;
     strctGridModel = getappdata(handles.figure1,'strctGridModel');
     if isempty(strctGridModel)
         return;
-    end;
+    end
     
     afDistToHoleMM = sqrt( (strctGridModel.m_afGridHolesX-pt2fPos(1)).^2+(strctGridModel.m_afGridHolesY-pt2fPos(2)).^2);
     [fMinDistMM, iHoleIndex] = min(afDistToHoleMM);
@@ -468,7 +468,7 @@ return;
 %         if isempty(hHoleSelected) || (~isempty(hHoleSelected) && ~ishandle(hHoleSelected))
 %             hHoleSelected = plot(handles.hGridAxes,0,0,'g','uicontextmenu', handles.hGridAxesMenu);
 %             setappdata(handles.figure1,'hHoleSelected',hHoleSelected);
-%         end;
+%         end
 %         afTheta = linspace(0,2*pi,20);
 %         afCos = cos(afTheta);
 %         afSin = sin(afTheta);
@@ -519,7 +519,7 @@ switch strMouseMode
             hContourObject = getappdata(handles.figure1,'hContourObject');
             if ~isempty(hContourObject) && ishandle(hContourObject)
                 delete(hContourObject);
-            end;
+            end
             
              hContourObject = plot(handles.axes1,pt2fMouseDownPosition(1),pt2fMouseDownPosition(2),'r','LineWidth',2);
              setappdata(handles.figure1,'hContourObject',hContourObject);
@@ -536,7 +536,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 
@@ -545,7 +545,7 @@ aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 if isempty(aiSelectedHoles)
     return;
-end;
+end
 
 iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
 iNewGroupIndex = iNumGroups+1;
@@ -569,7 +569,7 @@ strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 if iActiveGroup == 0
     return;
-end;
+end
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
 % We need to re-order the groups assignments....
 
@@ -593,7 +593,7 @@ strctGridModel = getappdata(handles.figure1,'strctGridModel');
 aiSelectedHoles = find(strctGridModel.m_abIntersect);
 if isempty(aiSelectedHoles)
     return;
-end;
+end
 strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles);
 setappdata(handles.figure1,'aiSelectedHoles',[]);
 fnUpdateGridModel(handles,strctGridModel);
@@ -653,7 +653,7 @@ strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 if iActiveGroup == 0
     return;
-end;
+end
 prompt={'Enter group name:'};
 name='Name';
 numlines=1;
@@ -671,7 +671,7 @@ strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 if iActiveGroup == 0
     return;
-end;
+end
 strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup) = uisetcolor(strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup));
 fnUpdateGridModel(handles,strctGridModel);
 
@@ -701,14 +701,14 @@ function hRotationEdit_Callback(hObject, eventdata, handles)
 fNewRotationAngle=str2num(get(handles.hRotationEdit,'string'));
 if isempty(fNewRotationAngle)
     return;
-end;
+end
 
 fNewRotationAngle = mod(fNewRotationAngle + 180,360) - 180;
 
 if (fNewRotationAngle >= -180 && fNewRotationAngle <= 180)
     fnModifyActiveGroupRotation(handles, fNewRotationAngle);
     set(handles.hRotationSlider,'value',fNewRotationAngle);
-end;
+end
 return;
 
 
@@ -716,11 +716,11 @@ function hTiltEdit_Callback(hObject, eventdata, handles)
 fNewTiltAngle=str2num(get(handles.hTiltEdit,'string'));
 if isempty(fNewTiltAngle)
     return;
-end;
+end
 if (fNewTiltAngle >= 0 && fNewTiltAngle <= 90)
     fnModifyActiveGroupTilt(handles, fNewTiltAngle);
     set(handles.hTiltSlider,'value',fNewTiltAngle);
-end;
+end
 return;
 
 function hTranslationXEdit_Callback(hObject, eventdata, handles)
@@ -771,7 +771,7 @@ if ~strcmpi(computer,'PCWIN64') && ~strcmpi(computer,'PCWIN32')
     h=msgbox('Automatic model generation with solidworks is only available under Windows platform.');
     waitfor(h);
     return;
-end;
+end
 strctGridModel=getappdata(handles.figure1,'strctGridModel');
 
 switch iVersion
@@ -802,7 +802,7 @@ Rad = strctOutput.m_afRad/2;
 if ~strcmpi(computer, 'PCWIN64')
     fprintf('Grid export is only supported on Windows 64 bit machines!\n');
     return;
-end;
+end
 
 switch iVersion
     case -1

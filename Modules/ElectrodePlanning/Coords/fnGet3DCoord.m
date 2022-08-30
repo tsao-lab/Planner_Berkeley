@@ -7,7 +7,7 @@ if isempty(strctMouseOp.m_hAxes )
      strctCrossSection = [];
      pt3fPosInAtlasSpace =  [NaN,NaN,NaN];
     return;
-end;
+end
 switch strctMouseOp.m_hAxes 
     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
         % Transform the clicked point to 3D coordinates
@@ -48,6 +48,6 @@ switch strctMouseOp.m_hAxes
     pt3fVoxelCoordinate = [NaN,NaN,NaN];
      strctCrossSection = [];
      pt3fPosInAtlasSpace =  [NaN,NaN,NaN];
-end;
+end
 
 return;

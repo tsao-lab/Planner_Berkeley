@@ -3,7 +3,7 @@ function fnUpdateGridAxes(bHideAfter)
 global g_strctModule g_strctWindows
 if ~exist('bHideAfter','var')
     bHideAfter = true;
-end;
+end
 % delete(g_strctModule.m_strctPanel.m_strctGrid.m_ahHoleHandles(ishandle(g_strctModule.m_strctPanel.m_strctGrid.m_ahHoleHandles)));
 % g_strctModule.m_strctPanel.m_strctGrid.m_ahHoleHandles = [];
 % bNoGrid = false;
@@ -17,7 +17,7 @@ else
     if isempty(iSelectedGrid) || iSelectedGrid == 0
         bNoGrid = true;
     end
-end;
+end
 
 if bNoGrid
     % Hide / close grid gui
@@ -42,7 +42,7 @@ end
 
 if isfield(g_strctModule,'m_strActiveGridHelperGUI') && ~strcmp(g_strctModule.m_strActiveGridHelperGUI, strctGrid.m_strctGeneral.m_strGUI) && ishandle(g_strctModule.m_hGridHelperGUI)
     close(g_strctModule.m_hGridHelperGUI);
-end;
+end
 
 
 try

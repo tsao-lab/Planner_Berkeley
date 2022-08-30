@@ -13,5 +13,5 @@ strName = [];
         strName = 'XZ';
     otherwise
         strctCrossSection =[];
-end;
+end
 return;

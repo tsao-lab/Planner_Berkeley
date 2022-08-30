@@ -3,14 +3,14 @@ function fnMoveGrid(afDelta)
 global g_strctModule
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) || g_strctModule.m_iCurrChamber == 0 
     return;
-end;
+end
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
     return;
-end;
+end
 if isempty(g_strctModule.m_strctLastMouseDown.m_hAxes)
     return;
-end;
+end
 fScale = fnGetAxesScaleFactor(g_strctModule.m_strctLastMouseDown.m_hAxes);
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_fChamberDepthOffset = ...
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_fChamberDepthOffset + afDelta(2)/fScale; 

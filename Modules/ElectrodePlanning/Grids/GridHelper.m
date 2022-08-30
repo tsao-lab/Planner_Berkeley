@@ -333,7 +333,7 @@ function fnMouseMove(obj,eventdata,handles)
     strctGridModel = getappdata(handles.figure1,'strctGridModel');
     if isempty(strctGridModel)
         return;
-    end;
+    end
     
     afDistToHoleMM = sqrt( (strctGridModel.m_afGridHolesX-pt2fPos(1)).^2+(strctGridModel.m_afGridHolesY-pt2fPos(2)).^2);
     [fMinDistMM, iHoleIndex] = min(afDistToHoleMM);
@@ -349,7 +349,7 @@ function fnMouseMove(obj,eventdata,handles)
         if isempty(hHoleSelected) || (~isempty(hHoleSelected) && ~ishandle(hHoleSelected))
             hHoleSelected = plot(handles.hGridAxes,0,0,'g','uicontextmenu', handles.hGridAxesMenu);
             setappdata(handles.figure1,'hHoleSelected',hHoleSelected);
-        end;
+        end
         afTheta = linspace(0,2*pi,20);
         afCos = cos(afTheta);
         afSin = sin(afTheta);
@@ -390,13 +390,13 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 function strctNewGridModel = fnCopySelectedHolesFromAnotherModel(strctNewGridModel, strctOldGridModel, bHardCopy)
 if isempty(strctOldGridModel.m_strctGridParams.m_abSelectedHoles)
     return;
-end;
+end
 
 if bHardCopy && length(strctNewGridModel.m_strctGridParams.m_abSelectedHoles) == length(strctOldGridModel.m_strctGridParams.m_abSelectedHoles)
     strctNewGridModel.m_strctGridParams.m_abSelectedHoles = strctOldGridModel.m_strctGridParams.m_abSelectedHoles;

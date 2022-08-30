@@ -111,7 +111,7 @@ hImage = getappdata(handles.figure1,'hImage');
 
 if ishandle(hImage)
     delete(hImage);
-end;
+end
 hImage=image(0:aiFigurePosition(3)-1,0:aiFigurePosition(4)-1,zeros(aiFigurePosition(4),aiFigurePosition(3),3),'parent',hAxes);
 axis(hAxes,'off');
 hold(hAxes,'on');
@@ -175,7 +175,7 @@ if strcmpi(strctKey.Key,'space')
     bShowAnnotations = getappdata(handles.figure1,'bShowAnnotations');
     if isempty(bShowAnnotations)
         bShowAnnotations= true;
-    end;
+    end
     bShowAnnotations = ~bShowAnnotations;
     setappdata(handles.figure1,'bShowAnnotations',bShowAnnotations);
      fnInvalidate(handles);
@@ -275,17 +275,17 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 function fnMouseMove(obj,eventdata,handles)
 if ~ishandle(handles.figure1)
     return;
-end;
+end
 hAxes=getappdata(handles.figure1,'hAxes');
 if ~ishandle(hAxes)
     return;
-end;
+end
 hFig=getappdata(handles.figure1,'hFig');
 strctMouseOp.m_strButton = []; 
 strctMouseOp.m_strAction = 'Move';
@@ -485,7 +485,7 @@ for k=1:length(aiSelectedChannels)
     iChannel = aiSelectedChannels(k);
     if (iChannel > length(strctWideField.m_astrctHighMag(iSelectedHighMag).m_astrctChannels))
         continue;
-    end;
+    end
 
     strctWideField.m_astrctHighMag(iSelectedHighMag).m_astrctChannels(iChannel).m_strctContrastTransform.m_fLeftX= ...
         strctWideField.m_astrctHighMag(iSelectedHighMag).m_astrctChannels(iChannel).m_strctContrastTransform.m_fMin;
@@ -509,7 +509,7 @@ for k=1:length(aiSelectedChannels)
     iChannel = aiSelectedChannels(k);
     if (iChannel > length(strctWideField.m_astrctChannels))
         continue;
-    end;
+    end
 
     strctWideField.m_astrctChannels(iChannel).m_strctContrastTransform.m_LeftX = ...
         strctWideField.m_astrctChannels(iChannel).m_strctContrastTransform.m_fMin;
@@ -551,7 +551,7 @@ function fnContrastHighMag(handles, afDelta,bRight)
 strctWideField = fnGetActiveWideField(handles);
 if isempty(strctWideField) || isempty(strctWideField.m_astrctHighMag)
     return;
-end;
+end
 
 iSelectedHighMag = get(handles.hHighMagList,'value');
 aiSelectedChannels = get(handles.hHighMagChannels,'value');
@@ -561,7 +561,7 @@ for k=1:length(aiSelectedChannels)
     
     if (iChannel > length(strctWideField.m_astrctHighMag(iSelectedHighMag).m_astrctChannels))
         continue;
-    end;
+    end
     
    strctLinearHistogramStretch= strctWideField.m_astrctHighMag(iSelectedHighMag).m_astrctChannels(iChannel).m_strctContrastTransform;
    
@@ -586,14 +586,14 @@ function fnContrastWideField(handles, afDelta,bRight)
 astrctWideField = fnGetActiveWideField(handles);
 if isempty(astrctWideField)
     return;
-end;
+end
 
 aiSelectedChannels = get(handles.hWideFieldChannels,'value');
 for k=1:length(aiSelectedChannels)
     iChannel = aiSelectedChannels(k);
     if (iChannel > length(astrctWideField.m_astrctChannels))
         continue;
-    end;
+    end
     
    strctLinearHistogramStretch= astrctWideField.m_astrctChannels(iChannel).m_strctContrastTransform;
    
@@ -1020,7 +1020,7 @@ function fnFirstInvalidate(handles)
 WideFieldData = getappdata(handles.figure1,'WideFieldData');
 if isempty(WideFieldData)
     return;
-end;
+end
 hFig = getappdata(handles.figure1,'hFig');
 try
     get(hFig,'Position');
@@ -1102,7 +1102,7 @@ a2fViewTrans = getappdata(handles.figure1,'a2fViewTrans');
     HighMagData = getappdata(handles.figure1,'HighMagData');
     if isempty(HighMagData) || ~isfield(strctWideField,'m_astrctHighMag') || iSelectedHighMag == 0 || isempty(strctWideField.m_astrctHighMag)
         return;
-    end;
+    end
 
      
     
@@ -1138,7 +1138,7 @@ iSelectedZ = getappdata(handles.figure1,'iSelectedZ');
         iChannel = aiSelectedChannels(k);
         if (iChannel > size(HighMagData,3))
             continue;
-        end;
+        end
     	a2fDataSampled= reshape(fndllFastInterp2(HighMagData(:,:,iChannel,iSelectedZ),...
                            1+apt2fSamplingCoords(1,:),1+apt2fSamplingCoords(2,:),NaN), aiImageSize);
                        
@@ -1213,7 +1213,7 @@ for k=1:length(aiSelectedChannels)
     iChannel = aiSelectedChannels(k);
     if (iChannel > size(WideFieldData,3))
         continue;
-    end;
+    end
     a2fDataSampled= reshape(fndllFastInterp2(WideFieldData(:,:,iChannel,iSelectedZ),...
         1+apt2fSamplingCoords(1,:),1+apt2fSamplingCoords(2,:),NaN), aiImageSize);
     
@@ -1301,7 +1301,7 @@ fScreenHeight = aiFigurePosition(4);
    bShowAnnotations = getappdata(handles.figure1,'bShowAnnotations');
     if isempty(bShowAnnotations)
         bShowAnnotations= true;
-    end;
+    end
 
     
 if get(handles.hNeuN,'value')
@@ -1559,12 +1559,12 @@ function hAddWideField_Callback(hObject, eventdata, handles)
 astrctTissueBlock=getappdata(handles.figure1,'astrctTissueBlock');
 if isempty(astrctTissueBlock)
     return;
-end;
+end
 
 [strFile,strPath]=uigetfile('D:\Photos\Work Related\Bert Confocal\Widefield Series 2 (NeuN, GFAP)\*.tif;*.jpg;*.oib;*.mat;*.xml');
 if strFile(1) == 0
     return;
-end;
+end
 [~,~,strType]=fileparts(strFile);
 strctWideField.m_strFullPath = [strPath,strFile];
 strctWideField.m_strName = strFile;
@@ -1649,7 +1649,7 @@ strctWideField=fnGetActiveWideField(handles);
 if isempty(strctWideField)
     set(handles.hHighMagList,'string',[]);
     return;
-end;
+end
 
 iNumMatchedHighRes = length(strctWideField.m_astrctHighMag);
 acHighResNames = cell(1,iNumMatchedHighRes);
@@ -1662,7 +1662,7 @@ return;
 function fnSetActiveHighMag(handles,iActiveHighMag)
 if iActiveHighMag== 0
     return;
-end;
+end
 strctWideField = fnGetActiveWideField(handles);
 
 [strPath,strFile,strExt]=fileparts(strctWideField.m_astrctHighMag(iActiveHighMag).m_strFullPath);
@@ -1679,7 +1679,7 @@ switch lower(strExt)
 %         acAttributes = fnSplitString(strctTmp.strMetaData,',')
 %         for k=1:length(acAttributes)
 %             fprintf('%s\n',acAttributes{k});
-%         end;
+%         end
 %         
         
         if ~isfield(strctWideField.m_astrctHighMag(iActiveHighMag),'m_astrctChannels') || ...
@@ -1711,12 +1711,12 @@ if iActiveWideField == 0
         setappdata(handles.figure1,'WideFieldData',[]);
 
     return;
-end;
+end
 strctWideField = fnGetActiveWideField(handles);
 if isempty(strctWideField)
     setappdata(handles.figure1,'WideFieldData',[]);
     return;
-end;
+end
 % Assume wide field does not have a z-stack, so 3rd dimension are channels.
 % Extract from meta data channel names
 [strP,strF,strType]=fileparts(strctWideField.m_strFullPath);
@@ -1800,12 +1800,12 @@ strctWideField=fnGetActiveWideField(handles);
 if isempty(strctWideField)
     fprintf('Cannot add high magnification if a wide field is not loaded...\n');
     return;
-end;
+end
 
 [strFile,strPath]=uigetfile('D:\Photos\Work Related\Bert Confocal\High Mag Seroes 2 (NeuN, YFP)\*.tif;*.jpg;*.oib;*.mat');
 if strFile(1) == 0
     return;
-end;
+end
 strctHighMag.m_strFullPath = [strPath,strFile];
 strctHighMag.m_strName = strFile;
 strctHighMag.m_astrctAnnoation = [];
@@ -1976,7 +1976,7 @@ function hAddTissueBlock_Callback(hObject, eventdata, handles)
 [strFile,strPath]=uigetfile('D:\Photos\Work Related\Bert Histology Organized\*.tif;*.jpg;','MultiSelect','on');
 if ~iscell(strFile) && strFile(1) == 0
     return;
-end;
+end
 if ~iscell(strFile)
     strFile = {strFile};
 end
@@ -2006,7 +2006,7 @@ return;
 function fnSetActiveTissueBlock(handles, iTissueBlockIndex)
 if iTissueBlockIndex == 0
     return;
-end;
+end
 % Load the tissue block image
 astrctTissueBlock=getappdata(handles.figure1,'astrctTissueBlock');
 fprintf('Loading Tissue block %s\n',astrctTissueBlock(iTissueBlockIndex).m_strFullPath);

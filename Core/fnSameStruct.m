@@ -4,19 +4,19 @@ bSame = false;
 if isempty(strctA) && isempty(strctB)
     bSame = true;
     return;
-end;
+end
 
 if (isempty(strctA) &&~isempty(strctB)) ||  (~isempty(strctA) && isempty(strctB))  || ...
         (isstruct(strctA) && ~isstruct(strctB)) || (~isstruct(strctA) && isstruct(strctB))
     return;
-end;
+end
 
 acFieldsA = fieldnames(strctA);
 acFieldsB = fieldnames(strctB);
 
 if ~isempty(setdiff(acFieldsA,acFieldsB)) || ~isempty(setdiff(acFieldsB,acFieldsA))
     return;
-end;
+end
 
 for iFieldIter=1:length(acFieldsA)
     A = getfield(strctA, acFieldsA{iFieldIter});
@@ -24,21 +24,21 @@ for iFieldIter=1:length(acFieldsA)
     if isstruct(A)
         if ~fnSameStruct(A,B)
             return;
-        end;
+        end
     elseif ischar(A)
         if ~strcmp(A,B)
             return;
-        end;
+        end
     elseif iscell(A)
         error('not supported');
     else
         if sum(abs(A(:)-B(:))) ~= 0
             return;
-        end;
-    end;
+        end
+    end
     
                 
-end;
+end
 
 bSame = true;
 

@@ -35,5 +35,5 @@ for vert = 1:1:num_vert_label,
   s = fgetl(fid);
   vert_data = sscanf(s,'%d %f %f %f %f');
   vert_num(vert) = vert_data(1:1);
-end;
+end
 fclose(fid);

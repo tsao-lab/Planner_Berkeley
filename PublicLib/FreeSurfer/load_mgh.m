@@ -73,7 +73,7 @@ if (strcmpi(fname((strlen(fname)-3):strlen(fname)), '.MGZ') | ...
           copyfile(fname,[fname(1:end-3),'mgh.gz']);
           if exist([fname(1:end-3),'mgh'],'file')
               delete([fname(1:end-3),'mgh']);
-          end;
+          end
           gunzip([fname(1:end-3),'mgh.gz']);
          if exist([fname(1:end-3),'mgh.gz'],'file')
               delete([fname(1:end-3),'mgh.gz']);
@@ -219,7 +219,7 @@ if(slices(1) <= 0 & frames(1) <= 0)
           unix(sprintf('rm %s', fname));  
       else
           delete(fname);
-      end;
+      end
   end
   
   nread = prod(size(vol));

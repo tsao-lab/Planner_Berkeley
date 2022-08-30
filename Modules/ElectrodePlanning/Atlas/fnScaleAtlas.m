@@ -2,7 +2,7 @@ function fnScaleAtlas(hAxes, afDelta)
 global g_strctModule
 if isempty(hAxes)
     return;
-end;
+end
 fScale1 = 1+ 1/150* fnGetAxesScaleFactor(g_strctModule.m_strctLastMouseDown.m_hAxes) * afDelta(1);
 fScale2 =1+1/150* fnGetAxesScaleFactor(g_strctModule.m_strctLastMouseDown.m_hAxes) * afDelta(2);
 

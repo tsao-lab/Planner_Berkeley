@@ -2,11 +2,11 @@ function fnAddFreesurferSurface()
  global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
     [strFile,strPath]=uigetfile('*.*');
     if strFile(1) ==0
         return;
-    end;
+    end
 strSurfaceFileConformed = fullfile(strPath,strFile);    
 strctMesh = fnReadSurfWrapper(strSurfaceFileConformed, true);
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_acFreeSurferSurfaces')

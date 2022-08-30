@@ -10,7 +10,7 @@ switch strCallback
         % Generate output root path
         if ~exist(strOutputPath,'dir')
             mkdir(strOutputPath);
-        end;
+        end
         
         strCurrPwd = pwd;
         cd(strOutputPath);

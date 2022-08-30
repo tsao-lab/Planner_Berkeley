@@ -116,7 +116,7 @@ if isempty(get(handles.hSeriesName,'String'))
     h=msgbox('Must enter a name!');
     waitfor(h);
     return;
-end;
+end
 
 uiresume(handles.figure1);
 

@@ -17,7 +17,7 @@ else
     set(g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY,'visible','off');
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY,'visible','off');
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ,'visible','off');
-end;
+end
 
 fnInvalidate();
 return;

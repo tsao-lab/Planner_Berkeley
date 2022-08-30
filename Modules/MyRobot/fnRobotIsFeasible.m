@@ -6,12 +6,12 @@ for i=1:length(afConf)
         if afConf(i)/180*pi < strctRobot.m_astrctJointsDescription(i).m_fMin || ...
                 afConf(i)/180*pi > strctRobot.m_astrctJointsDescription(i).m_fMax
             return;
-        end;
+        end
     else
         if afConf(i) < strctRobot.m_astrctJointsDescription(i).m_fMin || ...
                 afConf(i) > strctRobot.m_astrctJointsDescription(i).m_fMax
             return;
-        end;
+        end
     end
 end
 bFeasible = true;

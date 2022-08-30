@@ -27,7 +27,7 @@ switch hAxes
     case g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ % top left, green
         g_strctModule.m_strctCrossSectionXZ = fnRotateCrossSectionAux(...
             g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctCrossSectionXY, -fDiff/100/2*pi);
-end;
+end
 fnInvalidate();
 
 return;

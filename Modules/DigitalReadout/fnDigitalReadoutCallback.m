@@ -152,7 +152,7 @@ afY = afYValues(aiValidEntries);
     iX0Index = find(afX == 0);
     if isempty(iX0Index)
         continue;
-    end;
+    end
     fY0Value = afY(iX0Index);
     
     if iIter == 1
@@ -171,7 +171,7 @@ afY = afYValues(aiValidEntries);
             R = asin(afYrelative / fScale)/pi*180;
             E = sqrt(sum((R-afX).^2));
             a2fErrors(j,k)=E;
-        end;
+        end
     end
     
     figure(iIter+1);

@@ -35,7 +35,7 @@ iStart = find(abInside,1,'first');
 iEnd = find(abInside,1,'last');
 if isempty(iStart) || isempty(iEnd)
     return;
-end;
+end
 pt2fStart = apt2fPointsImage(iStart,:);
 pt2fEnd = apt2fPointsImage(iEnd,:);
 

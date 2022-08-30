@@ -2,7 +2,7 @@ function astrctMesh = fnBuildGridMesh_GenericCircular(strctGridModel, bDrawShort
 clear astrctMesh
 if ~exist('bHighlight','var')
     bHighlight = false;
-end;
+end
 
 iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
 astrctMesh = [];

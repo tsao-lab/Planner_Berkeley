@@ -2,7 +2,7 @@ function fnRotateAtlas(hAxes, afDelta)
 global g_strctModule
 if isempty(g_strctModule.m_acAnatVol)
     return;
-end;
+end
 a2fM = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg;
 strctCrossSection = fnAxesHandleToStrctCrossSection(hAxes);
 

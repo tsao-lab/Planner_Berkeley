@@ -63,7 +63,7 @@ else
     set(g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY,'visible','off');
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY,'visible','off');
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ,'visible','off');
-end;
+end
 
 fnInvalidate();
 return;
@@ -143,7 +143,7 @@ global g_strctModule
 [strFuncFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.bhdr'],'Select Functional Volume');
 if strFuncFile(1) == 0
     return;
-end;
+end
 strInputVolfile = [strPath,strFuncFile];
 
 [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.reg;*.dat'],'Select registeration');
@@ -158,7 +158,7 @@ if strFile(1) == 0
 else
     strInputRegfile = [strPath,strFile];
     [a2fRegisteration, strSubjectName, strVolType,afVoxelSpacing] = fnReadRegisteration(strInputRegfile);    
-end;
+end
 
 strctVol = MRIread(strInputVolfile);
 assert(size(strctVol.vol,4) == 1)
@@ -191,11 +191,11 @@ else
     end
     strList(end+1,1:length(strFuncFile)) = strFuncFile;
     set(g_strctModule.m_strctPanel.m_hFuncList,'String',strList,'value',g_strctModule.m_iCurrFuncVol);
-end;
+end
 
 if ~g_strctModule.m_bFuncVolLoaded 
     g_strctModule.m_bFuncVolLoaded  = true;
-end;
+end
 fnInvalidate();
 return;
 
@@ -209,10 +209,10 @@ global g_strctModule
 
 if ~iscell(strFile)
     strFile = {strFile};
-end;
+end
 if strFile{1}(1) == 0
     return;
-end;
+end
 hWaitbar = waitbar(0,'Loading volume(s)...');
 for iFileIter=1:length(strFile)
     strInputfile = [strPath,strFile{iFileIter}];
@@ -238,8 +238,8 @@ for iFileIter=1:length(strFile)
         
         strList(end+1,1:length(strFile{iFileIter})) = strFile{iFileIter};
         set(g_strctModule.m_strctPanel.m_hAnatList,'String',strList,'value',g_strctModule.m_iCurrAnatVol);
-    end;
-end;
+    end
+end
 
 if ~g_strctModule.m_bVolumeLoaded 
     g_strctModule.m_bVolumeLoaded = true;
@@ -252,7 +252,7 @@ if ~g_strctModule.m_bVolumeLoaded
 
 
     fnSetDefaultCrossSections(g_strctModule.m_strctPanel.m_aiImageRes(2),g_strctModule.m_strctPanel.m_aiImageRes(1));
-end;
+end
 close(hWaitbar);
 fnInvalidate();
 return;
@@ -310,8 +310,8 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hObjectSelected)
             g_strctModule.m_strctOverlay.m_pt2fRight = pt2fCurrPoint;
             fnInvalidateOverlayAxes();
             fnInvalidate();
-    end;
-end;
+    end
+end
 
 return;
 
@@ -331,12 +331,12 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxesSelected)
     end;   
     fnInvalidate();
     return;
-end;
+end
 
 if g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
     fnUpdateOverlayTransform();
     return;
-end;
+end
 
 % 3D Operation
 
@@ -349,7 +349,7 @@ if g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_st
             %        fnSetNewZoomLevel(handles, afDelta);
         case 'Pan'
             %        fnSetNewPanLevel(handles, afDiff);
-    end;
+    end
 
 else
     
@@ -363,8 +363,8 @@ else
            fnSetNewZoomLevel(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
         case 'Pan'
             fnSetNewPanLevel(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
-    end;
-end;
+    end
+end
 return;
 
 function fnSetNewZoomLevel(hAxes, afDelta)
@@ -382,8 +382,8 @@ if ~isempty(hAxes)
         case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
             g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM = g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM + fDiff;
             g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM = g_strctModule.m_strctCrossSectionXZ.m_fHalfHeightMM + fDiff;
-    end;
-end;
+    end
+end
 
 fnInvalidate();
 return;
@@ -413,10 +413,10 @@ switch hAxes
         -afDelta(1) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,1) + ...
         -afDelta(2) * g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,2);
         g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,4) = pt3fNewPos;
-end;
+end
 
 fnInvalidate();
-end;
+end
 return;
 
 function fnSetNewContrastLevel(afDelta)
@@ -440,7 +440,7 @@ global g_strctWindows
 
 if ~isempty(strctMouseOp.m_pt2fPos)
     %set(g_strctWindows.m_hStatusLine,'string',sprintf('Mouse Down at [%.0f %.0f]',strctMouseOp.m_pt2fPos(1),strctMouseOp.m_pt2fPos(2)));
-end;
+end
 
 return;
 
@@ -473,15 +473,15 @@ if ~isempty(strctMouseOp.m_hAxes)
                     bCloseToCenter = fDistFromCenterXZ < fCenterDist;
                     afPenDir = afPenDirXZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ;
-                end;
+                end
             else
                 if fDistYZ < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctYZ.m_hAxes;
                     bCloseToCenter = fDistFromCenterYZ < fCenterDist;
                     afPenDir = -afPenDirYZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ;
-                end;
-            end;
+                end
+            end
          case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
             [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ);
             [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY);
@@ -491,15 +491,15 @@ if ~isempty(strctMouseOp.m_hAxes)
                     bCloseToCenter = fDistFromCenterXZ < fCenterDist;
                     afPenDir = -afPenDirXZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ;
-                end;
+                end
             else
                 if fDistXY < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctXY.m_hAxes;
                     bCloseToCenter = fDistFromCenterXY < fCenterDist;
                     afPenDir = afPenDirXY;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY;
-                end;
-            end;
+                end
+            end
         case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
             [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ);
             [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY);
@@ -509,27 +509,27 @@ if ~isempty(strctMouseOp.m_hAxes)
                     bCloseToCenter = fDistFromCenterYZ < fCenterDist;
                     afPenDir = -afPenDirYZ;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ;
-                end;
+                end
             else
                 if fDistXY < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctXY.m_hAxes;
                     bCloseToCenter = fDistFromCenterXY < fCenterDist;
                     afPenDir = afPenDirXY;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY;
-                end;
+                end
             end;            
-    end;
-end;
+    end
+end
 
 if ~isempty(hAxes)
     if bCloseToCenter
        set(g_strctWindows.m_hFigure,'Pointer','fleur');
     else
         set(g_strctWindows.m_hFigure,'Pointer','topl');
-    end;
+    end
 else
     set(g_strctWindows.m_hFigure,'Pointer','arrow');
-end;
+end
 %topl - diagonal
 
 %       rosshair | {arrow} | watch | topl | 
@@ -543,22 +543,22 @@ function fnMouseMove(strctMouseOp)
 global g_strctModule
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if isempty(g_strctModule.m_strctPrevMouseOp)
     g_strctModule.m_strctPrevMouseOp = strctMouseOp;
-end;
+end
 if ~g_strctModule.m_bFirstInvalidate && g_strctModule.m_bShow2DPlanes
     fnIntersectAxis(strctMouseOp);  % Change mouse cursor
-end;
+end
 
 if  ~isempty(strctMouseOp.m_hAxes) 
     if g_strctModule.m_bMouseDown
         fnHandleMouseMoveWhileDown(g_strctModule.m_strctPrevMouseOp, strctMouseOp);
     else
         fnUpdateStatusLine(strctMouseOp);
-    end;
-end;
+    end
+end
 g_strctModule.m_strctPrevMouseOp = strctMouseOp;
 return;
         
@@ -566,7 +566,7 @@ function fnMouseDown(strctMouseOp)
 global g_strctModule
 if ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if g_strctModule.m_bShow2DPlanes
     
@@ -575,13 +575,13 @@ if g_strctModule.m_bShow2DPlanes
         strctMouseOp.m_strAxisOp = 'Pan';
     else
         strctMouseOp.m_strAxisOp = 'Rotate';
-    end;
+    end
     strctMouseOp.m_afAxesPen = afPenDir; % Penpendicular direction to selected axes
 else
     strctMouseOp.m_hAxesSelected = [];
     strctMouseOp.m_hAxesLineSelected = [];
     strctMouseOp.m_afAxesPen = [];
-end;
+end
 
 if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
     Tmp = get(g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes,'CurrentPoint');
@@ -598,7 +598,7 @@ if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctOverlayAxes.m_hAxes
         strctMouseOp.m_hObjectSelected = [];
     end
     %strctMouseOp.m_hObjectSelected = 
-end;
+end
 
 
 
@@ -633,13 +633,13 @@ function fnMouseWheel(strctMouseOp)
 global g_strctModule
 if isempty(strctMouseOp.m_hAxes) || ~g_strctModule.m_bVolumeLoaded
     return;
-end;
+end
 
 if (strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes)
     fnZoom3DAxes(strctMouseOp.m_iScroll);
 else
     fnShiftPlane(strctMouseOp.m_hAxes , strctMouseOp.m_iScroll)
-end;
+end
 
 return;
 
@@ -691,7 +691,7 @@ switch hAxes
     case g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ % top left, green
         g_strctModule.m_strctCrossSectionXZ = fnRotateCrossSectionAux(...
             g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctCrossSectionXY, -fDiff/100/2*pi);
-end;
+end
 fnInvalidate();
 
 return;
@@ -720,7 +720,7 @@ switch hAxes
         afNewPosCropped = min( max(afNewPos, g_strctModule.m_strctMainVol.m_afRangeMM(:,1)), g_strctModule.m_strctMainVol.m_afRangeMM(:,2));
         g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,4) = afNewPosCropped;
         fnInvalidate();
-end;
+end
 
 return;
 
@@ -874,7 +874,7 @@ global g_strctModule
 if ~g_strctModule.m_bVolumeLoaded
  set(g_strctModule.m_strctPanel.m_hWindowsPanel,'visible','off');    
     return;
-end;
+end
 a2fXYZ_To_CRS = inv(g_strctModule.m_strctMainVol.m_a2fM);
 [a2fCrossSectionXY, apt3fPlanePointsXY] = fnResampleCrossSection(g_strctModule.m_strctMainVol.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY);
 [a2fCrossSectionYZ, apt3fPlanePointsYZ] = fnResampleCrossSection(g_strctModule.m_strctMainVol.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionYZ);
@@ -885,7 +885,7 @@ a2fCrossSectionXZ_Trans = fnContrastTransform(a2fCrossSectionXZ, g_strctModule.m
 
 if g_strctModule.m_bFirstInvalidate
   fnFirstInvalidate();
-end;
+end
 
 
 if isfield(g_strctModule,'m_strctFuncVol') && ~isempty(g_strctModule.m_strctFuncVol) && g_strctModule.m_bShowFunctional
@@ -908,7 +908,7 @@ else
     a3fCrossSectionYZ = fnDup3(a2fCrossSectionYZ_Trans);
     a3fCrossSectionXZ = fnDup3(a2fCrossSectionXZ_Trans);
     
-end;
+end
 
 % Set Images
 set(g_strctModule.m_strctPanel.m_strctXY.m_hImage,'cdata',a3fCrossSectionXY);
@@ -920,7 +920,7 @@ if g_strctModule.m_bShow3DPlanes
     set(g_strctModule.m_strctPanel.m_hPlaneXY,'Xdata', reshape(apt3fPlanePointsXY(1,:),2,2),'Ydata',reshape(apt3fPlanePointsXY(2,:),2,2),'ZData',reshape(apt3fPlanePointsXY(3,:),2,2));
     set(g_strctModule.m_strctPanel.m_hPlaneYZ,'Xdata', reshape(apt3fPlanePointsYZ(1,:),2,2),'Ydata',reshape(apt3fPlanePointsYZ(2,:),2,2),'ZData',reshape(apt3fPlanePointsYZ(3,:),2,2));
     set(g_strctModule.m_strctPanel.m_hPlaneXZ,'Xdata', reshape(apt3fPlanePointsXZ(1,:),2,2),'Ydata',reshape(apt3fPlanePointsXZ(2,:),2,2),'ZData',reshape(apt3fPlanePointsXZ(3,:),2,2));
-end;
+end
 
 if g_strctModule.m_bShow2DPlanes
     
@@ -940,7 +940,7 @@ if g_strctModule.m_bShow2DPlanes
     set(g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY,'Xdata',[pt2fXZ_XY_1(1),pt2fXZ_XY_2(1)],'YData',[pt2fXZ_XY_1(2),pt2fXZ_XY_2(2)]);
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY,'Xdata',[pt2fYZ_XY_1(1),pt2fYZ_XY_2(1)],'YData',[pt2fYZ_XY_1(2),pt2fYZ_XY_2(2)]);
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ,'Xdata',[pt2fYZ_XZ_1(1),pt2fYZ_XZ_2(1)],'YData',[pt2fYZ_XZ_1(2),pt2fYZ_XZ_2(2)]);
-end;
+end
 
 return
 
@@ -960,6 +960,6 @@ if strcmp(strctTransform.m_strType,'Linear');
     a2fTranI(a2fI >=(strctTransform.m_fCenter+strctTransform.m_fWidth)) = 1;
     a2fTranI(a2fTranI < 0) = 0;
     a2fTranI(a2fTranI > 1) = 1;
-end;
+end
 return;
 

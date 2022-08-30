@@ -14,7 +14,7 @@ if nargin==0
    VFn=spm_get(1,'.img','select structural image');
 else
    VFn=iname;
-end;
+end
 
 [DIM VOX SCALE TYPE OFFSET ORIGIN DESCRIP] = spm_hread(VFn);
 VF=spm_map(VFn,[DIM VOX 1 TYPE OFFSET]);

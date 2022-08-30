@@ -3,7 +3,7 @@ global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0 || g_strctModule.m_iCurrChamber == 0 || ...
         isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids) 
     return;
-end;
+end
 
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 

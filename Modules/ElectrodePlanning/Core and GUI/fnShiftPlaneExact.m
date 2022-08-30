@@ -29,6 +29,6 @@ switch strctLastMouseDown.m_hAxesSelected
         afNewPos = afCurrPos + afDirection(1:3) * fDist;
         g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,4) = afNewPos;
         fnInvalidate();
-end;
+end
 
 return;

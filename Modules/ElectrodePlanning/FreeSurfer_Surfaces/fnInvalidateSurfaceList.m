@@ -7,7 +7,7 @@ else
     acSurfaceNames= cell(1,iNumSurfaces);
     for k=1:iNumSurfaces
         acSurfaceNames{k} =  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_acFreeSurferSurfaces{k}.m_strName;
-    end;
+    end
     if length(acSurfaceNames) >= 1
         set(g_strctModule.m_strctPanel.m_hSurfaceList,'string',acSurfaceNames,'value',1);
     else

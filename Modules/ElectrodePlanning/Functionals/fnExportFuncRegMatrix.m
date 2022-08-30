@@ -4,11 +4,11 @@ function fnExportFuncRegMatrix()
 global g_strctModule
     if g_strctModule.m_iCurrFuncVol == 0
         return;
-    end;
+    end
 [strFile, strPath] = uiputfile([g_strctModule.m_strDefaultFilesFolder,'*.reg'],'Select transformation file');
 if strFile(1) == 0
     return;
-end;
+end
 strFilename =fullfile(strPath,strFile);
 strVolType = 'round'; % make it compatible with FSL ?!?!??!
 afVoxelSpacing = g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_afVoxelSpacing;

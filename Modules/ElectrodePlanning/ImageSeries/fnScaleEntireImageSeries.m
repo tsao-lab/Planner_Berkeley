@@ -3,7 +3,7 @@ global g_strctModule
 return;
 if isempty(g_strctModule.m_acAnatVol) || ~isfield(g_strctModule,'m_astrctImageSeries')
     return;
-end;
+end
 
 iActiveSeries = get(g_strctModule.m_strctPanel.m_hImageSeriesList,'value');
 if iActiveSeries == 0 || length(g_strctModule.m_astrctImageSeries) < iActiveSeries
@@ -11,7 +11,7 @@ if iActiveSeries == 0 || length(g_strctModule.m_astrctImageSeries) < iActiveSeri
 end
 if isempty(hAxes)
     return;
-end;
+end
 if (bKeepAspect)
     afDelta = ones(1,2) * norm(afDelta) * sign(afDelta(1));
 end

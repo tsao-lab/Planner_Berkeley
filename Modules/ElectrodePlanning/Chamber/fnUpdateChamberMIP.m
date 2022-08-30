@@ -8,7 +8,7 @@ function fnUpdateChamberMIP()
 % end
 % if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected)
 %     return;
-% end;
+% end
 % % Test if we can do this type of projection....
 % % This is only OK if all holes are pointing along the same direction.
 % % Otherwise, we will need to sample each direction separately....

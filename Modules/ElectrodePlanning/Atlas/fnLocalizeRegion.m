@@ -9,11 +9,11 @@ jUITable = jUIScrollPane(2).getViewport.getView;
 iRegion = jUITable.getSelectedRow + 1; % Java indexes start at 0
 if iRegion == 0
     return;
-end;
+end
 pt3fCenterAtlasCoord = mean(g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).vertices,1);
 if isempty(g_strctModule.m_acAnatVol)
     return;
-end;
+end
 fnAlignViewWithAtlas(pt3fCenterAtlasCoord );
 fnInvalidate(1);
 return;

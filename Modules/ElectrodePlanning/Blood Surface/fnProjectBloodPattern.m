@@ -4,7 +4,7 @@ global g_strctModule
 
 if isempty(g_strctModule.m_acAnatVol) || g_strctModule.m_iCurrChamber == 0
     return;
-end;
+end
 aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
 

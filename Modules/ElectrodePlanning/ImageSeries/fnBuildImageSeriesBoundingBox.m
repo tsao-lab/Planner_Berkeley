@@ -6,7 +6,7 @@ iActiveSeries = get(g_strctModule.m_strctPanel.m_hImageSeriesList,'value');
 if isempty(g_strctModule.m_astrctImageSeries(iActiveSeries).m_acImages)
     strctMesh = [];
     return;
-end;
+end
 
 aiFirstImageSize = size(g_strctModule.m_astrctImageSeries(iActiveSeries).m_acImages{1}.m_Data);
 fZShift = g_strctModule.m_astrctImageSeries(iActiveSeries).m_fImageThickness;

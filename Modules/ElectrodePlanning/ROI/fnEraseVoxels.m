@@ -4,7 +4,7 @@ global g_strctModule
 strctCrossSection =fnAxesToCrossSection(strctMouseOp.m_hAxes);
 if  isempty(strctCrossSection)
     return;
-end;
+end
 
 if b2D
     fnEraseVoxels2D(strctCrossSection,strctMouseOp);

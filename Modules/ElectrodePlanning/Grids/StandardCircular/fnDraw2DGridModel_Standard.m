@@ -26,7 +26,7 @@ for iHoleIter=1:iNumHoles
             'color',[0.5 0.5 0.5],'uicontextmenu',hContextMenu);
          
     end;    
-end;
+end
 
 fOuterDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridOuterDiam');
 fInnerDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'GridInnerDiam');

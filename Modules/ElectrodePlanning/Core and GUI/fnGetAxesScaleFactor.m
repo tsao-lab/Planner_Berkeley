@@ -3,7 +3,7 @@ global g_strctModule
 if isempty(hAxes)
     fScale = 0;
     return;
-end;
+end
 switch hAxes
     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
         fScale = g_strctModule.m_strctCrossSectionXY.m_iResHeight /  (2*g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM);

@@ -12,7 +12,7 @@ fHoleDiameterMM = strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM;
 
 if ~isfield(strctDisplayParam,'m_bDisplayHoleDirection')
     strctDisplayParam.m_bDisplayHoleDirection = false;
-end;
+end
 
 bShowBottomHoles = false;
 bShowTopHoles = true;
@@ -67,7 +67,7 @@ for iHoleIter=1:iNumHoles
         ahHolesHandles(iHoleIter) =  fill( (strctGridModel.m_afGridHolesX(iHoleIter) + afCos*fHoleDiameterMM/2),...
             strctGridModel.m_afGridHolesY(iHoleIter) + afSin*fHoleDiameterMM/2,...
             'm','parent',hAxes);
-    end;
+    end
     
     if ~isempty(strctDisplayParam.m_aiSelectedHoles) && sum(strctDisplayParam.m_aiSelectedHoles == iHoleIter)>0
          fill( (strctGridModel.m_afGridHolesX(iHoleIter) + afCos*fHoleDiameterMM/4),...
@@ -80,7 +80,7 @@ for iHoleIter=1:iNumHoles
         plot([strctGridModel.m_afGridHolesX(iHoleIter),strctGridModel.m_afGridHolesX(iHoleIter)-strctGridModel.m_strctGridParams.m_fGridHeightMM*strctGridModel.m_apt3fGridHolesNormals(1,iHoleIter)],...
                 [strctGridModel.m_afGridHolesY(iHoleIter),strctGridModel.m_afGridHolesY(iHoleIter)+strctGridModel.m_strctGridParams.m_fGridHeightMM*strctGridModel.m_apt3fGridHolesNormals(2,iHoleIter)],'color',afGroupColor,'LineWidth',2);
     end
-end;
+end
 
 
 %Comment by Hongsun

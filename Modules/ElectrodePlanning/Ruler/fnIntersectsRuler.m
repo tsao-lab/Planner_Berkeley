@@ -6,7 +6,7 @@ strWhat = [];
 [strctCrossSection,strName] = fnAxesToCrossSection(strctMouseOp.m_hAxes);
  if ~strcmp(   strName, strctObject.m_strAxes)
      return;
- end;
+ end
  % Check whether it is close to the end points first.
  a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
 a2fCRS_To_XYZ = inv(a2fXYZ_To_CRS);

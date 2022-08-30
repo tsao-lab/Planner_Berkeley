@@ -2,11 +2,11 @@ function fnAddDerivedFreesurferSurface()
  global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
     [strFile,strPath]=uigetfile('*.*');
     if strFile(1) ==0
         return;
-    end;
+    end
 strSurfaceFileConformed = fullfile(strPath,strFile);    
 strctMesh = fnReadSurfWrapper(strSurfaceFileConformed, true);
 
@@ -17,7 +17,7 @@ if size(strctMesh.m_a2fVertices,2) ~= size(g_strctModule.m_acAnatVol{g_strctModu
         g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_acFreeSurferSurfaces{iSelectedSurface}.m_strName));
     waitfor(h);
     return;
-end;
+end
 iNumDerivedSurfaces = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_acFreeSurferSurfaces{iSelectedSurface}.m_acDerivedSurfaces);
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_acFreeSurferSurfaces{iSelectedSurface}.m_acDerivedSurfaces{iNumDerivedSurfaces+1} = strctMesh;
 

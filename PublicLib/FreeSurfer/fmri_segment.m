@@ -40,7 +40,7 @@ iPos_dH = find(sign(diff(h))==1);
 %% derivative of the histogram is positive 
 if isempty(iPos_dH) thresh = max(Img1d);
 else                thresh = v(iPos_dH(1));
-end;
+end
 
 % Binarize so that subthreshold voxels are 0 and suprathreshold
 % voxels are 1.

@@ -3,7 +3,7 @@ function fnCopyChamber(a,b,iAnatVolTo) %#ok
 global g_strctModule
 if g_strctModule.m_iCurrChamber == 0
     return;
-end;
+end
 strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
 % we can't just copy the chamber because it is represented in voxel
 % coordinates relative to the first volume.
@@ -15,9 +15,9 @@ if isempty(g_strctModule.m_acAnatVol{iAnatVolTo}.m_astrctChambers)
     g_strctModule.m_acAnatVol{iAnatVolTo}.m_astrctChambers = strctChamber;
 else
     g_strctModule.m_acAnatVol{iAnatVolTo}.m_astrctChambers(end+1) = strctChamber;
-end;
+end
 if iAnatVolTo == g_strctModule.m_iCurrAnatVol
     fnUpdateChamberList();
-end;
+end
 return;
 

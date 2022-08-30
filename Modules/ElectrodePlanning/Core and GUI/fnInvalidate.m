@@ -7,16 +7,16 @@ persistent apt3fPrevPlanePointsXZ apt3fPrevPlanePointsYZ apt3fPrevPlanePointsXY 
 persistent a2fPrevCrossSectionXY_Func a2fPrevCrossSectionYZ_Func a2fPrevCrossSectionXZ_Func
 if ~exist('bForceInvalidate','var')
     bForceInvalidate = false;
-end;
+end
 
 if ~g_strctModule.m_bVolumeLoaded
  set(g_strctModule.m_strctPanel.m_hWindowsPanel,'visible','off');    
     return;
-end;
+end
 
 if g_strctModule.m_bFirstInvalidate
   fnFirstInvalidate();
-end;
+end
 
 a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}, 'm_a2fTk')
@@ -29,7 +29,7 @@ if ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g
     a2fXYZ_To_CRS_Func = inv(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a2fM) * inv(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a2fReg); %#ok
 else
     a2fXYZ_To_CRS_Func = [];
-end;
+end
 
 if fnSameStruct(strctPrevCrossSectionXY, g_strctModule.m_strctCrossSectionXY) && ~bForceInvalidate
     a2fCrossSectionXY = a2fPrevCrossSectionXY;
@@ -46,11 +46,11 @@ else
     
     if g_strctModule.m_strctGUIOptions.m_bShow3DPlanes % Set Crosshairs planes on 3D axes
         set(g_strctModule.m_strctPanel.m_hPlaneXY,'Xdata', reshape(apt3fPlanePointsXY(1,:),2,2),'Ydata',reshape(apt3fPlanePointsXY(2,:),2,2),'ZData',reshape(apt3fPlanePointsXY(3,:),2,2));
-    end;
+    end
     if  ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g_strctModule.m_strctGUIOptions.m_bShowFunctional
         [a2fCrossSectionXY_Func] = fnResampleCrossSection(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a3fVol, a2fXYZ_To_CRS_Func, g_strctModule.m_strctCrossSectionXY);
         a2fPrevCrossSectionXY_Func = a2fCrossSectionXY_Func;
-    end;
+    end
 end
 
 
@@ -69,11 +69,11 @@ else
     
     if g_strctModule.m_strctGUIOptions.m_bShow3DPlanes % Set Crosshairs planes on 3D axes
         set(g_strctModule.m_strctPanel.m_hPlaneYZ,'Xdata', reshape(apt3fPlanePointsYZ(1,:),2,2),'Ydata',reshape(apt3fPlanePointsYZ(2,:),2,2),'ZData',reshape(apt3fPlanePointsYZ(3,:),2,2));
-    end;
+    end
     if ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g_strctModule.m_strctGUIOptions.m_bShowFunctional
         [a2fCrossSectionYZ_Func] = fnResampleCrossSection(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a3fVol, a2fXYZ_To_CRS_Func, g_strctModule.m_strctCrossSectionYZ);
         a2fPrevCrossSectionYZ_Func = a2fCrossSectionYZ_Func;
-    end;
+    end
 end
 
 if fnSameStruct(strctPrevCrossSectionXZ, g_strctModule.m_strctCrossSectionXZ) && ~bForceInvalidate
@@ -91,11 +91,11 @@ else
     
      if g_strctModule.m_strctGUIOptions.m_bShow3DPlanes % Set Crosshairs planes on 3D axes
         set(g_strctModule.m_strctPanel.m_hPlaneXZ,'Xdata', reshape(apt3fPlanePointsXZ(1,:),2,2),'Ydata',reshape(apt3fPlanePointsXZ(2,:),2,2),'ZData',reshape(apt3fPlanePointsXZ(3,:),2,2));
-    end;
+    end
     if ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g_strctModule.m_strctGUIOptions.m_bShowFunctional
         [a2fCrossSectionXZ_Func] = fnResampleCrossSection(g_strctModule.m_acFuncVol{g_strctModule.m_iCurrFuncVol}.m_a3fVol, a2fXYZ_To_CRS_Func, g_strctModule.m_strctCrossSectionXZ);
         a2fPrevCrossSectionXZ_Func = a2fCrossSectionXZ_Func;
-    end;
+    end
 end
 
 %if g_strctModule.m_strctCrossSectionXY
@@ -156,7 +156,7 @@ else
         a3fCrossSectionXZ = fnOverlayBlood(a3fCrossSectionXZ,a2fBloodXZ>0);
     end
     
-end;
+end
 
 
 
@@ -209,17 +209,17 @@ if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
     set(g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY,'Xdata',[pt2fXZ_XY_1(1),pt2fXZ_XY_2(1)],'YData',[pt2fXZ_XY_1(2),pt2fXZ_XY_2(2)]);
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY,'Xdata',[pt2fYZ_XY_1(1),pt2fYZ_XY_2(1)],'YData',[pt2fYZ_XY_1(2),pt2fYZ_XY_2(2)]);
     set(g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ,'Xdata',[pt2fYZ_XZ_1(1),pt2fYZ_XZ_2(1)],'YData',[pt2fYZ_XZ_1(2),pt2fYZ_XZ_2(2)]);
-end;
+end
 
 if g_strctModule.m_strctGUIOptions.m_bShowChamber
     fnUpdateChamberContour();
-end;
+end
 
 if g_strctModule.m_strctGUIOptions.m_bShowTargets
     fnUpdateTargetContours();
 else
     fnDeleteTargetContours();
-end;
+end
 
 
 
@@ -227,19 +227,19 @@ if g_strctModule.m_strctGUIOptions.m_bShowFreesurferSurfaces
     fnUpdateFreesurferContours();
 else
     fnDeleteFreesurferContours();
-end;
+end
 
 
 
 if ~isfield(g_strctModule.m_strctGUIOptions,'m_bShowAtlas')
     g_strctModule.m_strctGUIOptions.m_bShowAtlas = false;
-end;
+end
 
 if g_strctModule.m_strctGUIOptions.m_bShowAtlas
     fnUpdateAtlasContours();
 else
     fnDeleteAtlasContours();
-end;
+end
 
 
  fnDrawControlableObject();
@@ -250,7 +250,7 @@ if isfield(g_strctModule.m_strctGUIOptions,'m_bShowMarkers') && g_strctModule.m_
 else
     fnDeleteMarkerContours();
     g_strctModule.m_strctGUIOptions.m_bShowMarkers = false;
-end;
+end
 
 set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(9),'string', sprintf('C %d',round(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctContrastTransform.m_fCenter)));
 set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(10),'string',sprintf('W %d',round(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctContrastTransform.m_fWidth)));

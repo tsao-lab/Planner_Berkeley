@@ -7,7 +7,7 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMar
         isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers) || ...
         isempty(strctCrossSection)
     return; 
-end;
+end
 
 aiCurrMarkers = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 

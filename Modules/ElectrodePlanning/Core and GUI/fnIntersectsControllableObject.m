@@ -15,7 +15,7 @@ if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_acControll
                [bIntersects, strWhat] = fnIntersectsRuler(strctObject, strctMouseOp);
                if bIntersects
                 return;
-               end;
+               end
         end
     end
 end

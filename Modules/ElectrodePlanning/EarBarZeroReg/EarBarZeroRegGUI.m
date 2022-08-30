@@ -97,7 +97,7 @@ switch strWhat
         setappdata(handles.figure1,'strMouseMode','PanVolume');
     case 'SetRotatePivot'
         setappdata(handles.figure1,'strMouseMode','SetRotationPivot');
-end;
+end
 
 return;
 
@@ -111,7 +111,7 @@ fDiff =  eventdata.VerticalScrollCount * 0.1;
  hAxes = fnGetActiveAxes(handles, pt2fFigure);
  if isempty(hAxes)
      return;
- end;
+ end
 a2fTransMatrix = eye(4);
 switch hAxes
     case handles.hHorizAxes
@@ -205,7 +205,7 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 strctRotationPoints = getappdata(handles.figure1,'strctRotationPoints');
 fScale = 0.01;
@@ -213,7 +213,7 @@ afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 
 if max(abs(afDiff)) > 10
     return;
-end;
+end
 
 fRotAngleRad = afDiff(1);
 switch strctMouseDown.m_hAxes
@@ -259,14 +259,14 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 1;
 afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 fDiff = -afDiff(2);
 if abs(fDiff) > 10
     return;
-end;
+end
 
     switch strctMouseDown.m_hAxes
         
@@ -280,7 +280,7 @@ end;
         case  handles.hSaggitalAxes
             strctAnatVol.m_strctCrossSectionSaggital.m_fHalfWidthMM =max(1,strctAnatVol.m_strctCrossSectionSaggital.m_fHalfWidthMM + fDiff);
             strctAnatVol.m_strctCrossSectionSaggital.m_fHalfHeightMM =max(1,strctAnatVol.m_strctCrossSectionSaggital.m_fHalfHeightMM + fDiff);
-    end;
+    end
 setappdata(handles.figure1,'strctAnatVol',strctAnatVol);
 
 fnInvalidate(handles);
@@ -298,13 +298,13 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 1;
 afDiff = -fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 if max(abs(afDiff)) > 30
     return;
-end;
+end
 
     switch strctMouseDown.m_hAxes
         
@@ -327,7 +327,7 @@ end;
         -afDiff(1) * strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,1) + ...
         -afDiff(2) * strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,2);
         strctAnatVol.m_strctCrossSectionSaggital.m_a2fM(1:3,4) = pt3fNewPos;
-    end;
+    end
 setappdata(handles.figure1,'strctAnatVol',strctAnatVol);
 
 fnInvalidate(handles);
@@ -342,7 +342,7 @@ strctRotationPoints = getappdata(handles.figure1,'strctRotationPoints');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 
 switch strctMouseDown.m_hAxes
@@ -367,13 +367,13 @@ strctMouseMovePrev = getappdata(handles.figure1,'strctMouseOpMovePrev');
 if isempty(strctMouseDown.m_hAxes) || isempty(strctMouseMove.m_hAxes) || ...
     (~isempty(strctMouseDown.m_hAxes) && ~isempty(strctMouseMove.m_hAxes) && strctMouseDown.m_hAxes ~= strctMouseMove.m_hAxes )
     return;
-end;
+end
 strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 fScale = 0.1;
 afDiff = fScale*(strctMouseMovePrev.m_pt2fPos - strctMouseMove.m_pt2fPos);
 if max(abs(afDiff)) > 30
     return;
-end;
+end
 a2fTransMatrix = eye(4);
 switch strctMouseDown.m_hAxes
     case handles.hHorizAxes
@@ -404,7 +404,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 
@@ -423,8 +423,8 @@ bInside =  (MousePos(1) > aiAxesRect(1) && ...
     if bInside
         hAxes = ahAxes(k);
         return;
-    end;
-end;
+    end
+end
 
 return;
 
@@ -581,19 +581,19 @@ for iRegionIter=1:length(aiVisibleRegions)
         if ~isempty(a2fLinesPix)
             ahHandles(end+1) = fnPlotLinesAsSinglePatch(handles.hHorizAxes, a2fLinesPix, ...
                 g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).color); %#ok
-        end;
+        end
 
         a2fLinesPix = fnMeshCrossSectionIntersection(strctMeshRegion, strctAnatVol.m_strctCrossSectionSaggital );
         if ~isempty(a2fLinesPix)
             ahHandles(end+1) = fnPlotLinesAsSinglePatch(handles.hSaggitalAxes, a2fLinesPix, ...
                 g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).color); %#ok
-        end;
+        end
         
         a2fLinesPix = fnMeshCrossSectionIntersection(strctMeshRegion, strctAnatVol.m_strctCrossSectionCoronal );
         if ~isempty(a2fLinesPix)
             ahHandles(end+1) = fnPlotLinesAsSinglePatch(handles.hCoronalAxes, a2fLinesPix, ...
                 g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).color); %#ok
-        end;
+        end
         
             setappdata(handles.figure1,'ahHandles',ahHandles);
     end
@@ -658,7 +658,7 @@ strctAnatVol = getappdata(handles.figure1,'strctAnatVol');
 [strFile, strPath] = uiputfile('*.reg','Select transformation file');
 if strFile(1) == 0
     return;
-end;
+end
 strFilename =fullfile(strPath,strFile);
 strVolType = 'round'; % make it compatible with FSL ?!?!??!
 afVoxelSpacing = strctAnatVol.m_afVoxelSpacing;

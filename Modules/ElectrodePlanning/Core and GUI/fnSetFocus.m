@@ -4,7 +4,7 @@ global g_strctModule
 hAxes  = g_strctModule.m_strctMouseOpMenu.m_hAxes;
 if isempty(hAxes)
     return;
-end;
+end
 
 switch hAxes 
     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
@@ -21,7 +21,7 @@ switch hAxes
          pt2fPosMM = fnCrossSection_Image_To_MM(g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctMouseOpMenu.m_pt2fPos);
         pt3fPosMMOnPlane = [pt2fPosMM,0,1]';
         pt3fPosInVol = g_strctModule.m_strctCrossSectionXZ.m_a2fM*pt3fPosMMOnPlane;
- end;
+ end
  g_strctModule.m_strctCrossSectionXY.m_fHalfWidthMM = 15;
  g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = 15;
  g_strctModule.m_strctCrossSectionXZ.m_fHalfWidthMM = 15;

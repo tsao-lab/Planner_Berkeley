@@ -29,8 +29,8 @@ if(fid == -1)
 end
 fclose(fid);
 
-if(isempty(s.seed)) s.seed = sum(100*clock); end;
-if(s.seed < 0)      s.seed = sum(100*clock); end;
+if(isempty(s.seed)) s.seed = sum(100*clock); end
+if(s.seed < 0)      s.seed = sum(100*clock); end
 randn('state',s.seed); 
 rand('state',s.seed); 
 

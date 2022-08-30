@@ -7,7 +7,7 @@ a2fCRS_To_XYZ = inv(a2fXYZ_To_CRS); %#ok
 strctCrossSection=fnAxesHandleToStrctCrossSection(strctMouseOpStart.m_hAxes);
 if isempty(strctCrossSection)
     return;
-end;
+end
 
 pt2fPosMM = fnCrossSection_Image_To_MM(strctCrossSection, strctMouseOpStart.m_pt2fPos);
 pt3fPosMMOnPlane = [pt2fPosMM,0,1]';
@@ -39,7 +39,7 @@ fnInvalidate(true);
 % if iIntensity < 1.5*mean(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol(:))
 %     msgbox('Intensity in marker is not strong enough compared to background');
 %     return;
-% end;
+% end
 % %Use half intensity? Terrible heuristic, but this is temporary.
 % a3iTemp = bwlabeln(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol >= 530);
 % iSelectedComponent = a3iTemp(pt3iPosVoxel(2),pt3iPosVoxel(1),pt3iPosVoxel(3));

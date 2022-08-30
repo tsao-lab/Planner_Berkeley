@@ -3,7 +3,7 @@ global g_strctModule
 
 if isfield(g_strctModule,'m_ahFreeSurferHandles')
     delete(g_strctModule.m_ahFreeSurferHandles(ishandle(g_strctModule.m_ahFreeSurferHandles)));
-end;
+end
 
 
 ahAxes = [g_strctModule.m_strctPanel.m_strctXY.m_hAxes,...

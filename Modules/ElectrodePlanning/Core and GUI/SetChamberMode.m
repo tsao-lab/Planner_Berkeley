@@ -16,7 +16,7 @@ catch %#ok
 end
 if g_strctModule.m_iCurrAnatVol == 0
     return;
-end;
+end
 fnInvalidateStereotactic();
 
 % cameratoolbar('Show');

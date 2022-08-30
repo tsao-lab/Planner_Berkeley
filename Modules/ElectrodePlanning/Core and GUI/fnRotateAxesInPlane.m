@@ -3,7 +3,7 @@ function fnRotateAxesInPlane(hAxes,afDelta)
 global g_strctModule
 if isempty(hAxes)
     return;
-end;
+end
 switch hAxes
     case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
         g_strctModule.m_strctCrossSectionXY = ...
@@ -14,7 +14,7 @@ switch hAxes
     case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
         g_strctModule.m_strctCrossSectionXZ = ...
             fnRotateInPlaneCrossSectionAux(g_strctModule.m_strctCrossSectionXZ, -afDelta(1)/100*pi);
-end;
+end
 
 fnInvalidate();
 

@@ -142,5 +142,5 @@ end
 
 
 fprintf('fmri_roiavg: done\n\n');
-if(QuitOnError) quit; end;
+if(QuitOnError) quit; end
 

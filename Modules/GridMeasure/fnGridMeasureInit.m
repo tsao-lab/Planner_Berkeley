@@ -34,7 +34,7 @@ if aiWindowSize(2) == 1
     iOffset = -30;
 else
     iOffset = 10;
-end;
+end
 
 iRightPanelWidth = 300;
 strctPanel.m_aiRightPanelSize = [aiWindowSize(3)-iRightPanelWidth+10 5 iRightPanelWidth-20 aiWindowSize(4)-aiWindowSize(2)+iOffset];
@@ -116,7 +116,7 @@ if size(pt2fMouseDownPosition,2) ~= 3
     pt2fMouseDownPosition = [-1 -1];
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
-end;
+end
 return;
 
 

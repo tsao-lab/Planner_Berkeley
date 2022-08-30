@@ -2,11 +2,11 @@ function fnUpdateAtlasContours()
 global g_strctModule
 if g_strctModule.m_iCurrAnatVol == 0 || isempty(g_strctModule.m_acAnatVol)
     return;
-end;
+end
 if isfield(g_strctModule.m_strctPanel,'m_ahAtlas')
     delete(g_strctModule.m_strctPanel.m_ahAtlas);
     g_strctModule.m_strctPanel.m_ahAtlas = [];
-end;
+end
 
 %iActiveAtlas = get(
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_a2fAtlasReg')
@@ -48,8 +48,8 @@ for iRegionIter=1:length(aiVisibleRegions)
             if ~isempty(a2fLinesPix)
                 ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, ...
                     g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).color); %#ok
-            end;
-        end;
+            end
+        end
     end
   %    ahHandles = [ahHandles,fnDrawMeshIn3D( strctMeshRegion ,g_strctModule.m_strctPanel.m_strct3D.m_hAxes)];
 

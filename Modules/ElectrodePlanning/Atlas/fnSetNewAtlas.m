@@ -7,12 +7,12 @@ if strcmp(acAtlasOpt{iSelectedAtlas},'Load...')
     [strFile,strPath]=uigetfile('*.mat');
     if strFile(1) ==0
         return;
-    end;
+    end
     
    strctTmp = load(fullfile(strPath,strFile));
    if ~isfield(strctTmp,'strctAtlas')
        return;
-   end;
+   end
     strctAtlas = strctTmp.strctAtlas;
     for k=1:length(strctAtlas.m_astrctMesh)
         strctAtlas.m_astrctMesh(k).visible = false;

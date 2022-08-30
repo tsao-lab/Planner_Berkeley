@@ -10,7 +10,7 @@ answer=inputdlg({'New Chamber Name:'},'Change Volume Name',1,...
 
 if isempty(answer)
     return;
-end;
+end
 g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_strName = answer{1};
 fnUpdateChamberList();
 return;

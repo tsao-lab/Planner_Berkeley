@@ -29,7 +29,7 @@ if size(pt2fMousePosition,2) ~= 3
     pt2fMousePosition = [-1 -1];
 else
     pt2fMousePosition = [pt2fMousePosition(1,1), pt2fMousePosition(1,2)];
-end;
+end
 
 strctBalloon.m_afX = afX;
 strctBalloon.m_afY = afY;
@@ -99,7 +99,7 @@ if size(pt2fMousePosition,2) ~= 3
     pt2fMousePosition = [-1 -1];
 else
     pt2fMousePosition = [pt2fMousePosition(1,1), pt2fMousePosition(1,2)];
-end;
+end
 
 strctBalloon.m_pt2fPosition = pt2fMousePosition;
 afCircle = [strctBalloon.m_pt2fPosition(1)+cos(strctBalloon.m_afAngle)*strctBalloon.m_fRadius;...
@@ -144,7 +144,7 @@ if size(pt2fMousePosition,2) ~= 3
     pt2fMousePosition = [-1 -1];
 else
     pt2fMousePosition = [pt2fMousePosition(1,1), pt2fMousePosition(1,2)];
-end;
+end
 
 strctBalloon.m_pt2fPosition = pt2fMousePosition;
 afCircle = [strctBalloon.m_pt2fPosition(1)+cos(strctBalloon.m_afAngle)*strctBalloon.m_fRadius;...

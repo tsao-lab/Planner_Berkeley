@@ -27,7 +27,7 @@ function varargout = AtlasMarker(varargin)
 if nargin >=1 && (strcmpi(varargin{1},'Invalidate')  || strcmpi(varargin{1},'PrepareForModuleSwitch') || ...
         strcmpi(varargin{1},'AppClose') || strcmpi(varargin{1},'MouseMove') || strcmpi(varargin{1},'MouseUp') || strcmpi(varargin{1},'MouseDown')  || strcmpi(varargin{1},'Wheel')  || strcmpi(varargin{1},'KeyUp') || strcmpi(varargin{1},'KeyDown')  )
     return;
-end;
+end
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -163,7 +163,7 @@ defaultanswer={''};
 answer=inputdlg(prompt,name,numlines,defaultanswer);
 if isempty(answer)
     return;
-end;
+end
 strctAtlas.m_acRegions{end+1} = answer{1};
 fnUpdateAtlasStruct(handles.figure1,strctAtlas);
 fnUpdateRegionList(handles);
@@ -175,7 +175,7 @@ strctAtlas = getappdata(handles.figure1,'strctAtlas');
 iActiveRegion = get(handles.hRegionsList,'value');
 if isempty(strctAtlas.m_acRegions)
     return;
-end;
+end
 strctAtlas.m_acRegions(iActiveRegion) = [];
 fnUpdateAtlasStruct(handles.figure1,strctAtlas);
 fnUpdateRegionList(handles);
@@ -278,7 +278,7 @@ if bChanged
     end
     if strFile(1) == 0
         return;
-    end;
+    end
     strCurrentAtlasFile = fullfile(strPath,strFile);
     setappdata(hFigure1,'strCurrentAtlasFile',strCurrentAtlasFile);
     save(strCurrentAtlasFile,'strctAtlas');
@@ -292,7 +292,7 @@ function hAddSlice_Callback(hObject, eventdata, handles)
  [strFile,strPath] = uigetfile('D:\Photos\Work Related\Bert Histology\*');
 if strFile(1) == 0
     return;
-end;
+end
 strFullSliceName = fullfile(strPath,strFile);
 I = imread(strFullSliceName);
 
@@ -363,7 +363,7 @@ defaultanswer={'0'};
 answer=inputdlg(prompt,name,numlines,defaultanswer);
 if isempty(answer)
     return;
-end;
+end
 end
 [strPath,strFile,strExt]=fileparts(strRectFile);
 
@@ -390,7 +390,7 @@ function fnSetActiveSlice(handles, iNewSlice)
 strctAtlas = getappdata(handles.figure1,'strctAtlas');
 if isempty(strctAtlas.m_astrctSlices)
     return;
-end;
+end
 
 strOverlayFolder = getappdata(handles.figure1,'strOverlayFolder');
 strFileNameJPGShort = fullfile(strOverlayFolder,sprintf('%04d.jpg', strctAtlas.m_astrctSlices(iNewSlice).m_fPositionMM));
@@ -431,7 +431,7 @@ else
     a2hRegions= getappdata(handles.figure1,'a2hRegions');
     if ~isempty(a2hRegions)
         delete(a2hRegions(ishandle(a2hRegions)));
-    end;
+    end
     setappdata(handles.figure1,'a2hRegions',a2hRegions);
 
 end
@@ -456,12 +456,12 @@ if isempty(iActiveRegion) || iActiveSlice > length(strctAtlas.m_astrctSlices)
     iActiveSlice = 1;
     setappdata(handles.figure1,'iActiveSlice',iActiveSlice);
 
-end;
+end
 % Delete existing regions...
 a2hRegions= getappdata(handles.figure1,'a2hRegions');
 if ~isempty(a2hRegions)
     delete(a2hRegions(ishandle(a2hRegions)));
-end;
+end
 iNumRegions = length(strctAtlas.m_astrctSlices(iActiveSlice).m_acRegions);
 a2hRegions = NaN*ones(2,iNumRegions);
 for iRegionIter=1:iNumRegions
@@ -501,7 +501,7 @@ fnUpdateSliceRegions(handles,iNumRegions+1);
 if placement_cancelled'
      % Remove ?
     return;
-end;
+end
 strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions{iNumRegions+1}.m_apt2fCoordinates = [xi, yi];
 fnUpdateAtlasStruct(handles.figure1,strctAtlas);
 fnUpdateAnnotatedRegions(handles);
@@ -559,7 +559,7 @@ iActiveRegion = get(handles.hRegionsInSlice,'value');
 iActiveSlice = get(handles.hSlicesList,'value');
 if isempty(strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions)
     return;
-end;
+end
 
 
 %  apt2fArcLength= fnResampleArcLength2D(strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions{iActiveRegion}.m_apt2fCoordinates, 2);
@@ -591,7 +591,7 @@ iActiveRegion = get(handles.hRegionsInSlice,'value');
 iActiveSlice = get(handles.hSlicesList,'value');
 if isempty(strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions)
     return;
-end;
+end
 strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions(iActiveRegion) = [];
 
 fnUpdateAtlasStruct(handles.figure1,strctAtlas);
@@ -636,7 +636,7 @@ iActiveSlice = get(handles.hSlicesList,'value');
 if ~isempty(strctAtlas.m_astrctSlices(iActiveSlice).m_acRegions)
     setappdata(handles.figure1,'strctCopyRegions',strctAtlas.m_astrctSlices(iActiveSlice).m_acRegions);
     return;
-end;
+end
 return;
 
 
@@ -647,7 +647,7 @@ iActiveSlice = get(handles.hSlicesList,'value');
 strctCopyRegions = getappdata(handles.figure1,'strctCopyRegions');
 if isempty(strctCopyRegions)
     return;
-end;
+end
 
 ans=questdlg('Paste','Warning','Yes','No','Yes');
 if strcmp(ans,'Yes')
@@ -657,7 +657,7 @@ if strcmp(ans,'Yes')
     fnUpdateSliceRegions(handles)
 
     return;
-end;
+end
 
 
 % --- Executes on button press in hSetOverlay.
@@ -665,7 +665,7 @@ function hSetOverlay_Callback(hObject, eventdata, handles)
 strOverlayFolder =uigetdir();
 if strOverlayFolder(1) == 0
     return;
-end;
+end
 setappdata(handles.figure1,'strOverlayFolder',strOverlayFolder);
 iActiveSlice = get(handles.hSlicesList,'value');
 fnSetActiveSlice(handles, iActiveSlice);
@@ -705,7 +705,7 @@ defaultanswer={''};
 answer=inputdlg(prompt,name,numlines,defaultanswer);
 if isempty(answer)
     return;
-end;
+end
 
 if ~isfield(strctAtlas,'m_astrctMetaRegions')
     iNewRegion = 1;
@@ -914,7 +914,7 @@ function hOpenAtlasFile_ClickedCallback(hObject, eventdata, handles)
 [strFile,strPath]=uigetfile('Atlas.mat');
 if strPath(1)==0
     return;
-end;
+end
 
 fnLoadAtlasFile(handles, fullfile(strPath,strFile), false);
 return;
@@ -992,7 +992,7 @@ iActiveRegion = get(handles.hRegionsInSlice,'value');
 iActiveSlice = get(handles.hSlicesList,'value');
 if isempty(strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions)
     return;
-end;
+end
 [xi, yi ] = fnMyPolygonModificationTool(handles.axes1,...
     strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions{iActiveRegion}.m_apt2fCoordinates(:,1),...
     strctAtlas.m_astrctSlices(iActiveSlice ).m_acRegions{iActiveRegion}.m_apt2fCoordinates(:,2));
@@ -1079,7 +1079,7 @@ strctAtlas = getappdata(handles.figure1,'strctAtlas');
 iActiveRegion = get(handles.hRegionsList,'value');
 if isempty(strctAtlas.m_acRegions)
     return;
-end;
+end
 prompt={'Enter new name:'};
 
 name='New brain region name';
@@ -1088,7 +1088,7 @@ defaultanswer={''};
 answer=inputdlg(prompt,name,numlines,defaultanswer);
 if isempty(answer)
     return;
-end;
+end
 strNewName= answer{1};
 strOldName = strctAtlas.m_acRegions{iActiveRegion};
 strctAtlas.m_acRegions{iActiveRegion} = strNewName;
