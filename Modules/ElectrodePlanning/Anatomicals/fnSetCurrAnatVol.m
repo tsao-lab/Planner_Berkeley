@@ -19,9 +19,10 @@ if isempty(g_strctModule.m_acAnatVol)
     return
 end
 
-bSetDefaultView =  norm(g_strctModule.m_acAnatVol{iNewVolSelected}.m_strctCrossSectionHoriz.m_a2fM(:) - ...
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM(:)) > 1e-10;
-    
+% bSetDefaultView =  norm(g_strctModule.m_acAnatVol{iNewVolSelected}.m_strctCrossSectionHoriz.m_a2fM(:) - ...
+%     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM(:)) > 1e-10;
+bSetDefaultView = false;
+
 g_strctModule.m_iCurrAnatVol = iNewVolSelected;
 if isfield(g_strctModule.m_acAnatVol{iNewVolSelected},'m_iLastSelectedChamber') && g_strctModule.m_acAnatVol{iNewVolSelected}.m_iLastSelectedChamber > 0
     g_strctModule.m_iCurrChamber = g_strctModule.m_acAnatVol{iNewVolSelected}.m_iLastSelectedChamber;

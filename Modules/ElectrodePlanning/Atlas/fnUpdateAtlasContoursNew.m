@@ -1,9 +1,10 @@
-function fnUpdateAtlasContoursNew(a2fXYZ_To_CRS)
+function fnUpdateAtlasContoursNew()
 global g_strctModule g_strctApp
 if g_strctModule.m_iCurrAnatVol == 0 || isempty(g_strctModule.m_acAnatVol)
     return;
 end
 
+a2fXYZ_To_CRS = inv(g_strctApp.m_strctAtlasNewContour.m_strctMRI.vox2ras0);
 a2fCrossSectionXY = fnResampleCrossSection(g_strctApp.m_strctAtlasNewContour.m_strctMRI.vol, ...
     a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY, 1);
 a2fCrossSectionYZ = fnResampleCrossSection(g_strctApp.m_strctAtlasNewContour.m_strctMRI.vol, ...

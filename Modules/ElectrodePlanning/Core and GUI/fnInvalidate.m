@@ -236,7 +236,7 @@ if ~isfield(g_strctModule.m_strctGUIOptions,'m_bShowAtlas')
 end
 
 if g_strctModule.m_strctGUIOptions.m_bShowAtlas
-    fnUpdateAtlasContoursNew(a2fXYZ_To_CRS);
+    fnUpdateAtlasContoursNew();
 else
     fnDeleteAtlasContoursNew();
 end
