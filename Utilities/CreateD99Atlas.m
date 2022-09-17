@@ -17,7 +17,7 @@ for k = 1:length(idc)
 %     v2 = imerode(v1, se);
 %     v(:, :, :, k) = v1-v2;
 %     v0(bwperim(v(:, :, :, k), 26)) = idc(k);
-    v0(bwperim(V==idc(k), 26)) = idc(k);
+    v0(bwperim(V==idc(k), 6)) = idc(k);
 end
 fprintf('\n');
 

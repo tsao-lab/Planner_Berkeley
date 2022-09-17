@@ -1,11 +1,14 @@
 function [a2fCrossSection, apt3fPlanePoints, a2fXmm, a2fYmm, a2fXmmT, a2fYmmT, a2fZmmT, apt3fInVolMM] =...
-    fnResampleCrossSection(a3fVol, a2fXYZ_To_CRS, strctCrossSection)
+    fnResampleCrossSection(a3fVol, a2fXYZ_To_CRS, strctCrossSection, useNearestNeighbor)
 % resamples a cross-section (plane) of a volume.
 % Cross section is defined by a 3x3 rotation and position, emmbeded in a 4x4 matrix
 % 
 % Also returns the four corner of this plane in XYZ coordinates
 %
 
+if ~exist('useNearestNeighbor', 'var') || isempty(useNearestNeighbor)
+    useNearestNeighbor = false;
+end
 
 [a2fXmm,a2fYmm] = meshgrid(...
     linspace(-strctCrossSection.m_fHalfWidthMM, strctCrossSection.m_fHalfWidthMM, strctCrossSection.m_iResWidth),...
@@ -31,7 +34,7 @@ apt3fPlanePoints = a2fTmp(1:3,:);
 % however, matlab representation is relative to [1,1,1].
 % The fast interp 3 dll get indices which are relative to [1,1,1],
 % therefore, we add one to all three dimensions.
-a2fCrossSection = reshape(fndllFastInterp3(a3fVol, 1+apt2fPoints(1,:),1+apt2fPoints(2,:),1+apt2fPoints(3,:)), size(a2fXmm));
+a2fCrossSection = reshape(fndllFastInterp3(a3fVol, 1+apt2fPoints(1,:),1+apt2fPoints(2,:),1+apt2fPoints(3,:), useNearestNeighbor), size(a2fXmm));
 %  iMode=2;
 %  a2fCrossSection = reshape(interp3fast_double(a3fVol, 1+apt2fPoints(2,:),1+apt2fPoints(1,:),1+apt2fPoints(3,:),iMode), size(a2fXmm));
 

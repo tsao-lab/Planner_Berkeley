@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "mex.h"
+#include "matrix.h"
 
 #define TRI(x, y, z, V000, V010, V100, V110, V001, V011, V101, V111) (((V000) * (1 - z) + (V001) * (z)) * (1 - y) + ((V010) * (1 - z) + (V011) * (z)) * (y)) * (1 - x) + (((V100) * (1 - z) + (V101) * (z)) * (1 - y) + ((V110) * (1 - z) + (V111) * (z)) * (y)) * (x)
 #define MAX(x, y) (x > y) ? (x) : (y)
@@ -13,6 +14,28 @@ as arguments the volume grid. It is assumed that input volume coordinates are 1.
 % Input type is float
 % Output type is float
 */
+
+template <class T>
+void CalcNearestNeighbor(T *input_volume, T *output_vector,
+						 int iNumPoints, double *rows, double *cols, double *slices, int in_rows, int in_cols, int in_slices)
+{
+	int curr_row, curr_col, curr_slice;
+	int in_sliceoffset = in_rows * in_cols;
+	int num_input_voxels = in_slices * in_cols * in_rows;
+
+	for (int iPointIter = 0; iPointIter < iNumPoints; iPointIter++)
+	{
+		curr_row = int(round(rows[iPointIter] - 1));
+		curr_col = int(round(cols[iPointIter] - 1));
+		curr_slice = int(round(slices[iPointIter] - 1));
+
+		if (!(curr_row >= 0 & curr_col >= 0 & curr_slice >= 0 & curr_row < in_rows & curr_col < in_cols & curr_slice < in_slices))
+			continue;
+
+		int in_curpos = curr_slice * in_sliceoffset + curr_col * in_rows + curr_row;
+		output_vector[iPointIter] = ACCESS_VOLUME(input_volume, in_curpos, num_input_voxels);
+	}
+}
 
 template <class T>
 void CalcInterpolation(T *input_volume, float *output_vector,
@@ -54,9 +77,9 @@ void CalcInterpolation(T *input_volume, float *output_vector,
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-	if (nlhs != 1 || nrhs != 4)
+	if (nlhs != 1 || (nrhs != 4 && nrhs != 5))
 	{
-		mexErrMsgTxt("Usage: [afValues] = fndllFastInterp3(a3fVolume, Cols, Rows, Slices)");
+		mexErrMsgTxt("Usage: [afValues] = fndllFastInterp3(a3fVolume, cols, rows, slices[, useNearestNeighbor])");
 		return;
 	}
 
@@ -67,7 +90,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		return;
 	}
 
-	const int *input_dim_array = mxGetDimensions(prhs[0]);
+	const mwSize *input_dim_array = mxGetDimensions(prhs[0]);
 	int in_rows = input_dim_array[0];
 	int in_cols = input_dim_array[1];
 	int in_slices = input_dim_array[2];
@@ -75,8 +98,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 	double *rows = (double *)mxGetData(prhs[2]);
 	double *cols = (double *)mxGetData(prhs[1]);
 	double *slices = (double *)mxGetData(prhs[3]);
+	bool nn = false;
+	if (nrhs == 5)
+	{
+		if (mxIsLogical(prhs[4]))
+			nn = (bool)(mxGetLogicals(prhs[4])[0]);
+		else
+			nn = (double)(((double *)mxGetData(prhs[4]))[0]) != 0;
+	}
 
-	const int *tmp = mxGetDimensions(prhs[1]);
+	const mwSize *tmp = mxGetDimensions(prhs[1]);
 	int iNumPoints = MAX(tmp[0], tmp[1]);
 
 	if (iNumPoints == 0)
@@ -85,33 +116,55 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 		return;
 	}
 
-	int output_dim_array[2];
+	mwSize output_dim_array[2];
 	output_dim_array[0] = iNumPoints;
 	output_dim_array[1] = 1;
-	plhs[0] = mxCreateNumericArray(2, output_dim_array, mxSINGLE_CLASS, mxREAL);
-	float *output_vector = (float *)mxGetPr(plhs[0]);
 
-	if (mxIsSingle(prhs[0]))
+	if (nn)
 	{
-		float *input_volume = (float *)mxGetData(prhs[0]);
-		CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		if (mxIsInt16(prhs[0]))
+		{
+			plhs[0] = mxCreateNumericArray(2, output_dim_array, mxINT16_CLASS, mxREAL);
+			short *output_vector = (short *)mxGetPr(plhs[0]);
+			short *input_volume = (short *)mxGetData(prhs[0]);
+			CalcNearestNeighbor(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
+
+		if (mxIsUint8(prhs[0]))
+		{
+			plhs[0] = mxCreateNumericArray(2, output_dim_array, mxUINT8_CLASS, mxREAL);
+			unsigned char *output_vector = (unsigned char *)mxGetPr(plhs[0]);
+			unsigned char *input_volume = (unsigned char *)mxGetData(prhs[0]);
+			CalcNearestNeighbor(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
 	}
-
-	if (mxIsDouble(prhs[0]))
+	else
 	{
-		double *input_volume = (double *)mxGetData(prhs[0]);
-		CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
-	}
+		plhs[0] = mxCreateNumericArray(2, output_dim_array, mxSINGLE_CLASS, mxREAL);
+		float *output_vector = (float *)mxGetPr(plhs[0]);
 
-	if (mxIsUint16(prhs[0]) || mxIsInt16(prhs[0]))
-	{
-		short *input_volume = (short *)mxGetData(prhs[0]);
-		CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
-	}
+		if (mxIsSingle(prhs[0]))
+		{
+			float *input_volume = (float *)mxGetData(prhs[0]);
+			CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
 
-	if (mxIsUint8(prhs[0]) || mxIsLogical(prhs[0]))
-	{
-		unsigned char *input_volume = (unsigned char *)mxGetData(prhs[0]);
-		CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		if (mxIsDouble(prhs[0]))
+		{
+			double *input_volume = (double *)mxGetData(prhs[0]);
+			CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
+
+		if (mxIsUint16(prhs[0]) || mxIsInt16(prhs[0]))
+		{
+			short *input_volume = (short *)mxGetData(prhs[0]);
+			CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
+
+		if (mxIsUint8(prhs[0]) || mxIsLogical(prhs[0]))
+		{
+			unsigned char *input_volume = (unsigned char *)mxGetData(prhs[0]);
+			CalcInterpolation(input_volume, output_vector, iNumPoints, rows, cols, slices, in_rows, in_cols, in_slices);
+		}
 	}
 }

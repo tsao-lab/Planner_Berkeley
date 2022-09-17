@@ -41,20 +41,17 @@ if ~isempty(strctMouseOp.m_pt2fPos)
     set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(7),'String', sprintf('DV %.2f (%.2f)',pt3fPosInStereoSpace(3),pt3fPosInAtlasSpace(3)));
 
     if 1% strcmpi(g_strctModule.m_strMouseMode,'QueryAtlas')
-        if exist('pt3fPosIn3DSpace', 'var') && all(size(pt3fPosIn3DSpace)==[4 1])
-            pt3fAtlas = g_strctApp.m_strctAtlasNew.m_strctMRI.vox2ras0 \ pt3fPosIn3DSpace;
-            index = fndllFastInterp3(g_strctApp.m_strctAtlasNew.m_strctMRI.vol, ...
-                pt3fAtlas(1), pt3fAtlas(2), pt3fAtlas(3), 1);
-            idx = find(g_strctApp.m_strctAtlasNew.m_tableRegions.label==index, 1);
-        else
-            idx = [];
-        end
+        if length(pt3fPosIn3DSpace)<4
+            pt3fPosIn3DSpace = [pt3fPosIn3DSpace; 1]
+        pt3fAtlas = g_strctApp.m_strctAtlasNew.m_strctMRI.vox2ras0 \ pt3fPosIn3DSpace;
+        index = fndllFastInterp3(g_strctApp.m_strctAtlasNew.m_strctMRI.vol, ...
+            pt3fAtlas(1), pt3fAtlas(2), pt3fAtlas(3), 1);
+        idx = find(g_strctApp.m_strctAtlasNew.m_tableRegions.label==index, 1);
         if isempty(idx)
             strAtlasRegion = 'Unknown';
         else
             strAtlasRegion = g_strctApp.m_strctAtlasNew.m_tableRegions.name{idx};
         end
-        set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(11),'string',sprintf('Atlas Region: %s ',strAtlasRegion));
 
 %          if ~isempty(g_strctModule.m_strctAtlas.m_astrctSlices)
 %              

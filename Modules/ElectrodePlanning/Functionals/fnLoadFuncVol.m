@@ -45,7 +45,7 @@ strctFuncVol.m_a3fVol = strctVol.vol;
 % end
 
 %a2fM = fnFreesurferToPlanner(strctVol);
-a2fM=strctVol.tkrvox2ras;
+a2fM=strctVol.vox2ras;
 
 strctFuncVol.m_a2fM = a2fM;
 

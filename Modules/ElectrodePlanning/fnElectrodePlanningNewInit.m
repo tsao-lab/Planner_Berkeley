@@ -153,7 +153,7 @@ fnInitCrossSections();
 end
 
 function fnCreatePanels()
-global g_strctModule g_strctWindows
+global g_strctModule g_strctWindows g_strctApp
 % Create the four-window display
 aiWindowSize = get(g_strctWindows.m_hFigure,'Position');
 
@@ -225,8 +225,11 @@ strctPanel.m_strctXY.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m
 strctPanel.m_strctXY.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXY.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXY.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
 strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXY.m_hAxes);
-set(strctPanel.m_strctXY.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXY.m_hAxes,'on');
+strctPanel.m_strctXY.m_hAtlas = image(strctPanel.m_strctXY.m_hAxes, ...
+    [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
+    zeros(strctPanel.m_aiImageRes(1:2), 'uint8'));
+set(strctPanel.m_strctXY.m_hAxes,'Visible','off');
 
 strctPanel.m_strctXY.m_ahTextHandles(1) = text(8,  128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 strctPanel.m_strctXY.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
@@ -244,8 +247,11 @@ strctPanel.m_strctYZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m
 strctPanel.m_strctYZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctYZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctYZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
 strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctYZ.m_hAxes);
-set(strctPanel.m_strctYZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctYZ.m_hAxes,'on');
+strctPanel.m_strctYZ.m_hAtlas = image(strctPanel.m_strctYZ.m_hAxes, ...
+    [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
+    zeros(strctPanel.m_aiImageRes(1:2), 'uint8'));
+set(strctPanel.m_strctYZ.m_hAxes,'Visible','off');
 
 strctPanel.m_strctYZ.m_ahTextHandles(1) = text(8,  128,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 strctPanel.m_strctYZ.m_ahTextHandles(2) = text(248,128,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
@@ -253,14 +259,18 @@ strctPanel.m_strctYZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[
 strctPanel.m_strctYZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 
-
 strctPanel.m_strctXZ.m_aiPos =[iAxesSize+iSeparationBetweenWindowsPix strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35 iAxesSize,iAxesSize];
 strctPanel.m_strctXZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
 strctPanel.m_strctXZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
 strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXZ.m_hAxes);
-set(strctPanel.m_strctXZ.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctXZ.m_hAxes,'on');
+strctPanel.m_strctXZ.m_hAtlas = image(strctPanel.m_strctXZ.m_hAxes, ...
+    [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
+    zeros(strctPanel.m_aiImageRes(1:2), 'uint8'));
+set(strctPanel.m_strctXZ.m_hAxes,'Visible','off');
+
+
 strctPanel.m_strctXZ.m_ahTextHandles(1) = text(8,128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 strctPanel.m_strctXZ.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 strctPanel.m_strctXZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
@@ -738,9 +748,13 @@ uimenu(strctPanel.m_hScaleBarMenu, 'Label', 'Bottom Right', 'Callback', {@fnCall
 
 
 
-set(strctPanel.m_strctXY.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
-set(strctPanel.m_strctYZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
-set(strctPanel.m_strctXZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
+% set(strctPanel.m_strctXY.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
+% set(strctPanel.m_strctYZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
+% set(strctPanel.m_strctXZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
+
+set(strctPanel.m_strctXY.m_hAtlas, 'UIContextMenu', strctPanel.m_hMenu);
+set(strctPanel.m_strctYZ.m_hAtlas, 'UIContextMenu', strctPanel.m_hMenu);
+set(strctPanel.m_strctXZ.m_hAtlas, 'UIContextMenu', strctPanel.m_hMenu);
 
 strctPanel.m_hMenu3D = uicontextmenu;
 uimenu(strctPanel.m_hMenu3D, 'Label', 'Rotate', 'Callback', {@fnCallback,'SetRotateMode'});
@@ -976,6 +990,20 @@ else
     acAtlasOptions = {'Load...'};
 end
 strctAtlas=fnConvertAtlasToLongNames(strctAtlas);
+
+if exist('D99_atlas_v2.0.mat', 'file')
+    strctTmp = load('D99_atlas_v2.0');
+    strctAtlasNew = strctTmp.strctAtlas;
+    g_strctApp.m_strctAtlasNew = strctAtlasNew;
+end
+if exist('D99_atlas_v2.0_edge.mat', 'file')
+    strctTmp = load('D99_atlas_v2.0_edge');
+    strctAtlasNew = strctTmp.strctAtlas;
+    g_strctApp.m_strctAtlasNewContour = strctAtlasNew;
+    colormap(strctPanel.m_strctXY.m_hAxes, strctAtlasNew.m_tableRegions.color);
+    colormap(strctPanel.m_strctYZ.m_hAxes, strctAtlasNew.m_tableRegions.color);
+    colormap(strctPanel.m_strctXZ.m_hAxes, strctAtlasNew.m_tableRegions.color);
+end
 
 
 strctPanel.m_hAtlasList = uicontrol('style','popupmenu','String',acAtlasOptions,'HorizontalAlignment','left',...
