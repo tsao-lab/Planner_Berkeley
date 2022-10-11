@@ -1,10 +1,11 @@
-function strctModel = fnBuildRectangularChamberModel(fChamberWidthMM)
+function strctModel = fnBuildRectangularChamberModel()
 % A chamber must have only two strctures that describe the 3D geometry
 % One is "short" (normal size) and one is "long" to see its projection in
 % the volume. 
 %
 % Future versions may automatically do this projection so only the short
 % version will be needed.
+fChamberWidthMM = 20;
 strctModel.strctParams = fnGetStandardRectChamberParams(fChamberWidthMM);
 strctModel.m_astrctMeshShort = fnBuildRectModel( strctModel.strctParams, 80); %change from 0 to 80
 strctModel.m_astrctMeshLong = fnBuildRectModel( strctModel.strctParams, 80);

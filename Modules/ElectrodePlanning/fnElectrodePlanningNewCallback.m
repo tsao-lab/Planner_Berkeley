@@ -559,22 +559,21 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
             set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm, %.2f Deg',fDiffMM,fAngleRad/pi*180),'FontSize',11,'FontWeight','bold');
         elseif strcmpi(g_strctModule.m_strDistMode,'PointToGridTop');
             
-            if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) && ...
-                    g_strctModule.m_iCurrChamber > 0 && g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected > 0
-                strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
-                iSelectedGrid=g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
+            if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~isempty(g_strctModule.m_astrctChambers) && ...
+                    g_strctModule.m_iCurrChamber > 0 && g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected > 0
+                strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
+                iSelectedGrid=g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
                 
                 
                 strctGrid = strctChamber.m_astrctGrids(iSelectedGrid);
-                a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
-                a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+                a2fM = strctChamber.m_a2fM;
                 a2fGridOffsetTransform = eye(4);
                 a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
                 a2fM_WithMeshOffset =a2fM*a2fGridOffsetTransform;
                 pt3fPosIn3DSpace=fnGet3DCoord(strctMouseOp);
                 
                 [fMinDist, afMinDistToTarget, iBestHole, fDistanceFromHoleMM]=fnGridErrorFunction(...
-                    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_strctModel,...
+                    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_strctModel,...
                     pt3fPosIn3DSpace, a2fM_WithMeshOffset); %#ok
                 set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm from grid top',fDistanceFromHoleMM),'FontSize',11,'FontWeight','bold');
             end
@@ -665,10 +664,9 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && (g_strctModule.m_strc
             
             
         case 'RotateChamber3D'
-            if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+            if ~isempty(g_strctModule.m_astrctChambers)
                 rotHV = fnGetRotationMatrixFromAxes(g_strctModule.m_strctPanel.m_strct3D.m_hAxes, -afDiffScr(1)/5,-afDiffScr(2)/5);
-                a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
-                a2fM = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+                a2fM = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
                 pt3fCurrPos = a2fM(1:3,4);
                 a2fT = [1 0 0 -pt3fCurrPos(1);
                     0 1 0 -pt3fCurrPos(2);
@@ -679,7 +677,7 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && (g_strctModule.m_strc
                 a2fRot(1:3,1:3) = rotHV;
                 a2fRot(4,4) = 1;
                 a2fM = inv(a2fT) * a2fRot * a2fT * a2fM; %#ok
-                g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox = inv(a2fCRS_To_XYZ) * a2fM; %#ok
+                g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM = a2fM;
                 fnUpdateChamberMIP();
                 fnInvalidate();
             end
@@ -1007,7 +1005,7 @@ if (strcmpi(g_strctModule.m_strMouse3DMode,'AddChamberTowardsTarget') || strcmpi
         aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
         a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
         
-        pt3fTarget_mm= a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(aiCurrTarget(1)).m_pt3fPositionVoxel;1];
+        pt3fTarget_mm = g_strctModule.m_astrctTargets(aiCurrTarget(1)).m_pt3fPosition;
         afDirection = pt3fPointOnSurfaceMM-pt3fTarget_mm(1:3);
         afDirection = [afDirection / norm(afDirection)]'; %#ok
         

@@ -6,7 +6,7 @@ end
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers') 
     iNewMarkerIndex = 1;
 else
-    iNewMarkerIndex = 1+length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);    
+    iNewMarkerIndex = 1+length(g_strctModule.m_astrctMarkers);    
 end
 
 strctMarker.m_pt3fPosition_vox = pt3fPosVoxel;
@@ -32,11 +32,11 @@ strctMarker.m_bEnabled = true;
 %%
 
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers') || ...
-        isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers = strctMarker;
+        isempty(g_strctModule.m_astrctMarkers)
+     g_strctModule.m_astrctMarkers = strctMarker;
 else
-    iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);    
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iNumMarkers+1) = strctMarker;
+    iNumMarkers = length(g_strctModule.m_astrctMarkers);    
+    g_strctModule.m_astrctMarkers(iNumMarkers+1) = strctMarker;
 end
 fnUpdateMarkerList();
 return;

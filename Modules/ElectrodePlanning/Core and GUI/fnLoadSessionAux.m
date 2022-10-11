@@ -8,8 +8,8 @@ if ~isfield(strctSavedSession,'g_strctModule')
     return;
 end
     
-if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) && ...
-    isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber),'m_ah3DSurfaces')
+if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~isempty(g_strctModule.m_astrctChambers) && ...
+    isfield(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber),'m_ah3DSurfaces')
 
     if isfield(g_strctModule.m_strctPanel.m_strctXY,'m_ahChamber')
         delete(g_strctModule.m_strctPanel.m_strctXY.m_ahChamber);
@@ -21,7 +21,7 @@ if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~i
         delete(g_strctModule.m_strctPanel.m_strctXZ.m_ahChamber);
     end
 
-    ahHandles = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_ah3DSurfaces;
+    ahHandles = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_ah3DSurfaces;
     delete(ahHandles(ishandle(ahHandles)));
 end
   
@@ -36,8 +36,8 @@ end
     end
 %%
 
-if ~isempty(strctSavedSession.g_strctModule.m_acAnatVol) && ~isempty(strctSavedSession.g_strctModule.m_acAnatVol{1}.m_astrctChambers) && ...
-    isfield(strctSavedSession.g_strctModule.m_acAnatVol{1}.m_astrctChambers(1),'m_a2fM')
+if ~isempty(strctSavedSession.g_strctModule.m_acAnatVol) && ~isempty(strctSavedSession.g_strctModule.m_astrctChambers) && ...
+    isfield(strctSavedSession.g_strctModule.m_astrctChambers(1),'m_a2fM')
     % This is a really old saved session. Import it 
     
     for iAnatVolIter=1:length(strctSavedSession.g_strctModule.m_acAnatVol)
@@ -66,29 +66,29 @@ if ~isempty(strctSavedSession.g_strctModule.m_acAnatVol) && ~isempty(strctSavedS
         a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{iAnatVolIter}.m_a2fReg*g_strctModule.m_acAnatVol{iAnatVolIter}.m_a2fM; 
         
         % Add chambers
-        for iChamberIter=1:length(strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers)
-            g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_a2fM_vox = ...
-                inv(a2fCRS_To_XYZ)*strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_a2fM; %#ok
-            g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_astrctGrids = [];
-            g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_strctModel = g_strctModule.m_astrctChamberModels(1);
-             g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_strName = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_strName;
-             g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_ah3DSurfaces = [];
-             g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_bVisible = true;
-             g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctChambers(iChamberIter).m_iGridSelected = 0;
+        for iChamberIter=1:length(strctSavedSession.g_strctModule.m_astrctChambers)
+            g_strctModule.m_astrctChambers(iChamberIter).m_a2fM = ...
+                strctSavedSession.g_strctModule.m_astrctChambers(iChamberIter).m_a2fM;
+            g_strctModule.m_astrctChambers(iChamberIter).m_astrctGrids = [];
+            g_strctModule.m_astrctChambers(iChamberIter).m_strctModel = g_strctModule.m_astrctChamberModels(1);
+            g_strctModule.m_astrctChambers(iChamberIter).m_strName = strctSavedSession.g_strctModule.m_astrctChambers(iChamberIter).m_strName;
+            g_strctModule.m_astrctChambers(iChamberIter).m_ah3DSurfaces = [];
+            g_strctModule.m_astrctChambers(iChamberIter).m_bVisible = true;
+            g_strctModule.m_astrctChambers(iChamberIter).m_iGridSelected = 0;
         end
         % Add markers
         if isfield(strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter},'m_astrctMarkers')
             
-            iNumMarkers = length(strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers);
+            iNumMarkers = length(strctSavedSession.g_strctModule.m_astrctMarkers);
         else
              iNumMarkers =0;
         end
         for iMarkerIter=1:iNumMarkers
                         
             clear strctMarker
-            Tmp = inv(a2fCRS_To_XYZ)*[strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_pt3fPositionMM;1]; %#ok
+            Tmp = inv(a2fCRS_To_XYZ)*[strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_pt3fPositionMM;1]; %#ok
             strctMarker.m_pt3fPosition_vox = Tmp(1:3);
-            strctMarker.m_strName = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_strName;
+            strctMarker.m_strName = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_strName;
             
             strctMarker.m_strctCrossSectionXY =  g_strctModule.m_acAnatVol{iAnatVolIter}.m_strctCrossSectionHoriz;
             strctMarker.m_strctCrossSectionYZ = g_strctModule.m_acAnatVol{iAnatVolIter}.m_strctCrossSectionSaggital;
@@ -100,27 +100,27 @@ if ~isempty(strctSavedSession.g_strctModule.m_acAnatVol) && ~isempty(strctSavedS
             
             
             
-            if isfield(strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter),'m_bLeftArm')
+            if isfield(strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter),'m_bLeftArm')
                 iModel = 1; % Assume Kopf 1430
                 strctMarker.m_strModelName =  g_strctModule.m_astrctStereoTaxticModels(iModel).m_strName;
                 
-                if  strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_bLeftArm
+                if  strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_bLeftArm
                     iArm=1;
                 else
                     iArm=2;
                 end
-                fApValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_fAP_Value;
-                fDvValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_fZ_Value;
+                fApValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_fAP_Value;
+                fDvValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_fZ_Value;
                 
-                fMlValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_fMidline_Value;
+                fMlValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_fMidline_Value;
             else
                 
                 iModel = 2;
                 iArm =1 ;
                 strctMarker.m_strModelName =  g_strctModule.m_astrctStereoTaxticModels(iModel).m_strName;
-                fApValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(1).m_fValue;
-                fDvValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(5).m_fValue;
-                fMlValue = strctSavedSession.g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(6).m_fValue;
+                fApValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(1).m_fValue;
+                fDvValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(5).m_fValue;
+                fMlValue = strctSavedSession.g_strctModule.m_astrctMarkers(iMarkerIter).m_astrctJointDescirptions(6).m_fValue;
             end
             
             strctMarker.m_astrctJointDescirptions = ...
@@ -136,7 +136,7 @@ if ~isempty(strctSavedSession.g_strctModule.m_acAnatVol) && ~isempty(strctSavedS
             strctMarker.m_astrctJointDescirptions(6).m_fValue = fMlValue;
             strctMarker.m_astrctJointDescirptions(7).m_fValue = 0;
             strctMarker.m_astrctJointDescirptions(8).m_fValue = 0;
-            g_strctModule.m_acAnatVol{iAnatVolIter}.m_astrctMarkers(iMarkerIter) = strctMarker;
+            g_strctModule.m_astrctMarkers(iMarkerIter) = strctMarker;
          %   end
         end
 

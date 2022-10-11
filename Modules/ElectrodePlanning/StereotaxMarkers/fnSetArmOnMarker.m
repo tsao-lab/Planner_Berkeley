@@ -6,8 +6,8 @@ if length(iSelectedMarker) > 1 || g_strctModule.m_iCurrAnatVol == 0
     return;
 end
 if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-    if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-        strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
+    if ~isempty(g_strctModule.m_astrctMarkers)
+        strctMarker = g_strctModule.m_astrctMarkers(iSelectedMarker);
         
     iNewModelIndex = find(ismember({g_strctModule.m_astrctStereoTaxticModels.m_strName},strctMarker.m_strModelName));
    iNumArms= length(g_strctModule.m_astrctStereoTaxticModels(iNewModelIndex).m_astrctArms);

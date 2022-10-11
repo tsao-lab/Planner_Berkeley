@@ -230,9 +230,9 @@ return;
 
 % %%  Draw chamber...
 % global g_strctModule
-% strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(1);
+% strctChamber = g_strctModule.m_astrctChambers(1);
 % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-% a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+% a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox();
 % % start by drawing the actual chamber
 % % 1. Build chamber model
 % astrctMesh = fnChamber_BuildModel(strctChamber, true);

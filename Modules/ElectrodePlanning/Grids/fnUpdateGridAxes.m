@@ -10,10 +10,10 @@ end
 % set(g_strctModule.m_strctPanel.m_strctGrid.m_hCurrGridHoleDir,'visible','off');
 % set(g_strctModule.m_strctPanel.m_strctGrid.m_hCurrGridHole,'visible','off');
 bNoGrid = false;
-if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_astrctChambers)
     bNoGrid = true;
 else
-   iSelectedGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
+   iSelectedGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
     if isempty(iSelectedGrid) || iSelectedGrid == 0
         bNoGrid = true;
     end
@@ -28,7 +28,7 @@ if bNoGrid
 end
 
 % Open Grid Helper GUI
-strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 
 
 strctPlannerInfo.m_iAnatomicalIndex = g_strctModule.m_iCurrAnatVol;

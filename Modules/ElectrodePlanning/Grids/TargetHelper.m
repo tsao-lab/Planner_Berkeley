@@ -146,7 +146,7 @@ for k=1:iNumParamToOpt
 end
 
 
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 a2fGridOffsetTransform = eye(4);
 a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
 a2fM_WithMeshOffset =a2fM*a2fGridOffsetTransform;

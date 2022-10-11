@@ -4,13 +4,13 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMar
     errordlg('Please add markers first!');
     return;
 end
-iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+iNumMarkers = length(g_strctModule.m_astrctMarkers);
 
-strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(1);
+strctMarker = g_strctModule.m_astrctMarkers(1);
 acRowNames= {strctMarker.m_astrctJointDescirptions.m_strName};
 a2cData = cell( length(acRowNames), iNumMarkers);
 for k=1:iNumMarkers
-    strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k);
+    strctMarker = g_strctModule.m_astrctMarkers(k);
     for j=1:length(acRowNames)
         a2cData{j,k} = num2str(strctMarker.m_astrctJointDescirptions(j).m_fValue);
     end

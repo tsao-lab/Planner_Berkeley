@@ -11,16 +11,15 @@ if iNumTargets == 0 || iSelectedGrid == 0
 end
 
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-apt2fTargetsVoxels = cat(2,g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(aiCurrTarget).m_pt3fPositionVoxel);
-apt3fTargetsPosMM = a2fCRS_To_XYZ*[apt2fTargetsVoxels;ones(1,iNumTargets)];
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
+apt3fTargetsPosMM = cat(2,g_strctModule.m_astrctTargets(aiCurrTarget).m_pt3fPosition);
+if isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
     h=msgbox('Please add a grid first');
     waitfor(h);
     return;
 end
-strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 if strcmp(strctGrid.m_strType,'Standard Circular')
-    strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
+    strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
     TargetHelper(apt3fTargetsPosMM,strctChamber,strctGrid,a2fCRS_To_XYZ);
 else
     h=msgbox('This option is only available for standard circular grids','Warning');

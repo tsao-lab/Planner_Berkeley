@@ -89,15 +89,14 @@ switch strCommand
         iSelectedAnatomical = varargin{1};
         iSelectedChamber = varargin{2};
         iSelectedGrid = varargin{3};
-        strctGrid = g_strctModule.m_acAnatVol{iSelectedAnatomical}.m_astrctChambers(iSelectedChamber).m_astrctGrids(iSelectedGrid);
+        strctGrid = g_strctModule.m_astrctChambers(iSelectedChamber).m_astrctGrids(iSelectedGrid);
         aiSelectedHoles = find(strctGrid.m_strctModel.m_strctGridParams.m_abSelectedHoles);
         P0 = [-strctGrid.m_strctModel.m_afGridHolesX(aiSelectedHoles);strctGrid.m_strctModel.m_afGridHolesY(aiSelectedHoles);ones(1,length(aiSelectedHoles))];
         P1 = P0 + strctGrid.m_strctModel.m_apt3fGridHolesNormals(:,aiSelectedHoles);
         % Now we know the direction in the grid coordiante system.
         % Transform it to chamber and then to MM space....
-        strctChamber = g_strctModule.m_acAnatVol{iSelectedAnatomical}.m_astrctChambers(iSelectedChamber);
-        a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{iSelectedAnatomical}.m_a2fReg*g_strctModule.m_acAnatVol{iSelectedAnatomical}.m_a2fM; 
-        a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+        strctChamber = g_strctModule.m_astrctChambers(iSelectedChamber);
+        a2fM = strctChamber.m_a2fM;
        a2fGridOffsetTransform = eye(4);
        a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
        a2fM_WithMeshOffset =a2fM*a2fGridOffsetTransform;

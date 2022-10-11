@@ -6,7 +6,7 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMar
     errordlg('Please add markers first!');
     return;
 end
-iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+iNumMarkers = length(g_strctModule.m_astrctMarkers);
 if iNumMarkers < 4
     errordlg('Need at least 3 markers to solve this problem.');
     return;
@@ -17,15 +17,15 @@ end
 
 % Remove non-enabled markers from computation
 
-if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(1),'m_bEnabled')
-    for k=1:length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_bEnabled = true;
+if ~isfield(g_strctModule.m_astrctMarkers(1),'m_bEnabled')
+    for k=1:length(g_strctModule.m_astrctMarkers)
+        g_strctModule.m_astrctMarkers(k).m_bEnabled = true;
     end
 end
 
 abEnabled = zeros(1,iNumMarkers) >0;
 for k=1:iNumMarkers
-     abEnabled(k) = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_bEnabled;
+     abEnabled(k) = g_strctModule.m_astrctMarkers(k).m_bEnabled;
 end
 apt3fMarkersStereoTaticCoord = apt3fMarkersStereoTaticCoord(:,abEnabled);
 apt3fMarkersMRIMetricCoord= apt3fMarkersMRIMetricCoord(:,abEnabled);
@@ -76,8 +76,8 @@ StereotaxMMtoMRIspaceMM = [[inv(R2), -inv(R2)*T]; 0,0,0,1];
 
 %%%%%%%%%%%%%%%%%
 if 1
-    for selectedMarker =1:length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-        strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(selectedMarker);
+    for selectedMarker =1:length(g_strctModule.m_astrctMarkers)
+        strctMarker = g_strctModule.m_astrctMarkers(selectedMarker);
         
         iModelIndex = find(ismember({g_strctModule.m_astrctStereoTaxticModels.m_strName},strctMarker.m_strModelName));
         iNumArmsInModel = length(g_strctModule.m_astrctStereoTaxticModels(iModelIndex).m_astrctArms);

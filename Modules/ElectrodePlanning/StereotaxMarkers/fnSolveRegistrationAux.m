@@ -1,7 +1,7 @@
 function [apt3fMarkersStereoTaticCoord, apt3fMarkersMRIMetricCoord]=fnSolveRegistrationAux()
 global g_strctModule
 
-iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+iNumMarkers = length(g_strctModule.m_astrctMarkers);
 apt3fMarkersStereoTaticCoord = zeros(3,iNumMarkers);
 apt3fMarkersMRIMetricCoord = zeros(3,iNumMarkers);
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
@@ -12,7 +12,7 @@ fnRefreshStereoModels();
 
 % The convension says: [X,Y,Z] = [MidLine, AP, Z]
 for k=1:iNumMarkers
-    strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k);
+    strctMarker = g_strctModule.m_astrctMarkers(k);
     
     iModelIndex = find(ismember({g_strctModule.m_astrctStereoTaxticModels.m_strName},strctMarker.m_strModelName));
     iNumArmsInModel = length(g_strctModule.m_astrctStereoTaxticModels(iModelIndex).m_astrctArms);

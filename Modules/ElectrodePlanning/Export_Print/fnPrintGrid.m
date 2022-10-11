@@ -8,8 +8,8 @@ hFig = figure; %#ok
 clf;
 hAxes = gca;
 
-iSelectedGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
-strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+iSelectedGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
+strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 
 fnUpdateGridAxesAux(hAxes, strctGrid);
 axis equal

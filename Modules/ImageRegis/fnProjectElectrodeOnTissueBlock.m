@@ -4,10 +4,9 @@ function astrctElectrodeProjectionToTissueBlock=fnProjectElectrodeOnTissueBlock(
 % Draw chamber, both in 2D and 3D
 % if chamber has a grid, draw it as well. 
 % if there are electrodes in the grid, draw them as well
-strctChamber = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber);
+strctChamber = strctPlanner.g_strctModule.m_astrctChambers(iChamber);
 
-a2fCRS_To_XYZ = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fReg*strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fM; 
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 
 strctGrid = strctChamber.m_astrctGrids(iGrid);
 

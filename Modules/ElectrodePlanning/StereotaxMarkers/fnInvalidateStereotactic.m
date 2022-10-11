@@ -59,10 +59,10 @@ if isfield(g_strctModule,'m_ahChamberHandles')
 end
 
 g_strctModule.m_ahChamberHandles = [];
-if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) && g_strctModule.m_iCurrChamber ~= 0
-    iNumChambers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers);
+if ~isempty(g_strctModule.m_astrctChambers) && g_strctModule.m_iCurrChamber ~= 0
+    iNumChambers = length(g_strctModule.m_astrctChambers);
     for iChamberIter=1:iNumChambers
-        strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iChamberIter);
+        strctChamber = g_strctModule.m_astrctChambers(iChamberIter);
         if strctChamber.m_bVisible
             if iChamberIter == g_strctModule.m_iCurrChamber
                 g_strctModule.m_ahChamberHandles=[g_strctModule.m_ahChamberHandles, fnDrawChamberGridAndElectrodes2(strctChamber, true)];

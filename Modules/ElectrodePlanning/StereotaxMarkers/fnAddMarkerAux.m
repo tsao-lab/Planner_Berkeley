@@ -16,7 +16,7 @@ pt3fPosVoxel = a2fXYZ_To_CRS * pt3fPosInVol;
 fnAddMarkerAux2(pt3fPosVoxel(1:3),pt3fPosInStereoSpace,pt3fPosInVol);
 
 set(g_strctModule.m_strctPanel.m_hMarkersList,'value', ...
-    length( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers));
+    length( g_strctModule.m_astrctMarkers));
 fnUpdateMarkerList();
 fnInvalidate(true);
 return;

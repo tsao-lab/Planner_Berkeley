@@ -1,15 +1,15 @@
 function fnAlignToGridHole(iSelectedHole)
 global g_strctModule
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
-if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
+if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
     return;
 end
-strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
+strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
 strctGrid = strctChamber.m_astrctGrids(iSelectedGrid);
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 a2fXYZ_To_CRS_Anat = inv(a2fCRS_To_XYZ);
 
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 
 a2fGridOffsetTransform = eye(4);
 a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;

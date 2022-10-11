@@ -5,10 +5,10 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTar
     set(g_strctModule.m_strctPanel.m_hTargetList,'String','');
 else
     strName = '';
-    iNumTargets = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets);
+    iNumTargets = length(g_strctModule.m_astrctTargets);
 
     for k=1:iNumTargets
-        strName = [strName,'|',g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(k).m_strName]; %#ok
+        strName = [strName,'|',g_strctModule.m_astrctTargets(k).m_strName]; %#ok
     end
     iValue = min(iNumTargets,get(g_strctModule.m_strctPanel.m_hTargetList,'value'));
     if isempty(iValue)

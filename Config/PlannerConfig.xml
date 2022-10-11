@@ -56,8 +56,8 @@
                         />
 
                 <m_strctModel
-                        m_strModelName="Rectangular 20 mm"
-                        m_strModelFunc="fnBuildRectangularChamberModel(20)"
+                        m_strModelName="Rectangular"
+                        m_strModelFunc="fnBuildRectangularChamberModel()"
                         />
 
                 <m_strctModel

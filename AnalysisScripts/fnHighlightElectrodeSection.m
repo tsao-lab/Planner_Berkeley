@@ -30,14 +30,14 @@ afHighlightRange = 29:0.5:33;
 
 afColor = afColorArchT;
 fMarkerSize = 18;
-strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
+strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
 strctGrid = strctChamber.m_astrctGrids(iSelectedGrid);
 
 %find(strctGrid.m_strctModel.m_strctGridParams.m_abSelectedHoles)
 
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 a2fXYZ_To_CRS_Anat = inv(a2fCRS_To_XYZ);
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 a2fGridOffsetTransform = eye(4);
 a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
 a2fM_WithMeshOffset =a2fM*a2fGridOffsetTransform;

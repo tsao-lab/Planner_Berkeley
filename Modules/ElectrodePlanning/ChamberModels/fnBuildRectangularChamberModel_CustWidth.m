@@ -9,8 +9,7 @@ global g_strctModule
 if isempty(g_strctModule.m_acAnatVol)
     fChamberWidthMM = 20;
 else
-    chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
-        m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
+    chamberParams = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
     
     if ~isfield(chamberParams, 'm_fWidthMM')
         %not exist. May just changed from a circular chamber

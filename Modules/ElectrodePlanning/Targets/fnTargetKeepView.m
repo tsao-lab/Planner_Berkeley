@@ -1,7 +1,7 @@
 
 function fnTargetKeepView()
 global g_strctModule
-if isempty(g_strctModule.m_acAnatVol) || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets )
+if isempty(g_strctModule.m_acAnatVol) || isempty(g_strctModule.m_astrctTargets )
     return;
 end
 
@@ -12,13 +12,13 @@ if length(aiCurrTarget) > 1
 end
 iCurrTarget = aiCurrTarget(1);
 
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_strctCrossSectionXY = ...
+g_strctModule.m_astrctTargets(iCurrTarget).m_strctCrossSectionXY = ...
     g_strctModule.m_strctCrossSectionXY;
 
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_strctCrossSectionXZ = ...
+g_strctModule.m_astrctTargets(iCurrTarget).m_strctCrossSectionXZ = ...
     g_strctModule.m_strctCrossSectionXZ;
 
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_strctCrossSectionYZ = ...
+g_strctModule.m_astrctTargets(iCurrTarget).m_strctCrossSectionYZ = ...
     g_strctModule.m_strctCrossSectionYZ;
 
 return;

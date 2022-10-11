@@ -3,9 +3,6 @@ global g_strctModule
     % Generate three cubes with different colors and different radii
     % (too problematic to generate a spherical triangular mesh. Delaunay is
     % CRAP!
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-    
-
 if bSelected
     a2fColors = [1 0 0;
                  0 1 0;
@@ -15,7 +12,7 @@ else
                  0.5 0.5 0;
                  0.5 0.5 0];
 end
-pt3fPositionMM = a2fCRS_To_XYZ * [strctTarget.m_pt3fPositionVoxel;1];
+pt3fPositionMM = strctTarget.m_pt3fPosition;
 
 astrctMesh(1) = fnBuildCubeMesh(...
     pt3fPositionMM(1),...

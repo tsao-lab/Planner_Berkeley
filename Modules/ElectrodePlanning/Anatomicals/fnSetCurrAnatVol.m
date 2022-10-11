@@ -30,7 +30,7 @@ else
     g_strctModule.m_iCurrChamber = 0;
 end
 fnUpdateChamberList();
-fnSelectChamberAux(g_strctModule.m_iCurrChamber);
+% fnSelectChamberAux(g_strctModule.m_iCurrChamber);
     
 fnUpdateSurfacePatch();
 

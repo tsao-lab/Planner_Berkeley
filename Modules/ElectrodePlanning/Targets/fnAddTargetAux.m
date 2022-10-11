@@ -14,12 +14,13 @@ pt3fPosInVol = strctCrossSection.m_a2fM*pt3fPosMMOnPlane;
 
 
 pt3fPosInStereoSpace=fnGetCoordInStereotacticSpace(pt3fPosInVol(1:3));
-pt3fPosVoxel = a2fXYZ_To_CRS * pt3fPosInVol;
-% Convert to coordinates voxel
+% pt3fPosVoxel = a2fXYZ_To_CRS * pt3fPosInVol;
+% Convert to coordinates voxel %JL:NOOOOOOOOOOOOOOOOOO
 % this way, if the volume moves, or something, it will still be in
 % alignment!
-fnAddTargetAux2(pt3fPosVoxel(1:3),pt3fPosInStereoSpace);
-set(g_strctModule.m_strctPanel.m_hTargetList,'value', length( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets ));
+% fnAddTargetAux2(pt3fPosVoxel(1:3),pt3fPosInStereoSpace);
+fnAddTargetAux2(pt3fPosInVol(1:3),pt3fPosInStereoSpace);
+set(g_strctModule.m_strctPanel.m_hTargetList,'value', length( g_strctModule.m_astrctTargets ));
 fnUpdateTargetList();
 fnInvalidate(true);
 return;

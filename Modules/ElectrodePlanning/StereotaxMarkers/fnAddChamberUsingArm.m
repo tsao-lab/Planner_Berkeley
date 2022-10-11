@@ -1,6 +1,6 @@
 function fnAddChamberUsingArm()
 global g_strctModule
-strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(1);
+strctMarker = g_strctModule.m_astrctMarkers(1);
   
 iModelIndex = find(ismember({g_strctModule.m_astrctStereoTaxticModels.m_strName},strctMarker.m_strModelName));
 iNumArmsInModel = length(g_strctModule.m_astrctStereoTaxticModels(iModelIndex).m_astrctArms);

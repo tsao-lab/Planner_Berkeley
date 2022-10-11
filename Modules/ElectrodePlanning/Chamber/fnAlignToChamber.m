@@ -5,8 +5,7 @@ global g_strctModule
 if g_strctModule.m_iCurrChamber == 0
     return;
 end
-    a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-a2fChamberT = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+a2fChamberT = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
 
 % Rotate by pi
 a2fPiRot = fnRotateVectorAboutFixedAxis(a2fChamberT(1:3,3),pi,a2fChamberT(1:3,4));

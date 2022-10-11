@@ -2,12 +2,11 @@ function fnSolveWithVirtualArmNew()
 global g_strctModule
 
 iSelectedChamber = get(g_strctModule.m_strctPanel.m_hChambersList,'value');
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+if isempty(g_strctModule.m_astrctChambers)
     return;
 end
 
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-a2fChamberInMRI = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iSelectedChamber).m_a2fM_vox;
+a2fChamberInMRI = g_strctModule.m_astrctChambers(iSelectedChamber).m_a2fM;
 % FIXED! 18 Apr 2014.
 a2fChamberInMRI(1:3,3) = -a2fChamberInMRI(1:3,3);
 a2fChamberInStereoTacticCoord =  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fRegToStereoTactic * a2fChamberInMRI;

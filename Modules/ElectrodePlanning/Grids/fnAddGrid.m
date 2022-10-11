@@ -1,7 +1,7 @@
 function  fnAddGrid(iModel,iSubModel)
 global g_strctModule
 
-if isempty(g_strctModule.m_iCurrAnatVol) || isempty(g_strctModule.m_acAnatVol) || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+if isempty(g_strctModule.m_iCurrAnatVol) || isempty(g_strctModule.m_acAnatVol) || isempty(g_strctModule.m_astrctChambers)
     return;
 end
 

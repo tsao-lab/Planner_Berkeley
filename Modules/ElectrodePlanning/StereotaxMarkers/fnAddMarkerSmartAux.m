@@ -25,7 +25,7 @@ pt3fPosInStereoSpace=fnGetCoordInStereotacticSpace(pt3fPosVoxelEnd(1:3));
 fnAddMarkerAux2(pt3fPosVoxelEnd(1:3),pt3fPosInStereoSpace,pt3fPosInVol,afVoxelDirection);
 
 set(g_strctModule.m_strctPanel.m_hMarkersList,'value', ...
-    length( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers));
+    length( g_strctModule.m_astrctMarkers));
 fnUpdateMarkerList();
 fnInvalidate(true);
 % 
@@ -93,7 +93,7 @@ fnInvalidate(true);
 % fnAddMarkerAux2(pt3fMarkerPos_vox(1:3),pt3fPosInStereoSpace,pt3fMarkerPos_MM,afMarkerDirex_vox);
 % 
 % set(g_strctModule.m_strctPanel.m_hMarkersList,'value', ...
-%     length( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers));
+%     length( g_strctModule.m_astrctMarkers));
 % fnUpdateMarkerList();
 % fnInvalidate(true);
 % fnChangeMouseMode('Scroll');

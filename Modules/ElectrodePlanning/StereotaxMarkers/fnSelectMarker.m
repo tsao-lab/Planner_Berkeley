@@ -6,8 +6,8 @@ if length(iSelectedMarker) > 1 || g_strctModule.m_iCurrAnatVol == 0
     return;
 end
 if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-    if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-        strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
+    if ~isempty(g_strctModule.m_astrctMarkers)
+        strctMarker = g_strctModule.m_astrctMarkers(iSelectedMarker);
          if ~isfield(strctMarker,'m_astrctJointDescirptions')
             % Old version. Add as default the Kopf 1460 arm
             if strctMarker.m_bLeftArm
@@ -16,8 +16,8 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
                 [strctArm, astrctJointDescirptions] = fnKopf1460RightArm();
             end
             
-            for iMarkerIter=1:length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
-                strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iMarkerIter);
+            for iMarkerIter=1:length(g_strctModule.m_astrctMarkers)
+                strctMarker = g_strctModule.m_astrctMarkers(iMarkerIter);
                 
                 strctNewMarker.m_pt3fPositionMM = strctMarker.m_pt3fPositionMM;
                 strctNewMarker.m_strName = strctMarker.m_strName;
@@ -40,8 +40,8 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
                 astrctNewMarkers(iMarkerIter) = strctNewMarker; %#ok
             end
             
-             g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers = astrctNewMarkers;
-             strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
+             g_strctModule.m_astrctMarkers = astrctNewMarkers;
+             strctMarker = g_strctModule.m_astrctMarkers(iSelectedMarker);
          end
 
          a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 

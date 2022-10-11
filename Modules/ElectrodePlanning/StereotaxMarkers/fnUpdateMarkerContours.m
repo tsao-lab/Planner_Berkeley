@@ -7,7 +7,7 @@ if isfield(g_strctModule.m_strctPanel,'m_ahMarkers')
     delete(g_strctModule.m_strctPanel.m_ahMarkers);
     g_strctModule.m_strctPanel.m_ahMarkers = [];
 end
-iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+iNumMarkers = length(g_strctModule.m_astrctMarkers);
 ahHandles = [];
 ahAxes = [g_strctModule.m_strctPanel.m_strctXY.m_hAxes,...
     g_strctModule.m_strctPanel.m_strctYZ.m_hAxes,...
@@ -19,7 +19,7 @@ astrctCrossSection = [g_strctModule.m_strctCrossSectionXY,...
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 
 for iMarkerIter=1:iNumMarkers
-    strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iMarkerIter);
+    strctMarker = g_strctModule.m_astrctMarkers(iMarkerIter);
     
     astrctMesh = fnBuildMarkerMesh(strctMarker, iMarkerIter==iSelectedMarker);
     
@@ -43,7 +43,7 @@ a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg
 
 for k=1:iNumMarkers
     
-    pt3fMarkerPosMM = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)* a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_pt3fPosition_vox(:);1];
+    pt3fMarkerPosMM = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)* a2fCRS_To_XYZ*[g_strctModule.m_astrctMarkers(k).m_pt3fPosition_vox(:);1];
     
     ahHandlesMarkers(k) = plot3(g_strctModule.m_strctPanel.m_strct3D.m_hAxes,...
         pt3fMarkerPosMM(1),...

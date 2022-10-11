@@ -5,7 +5,7 @@ global g_strctModule
 if isempty(g_strctModule.m_acAnatVol) || g_strctModule.m_iCurrChamber == 0
     return;
 end
-iNumGrids = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
+iNumGrids = length(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
 if iNumGrids == 0
     return;
 end
@@ -17,15 +17,13 @@ end
 iCurrTarget = aiCurrTarget(1);
 iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-pt3fTargetPosMM = a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_pt3fPositionVoxel;1];
+pt3fTargetPosMM = g_strctModule.m_astrctTargets(iCurrTarget).m_pt3fPosition;
 
 
 
-strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
+strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
 strctGrid = strctChamber.m_astrctGrids(iSelectedGrid);
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 
 a2fGridOffsetTransform = eye(4);
 a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
@@ -51,7 +49,7 @@ plot(strctGrid.m_strctModel.m_afGridHolesX(iBestHole),strctGrid.m_strctModel.m_a
 title( sprintf('Minimum distance to target is %.2f mm, at depth %.2f mm ',fMinDist,fDepthMM));
 axis equal
 
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles(iBestHole) = 1;
+g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles(iBestHole) = 1;
 fnUpdateGridAxes();
 fnInvalidate(1);
 %fnChangePlanarIntersectionToElectrodeTract(strctGrid, iBestHole);

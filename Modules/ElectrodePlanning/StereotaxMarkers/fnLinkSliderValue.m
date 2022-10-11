@@ -29,7 +29,7 @@ fnUpdateChamberContour();
 % a2fManipulatorMM(1:3,3)=-a2fManipulatorMM(1:3,3);
 % a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); 
 % a2fManipualtor_Vox = a2fXYZ_To_CRS*a2fManipulatorMM;
-% g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox = a2fManipualtor_Vox; 
+% g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox() = a2fManipualtor_Vox; 
 % fnInvalidate();
 
 return;

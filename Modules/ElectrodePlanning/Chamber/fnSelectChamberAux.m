@@ -8,8 +8,8 @@ if iChamber > 0
     set(g_strctModule.m_strctPanel.m_hChamberList,'value',iChamber);
     set(g_strctModule.m_strctPanel.m_hGridList,'value',1);
     
-    if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers) && ...
-            g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_bVisible
+    if ~isempty(g_strctModule.m_astrctChambers) && ...
+            g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_bVisible
         set(g_strctModule.m_strctPanel.m_hChamberMenuVisible,'Checked','on')
     else
         set(g_strctModule.m_strctPanel.m_hChamberMenuVisible,'Checked','off')

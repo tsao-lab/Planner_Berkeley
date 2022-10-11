@@ -150,7 +150,26 @@ end
 %% Init global crosssections (JL)
 fnInitCrossSections();
 
+%% Init global chambers, targets and markers (JL)
+g_strctModule.m_astrctChambers = [];
+g_strctModule.m_astrctTargets = [];
+g_strctModule.m_astrctMarkers = [];
+
 end
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
 
 function fnCreatePanels()
 global g_strctModule g_strctWindows g_strctApp
@@ -295,45 +314,6 @@ strctPanel.m_strctYZ.m_ahTextHandles(12) = text(5,50,'Chamber Angles:','fontsize
 strctPanel.m_hMeasureLine  = [];
 strctPanel.m_hMeasureText  = [];
 
-% strctPanel.m_hGridTitleText = uicontrol('style','text','String','Current Grid (Top View)',...
-%     'Position',[20  strctPanel.m_aiRightPanelSize(4)-445 200 20],'parent',strctPanel.m_ahRightPanels(1),'horizontalalignment','center');
-% 
-% strctPanel.m_hGridAxesMenu = uicontextmenu('Callback',@fnMouseDownEmulator);
-% uimenu(strctPanel.m_hGridAxesMenu, 'Label', 'Align to grid hole','Callback', {@fnCallback,'AlignToGridHole'});
-% uimenu(strctPanel.m_hGridAxesMenu, 'Label', 'MIP Func (neg)','Callback', {@fnCallback,'GridMIPFuncNeg'});
-% uimenu(strctPanel.m_hGridAxesMenu, 'Label', 'MIP Func (pos)','Callback', {@fnCallback,'GridMIPFuncPos'});
-% uimenu(strctPanel.m_hGridAxesMenu, 'Label', 'MIP Vessels','Callback', {@fnCallback,'GridMIPVessels'});
-% uimenu(strctPanel.m_hGridAxesMenu, 'Label', 'Cancel');
-% 
-
-% strctPanel.m_strctGrid.m_aiAxesSize = [30 strctPanel.m_aiRightPanelSize(4)-690 iRightPanelWidth-70 iRightPanelWidth-70];
-% strctGrid.m_ahHoleHandles = [];
-% strctPanel.m_strctGrid.m_hAxes = axes('units','pixels','position',...
-%     strctPanel.m_strctGrid.m_aiAxesSize,'parent',strctPanel.m_ahRightPanels(1),'uicontextmenu',strctPanel.m_hGridAxesMenu);
-% strctPanel.m_strctGrid.m_hImage = image(-10:10,-10:10,zeros(64,64,3),'parent',strctPanel.m_strctGrid.m_hAxes,'uicontextmenu',strctPanel.m_hGridAxesMenu,'visible','off');
-% grid(strctPanel.m_strctGrid.m_hAxes,'on');
-% box(strctPanel.m_strctGrid.m_hAxes ,'on');
-% hold(strctPanel.m_strctGrid.m_hAxes,'on');
-% axis(strctPanel.m_strctGrid.m_hAxes,'xy');
-% set(strctPanel.m_strctGrid.m_hAxes,'visible','off');
-% strctPanel.m_strctGrid.m_ahHoleHandles = [];
-% strctPanel.m_strctGrid.m_hCurrGridHoleDir = ...
-%     plot(strctPanel.m_strctGrid.m_hAxes, 0,0,'c','uicontextmenu',strctPanel.m_hGridAxesMenu);
-% strctPanel.m_strctGrid.m_hCurrGridHole = ...
-%     plot(strctPanel.m_strctGrid.m_hAxes, 0,0,'g','uicontextmenu',strctPanel.m_hGridAxesMenu);
-% strctPanel.m_strctGrid.m_hCurrGridHoleTextPos = ...
-%     text(-9,9,'','HorizontalAlignment','left','parent',strctPanel.m_strctGrid.m_hAxes,...
-%     'color','b','fontweight','bold','uicontextmenu',strctPanel.m_hGridAxesMenu);
-% 
-% strctPanel.m_strctGrid.m_hCurrGridHoleTextInfo = ...
-%     text(-9,-9,'','HorizontalAlignment','left','parent',strctPanel.m_strctGrid.m_hAxes,...
-%     'color','b','fontweight','bold','uicontextmenu',strctPanel.m_hGridAxesMenu);
-% 
-% strctPanel.m_strctGrid.m_hScrollPos = [30 strctPanel.m_aiRightPanelSize(4)-740 iRightPanelWidth-70 20];
-% 
-% strctPanel.m_strctGrid.m_hScroll= uicontrol('style','slider','units','pixels','position',...
-%     strctPanel.m_strctGrid.m_hScrollPos,'parent',strctPanel.m_ahRightPanels(1),'min',-180,'max',180,...
-%     'SliderStep',[1/360 10/360],'callback', {@fnCallback,'RotateGrid'},'visible','off');
 %%
 
 % Set the overlay axes
@@ -409,7 +389,7 @@ strctPanel.m_hChamberMenu = uicontextmenu;
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Align Axes To Chamber','Callback', {@fnCallback,'fnAlignToChamber'});
 strctPanel.m_hChamberMenuVisible = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Visible','Callback', {@fnCallback,'fnShowHideChamber'});
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameChamber'});
-strctPanel.m_AnatCopySubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Copy To');
+% strctPanel.m_AnatCopySubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Copy To');
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveChamber'},'separator','on');
 
 strctPanel.m_hChamberMenuSubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Change type');
@@ -485,7 +465,7 @@ uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Find Closest Hole(No Grid Rotatio
 uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Optimal Grid Analysis', 'Callback', {@fnCallback,'TargetFindGridAndHole'});
 uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Project Blood Pattern On Surface', 'Callback', {@fnCallback,'ProjectBloodPattern'});
 
-strctPanel.m_TargetCopySubMenu = uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Copy To');
+% strctPanel.m_TargetCopySubMenu = uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Copy To');
 uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Remove', 'Callback', {@fnCallback,'RemoveTarget'},'separator','on');
 
 

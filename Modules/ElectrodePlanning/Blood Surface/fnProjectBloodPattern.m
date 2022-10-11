@@ -24,7 +24,7 @@ a2fXYZ_To_CRS = inv(a2fCRS_To_XYZ);
 a2fDataMax = zeros( iNumRays,iNumTargets);
 a2iMatchingInd = zeros( iNumVertices,iNumTargets);
 for iTargetIter=1:iNumTargets
-    pt3fTarget_mm= a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(aiCurrTarget(iTargetIter)).m_pt3fPositionVoxel;1];
+    pt3fTarget_mm = g_strctModule.m_astrctTargets(aiCurrTarget(iTargetIter)).m_pt3fPosition;
     % Convert surface to mm.
     % for each direction, generate a line that we will sample things on...
     a2fX = pt3fTarget_mm(1) + repmat(afSamplingAlongLine, iNumRays,1) .* repmat(X(:),1,iNumSamplesAlongLine);
@@ -82,8 +82,8 @@ end
 
 % % % % Code to add a chamber passing between two targets.
 % % % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
-% % % afPt1 = a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(aiCurrTarget(1)).m_pt3fPositionVoxel;1];
-% % % afPt2 = a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(aiCurrTarget(2)).m_pt3fPositionVoxel;1];
+% % % afPt1 = a2fCRS_To_XYZ*[g_strctModule.m_astrctTargets(aiCurrTarget(1)).m_pt3fPositionVoxel;1];
+% % % afPt2 = a2fCRS_To_XYZ*[g_strctModule.m_astrctTargets(aiCurrTarget(2)).m_pt3fPositionVoxel;1];
 % % % afDirection = afPt1(1:3)-afPt2(1:3);
 % % % afDirection = afDirection/norm(afDirection);
 % % % [afDirection1,afDirection2] = fnGramSchmidt(afDirection');

@@ -5,8 +5,7 @@ strctCrossSection = fnAxesHandleToStrctCrossSection(strctStartPoint.m_hAxes);
 
 pt3fStartPoint = fnCrossSection_Image_To_MM_3D(strctCrossSection, strctStartPoint.m_pt2fPos);
 pt3fEndPoint = fnCrossSection_Image_To_MM_3D(strctCrossSection, strctEndPoint.m_pt2fPos);
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
-a2fChamber = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+a2fChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
 
 
 afDesiredDirection = pt3fEndPoint-pt3fStartPoint;
@@ -106,7 +105,7 @@ strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = true;
 % Add a grid
 iGridIndex = fnAddGridFromStruct(g_strctModule.m_astrctGrids(iDefaultModel),[]);
 % Now, manipulate this grid....
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iGridIndex).m_strctModel = strctGridModel;
+g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iGridIndex).m_strctModel = strctGridModel;
 
 fnUpdateGridList();
 fnUpdateGridAxes(false);

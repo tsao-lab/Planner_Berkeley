@@ -12,12 +12,12 @@ end
 
 if iSelectedTarget > 0
     
-    answer=inputdlg({'New Target Name'},'Change Target Name',1,{g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iSelectedTarget).m_strName});
+    answer=inputdlg({'New Target Name'},'Change Target Name',1,{g_strctModule.m_astrctTargets(iSelectedTarget).m_strName});
     
     if isempty(answer)
         return;
     end
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iSelectedTarget).m_strName = answer{1};
+    g_strctModule.m_astrctTargets(iSelectedTarget).m_strName = answer{1};
     fnUpdateTargetList()
 end
 

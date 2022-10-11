@@ -7,7 +7,7 @@ if isfield(g_strctModule.m_strctPanel,'m_ahTargets')
     delete(g_strctModule.m_strctPanel.m_ahTargets);
     g_strctModule.m_strctPanel.m_ahTargets = [];
 end
-iNumTargets = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets);
+iNumTargets = length(g_strctModule.m_astrctTargets);
 ahHandles = [];
 ahAxes = [g_strctModule.m_strctPanel.m_strctXY.m_hAxes,...
     g_strctModule.m_strctPanel.m_strctYZ.m_hAxes,...
@@ -17,11 +17,10 @@ astrctCrossSection = [g_strctModule.m_strctCrossSectionXY,...
     g_strctModule.m_strctCrossSectionXZ];
 
 iSelectedTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
     
 for iTargetIter=1:iNumTargets
-    strctTarget = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iTargetIter);
+    strctTarget = g_strctModule.m_astrctTargets(iTargetIter);
     if iSelectedTarget == iTargetIter
         astrctMesh = fnBuildTargetMesh(strctTarget,1);
     else
@@ -37,7 +36,7 @@ for iTargetIter=1:iNumTargets
         end
         
     end
-    pt3fTarget3D = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM) *a2fCRS_To_XYZ*[strctTarget.m_pt3fPositionVoxel;1];
+    pt3fTarget3D = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM \ [strctTarget.m_pt3fPosition;1];
     
     % Draw target in 3D
     if sum(iTargetIter == aiCurrTarget) > 0

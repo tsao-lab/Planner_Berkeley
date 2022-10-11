@@ -7,13 +7,13 @@
 %     return;
 % global g_strctModule
 % iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
-% if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
+% if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
 %     return;
 % end
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 % 
-% a2fChamberT = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+% a2fChamberT = a2fCRS_To_XYZ*g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox();
 % 
 % [fDummy,iSelectedHole] = min(strctGrid.m_afGridHolesX.^2+strctGrid.m_afGridHolesY.^2);
 % 
@@ -72,18 +72,18 @@
 % 
 % iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
 % 
-% iNumGrids = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
+% iNumGrids = length(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
 % if iNumGrids == 0
 %     return;
 % end
 % 
 % 
 % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-% pt3fTargetPosMM = a2fCRS_To_XYZ*[g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_pt3fPositionVoxel;1];
+% pt3fTargetPosMM = a2fCRS_To_XYZ*[g_strctModule.m_astrctTargets(iCurrTarget).m_pt3fPositionVoxel;1];
 % 
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
-% strctChamber = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber);
-% a2fChamberM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+% strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
+% a2fChamberM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox();
 % 
 % [fMinDist,fDepthMM,iBestHole,fBestTheta] = fnSearchAllOrientations(strctGrid, a2fChamberM,pt3fTargetPosMM);
 % strctGrid.m_abSelected(:) = false;
@@ -104,7 +104,7 @@
 % 
 % % Add a new grid
 % strctGrid.m_fGridThetaDeg = fTheta;
-% strctGrid.m_strName = [strctGrid.m_strGridType,' Opt for ',g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_strName];
+% strctGrid.m_strName = [strctGrid.m_strGridType,' Opt for ',g_strctModule.m_astrctTargets(iCurrTarget).m_strName];
 % strctGrid.m_abSelected(iHoleSelected) = 1;
 % strctGrid.m_afGuideTubeLengthMM(iHoleSelected) = 20;
 % strctGrid.m_afElectrodeLengthMM(iHoleSelected) = fDepthMM-strctGrid.m_afGuideTubeLengthMM(iHoleSelected);
@@ -166,11 +166,11 @@
 
 % function fnMakeMarkersPlanar() %#ok
 % global g_strctModule
-% iNumMarkers = 8;%length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+% iNumMarkers = 8;%length(g_strctModule.m_astrctMarkers);
 % apt3fMarkersVox = ones(4,iNumMarkers);
 % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
 % for k=1:iNumMarkers
-%     apt3fMarkersVox(1:3,k) = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_pt3fPosition_vox;
+%     apt3fMarkersVox(1:3,k) = g_strctModule.m_astrctMarkers(k).m_pt3fPosition_vox;
 % end
 % apt3fMarkersMM = a2fCRS_To_XYZ* apt3fMarkersVox;
 % % fit the best plane to the points.
@@ -186,7 +186,7 @@
 % 
 % for k=1:iNumMarkers
 %     pt3fVox = inv(a2fCRS_To_XYZ) *[apt3fMarkersAdjustedMM(:,k);1]; %#ok
-%     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_pt3fPosition_vox = pt3fVox(1:3);
+%     g_strctModule.m_astrctMarkers(k).m_pt3fPosition_vox = pt3fVox(1:3);
 % end
 % fnInvalidate(1);
 % return;
@@ -244,7 +244,7 @@
 %     delete(strctAxes.m_ahChamber(ishandle(strctAxes.m_ahChamber)));
 %     strctAxes.m_ahChamber = [];
 % end
-% if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+% if isempty(g_strctModule.m_astrctChambers)
 %     setfield(g_strctModule.m_strctPanel,strStrctField,strctAxes);
 %     return;
 % end
@@ -357,7 +357,7 @@
 % return;
 % % Change crosshair to visualize a specified electrode track
 % a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-% a2fChamberT = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+% a2fChamberT = a2fCRS_To_XYZ*g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox();
 % 
 % a2fTrans = fnBuildElectrodeTransform(...
 %     strctGrid.m_strctModel.m_afGridHolesX(iSelectedHole), ...
@@ -629,12 +629,12 @@
 % global g_strctModule
 % cla(g_strctModule.m_strctPanel.hMarkersAxes);
 % if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers') 
-%     iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+%     iNumMarkers = length(g_strctModule.m_astrctMarkers);
 %     if  iNumMarkers  > 0
 %     
 %     apt3fMarkersPosition = zeros(3,iNumMarkers);
 %     for k=1:iNumMarkers 
-%         apt3fMarkersPosition(:,k) = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k).m_pt3fPositionMM;
+%         apt3fMarkersPosition(:,k) = g_strctModule.m_astrctMarkers(k).m_pt3fPositionMM;
 %     end
 %     plot(g_strctModule.m_strctPanel.hMarkersAxes,apt3fMarkersPosition(1,:),apt3fMarkersPosition(2,:),'r.')
 %     fMinX = min(apt3fMarkersPosition(1,:));
@@ -675,7 +675,7 @@
 % function fnHandleMouseMoveOnGridAxes(strctMouseOp)
 % global g_strctModule
 % 
-% if ~isfield(g_strctModule.m_strctPanel.m_strctGrid,'m_hCurrGridHole') || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+% if ~isfield(g_strctModule.m_strctPanel.m_strctGrid,'m_hCurrGridHole') || isempty(g_strctModule.m_astrctChambers)
 %     return;
 % end
 % 
@@ -684,11 +684,11 @@
 %     return;
 % end
 % 
-% iNumGrids = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
+% iNumGrids = length(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
 % if iNumGrids == 0
 %     return;
 % end
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 % % % Find out whether the mouse click is inside a hole
 % % 
 % 
@@ -757,11 +757,11 @@
 % %     end
 %     
 % %     iCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
-% %     if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets) && ~isempty(iCurrTarget) &&  length(iCurrTarget) == 1 && ...
-% %             iCurrTarget <= length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets) && (g_strctModule.m_iCurrChamber > 0)
+% %     if ~isempty(g_strctModule.m_astrctTargets) && ~isempty(iCurrTarget) &&  length(iCurrTarget) == 1 && ...
+% %             iCurrTarget <= length(g_strctModule.m_astrctTargets) && (g_strctModule.m_iCurrChamber > 0)
 % %         
-% %         pt3fCurrTarget = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctTargets(iCurrTarget).m_pt3fPositionMM;
-% %         a2fChamberT = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
+% %         pt3fCurrTarget = g_strctModule.m_astrctTargets(iCurrTarget).m_pt3fPositionMM;
+% %         a2fChamberT = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
 % %         
 % %         a2fTrans = fnBuildElectrodeTransform(strctGrid.m_afGridX(iSelectedHole), strctGrid.m_afGridY(iSelectedHole), ...
 % %             strctGrid.m_apt3fGridNormals(iSelectedHole,:), strctGrid.m_fGridThetaDeg,   strctGrid.m_fChamberDepthOffset,...
@@ -929,10 +929,10 @@
 % function fnSelectGridHole(strctMouseOp)
 % global g_strctModule
 % iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
-% if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
+% if isempty(iSelectedGrid) || iSelectedGrid == 0 || isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
 %     return;
 % end
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 % 
 %  [iSelectedHole]=fnSelectGridHoleAux(strctGrid,strctMouseOp);
 % if ~isempty(iSelectedHole)
@@ -940,7 +940,7 @@
 % 
 %     if strcmp(strctMouseOp.m_strButton,'Left')
 %         strctGrid.m_abSelected(iSelectedHole) = ~strctGrid.m_abSelected(iSelectedHole);
-%         g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid) = strctGrid;
+%         g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid) = strctGrid;
 %         fnUpdateGridAxes();
 %         fnInvalidate();
 %     end
@@ -963,9 +963,9 @@
 % function fnSetViewtoRecordingDepth()
 % global g_strctModule
 % % Change crosshair to visualize a specified electrode track
-% a2fChamberT = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
+% a2fChamberT = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
 % iSelectedGrid = get(g_strctModule.m_strctPanel.m_hGridList,'value');
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid);
 % 
 % iSelectedHole = g_strctModule.m_iLastSelectedGridHole;
 % a2fTrans = fnBuildElectrodeTransform(...
@@ -1007,11 +1007,11 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%     if g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm == true
-%          g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm = false;
+%     if g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm == true
+%          g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm = false;
 %          set(g_strctModule.m_strctPanel.m_hLeftArmMarkerSelect,'value',0);
 %     else
-%          g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm = false;
+%          g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm = false;
 %          set(g_strctModule.m_strctPanel.m_hRightArmMarkerSelect,'value',1);
 %     end
 % end
@@ -1025,11 +1025,11 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%     if g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm  == false
-%          g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm = true;
+%     if g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm  == false
+%          g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm = true;
 %          set(g_strctModule.m_strctPanel.m_hRightArmMarkerSelect,'value',0);
 %     else
-%          g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_bLeftArm = true;
+%          g_strctModule.m_astrctMarkers(iSelectedMarker).m_bLeftArm = true;
 %          set(g_strctModule.m_strctPanel.m_hLeftArmMarkerSelect,'value',1);
 %     end
 % end
@@ -1043,7 +1043,7 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fMidlineRotation_Value = ...
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fMidlineRotation_Value = ...
 %      str2num(get(g_strctModule.m_strctPanel.m_hRotMidlineEdit,'string'));
 % end
 % fnSelectMarker();
@@ -1061,11 +1061,11 @@
 %     if (X ~= 0 && X ~= 90 && X ~= -90 && X ~= 180)
 %         set(g_strctModule.m_strctPanel.m_hRot3Edit,'string',0);
 %         errordlg('Values can only be [0,90,-90,180]');
-%         g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fRot3_Value = 0;
+%         g_strctModule.m_astrctMarkers(iSelectedMarker).m_fRot3_Value = 0;
 %         return;
 %     end
 % 
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fRot3_Value = X;
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fRot3_Value = X;
 % end
 % fnSelectMarker();
 % return;
@@ -1077,7 +1077,7 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fHeightRotation_Value = ...
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fHeightRotation_Value = ...
 %      str2num(get(g_strctModule.m_strctPanel.m_hRotHeightEdit,'string'));
 % end
 % fnSelectMarker();
@@ -1094,7 +1094,7 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fAP_Value = ...
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fAP_Value = ...
 %      str2num(get(g_strctModule.m_strctPanel.m_hAPEdit,'string'));
 % end
 % fnSelectMarker();
@@ -1107,7 +1107,7 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fMidline_Value = ...
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fMidline_Value = ...
 %      str2num(get(g_strctModule.m_strctPanel.m_hMidLineEdit,'string'));
 % end
 % fnSelectMarker();
@@ -1120,7 +1120,7 @@
 %     return;
 % end
 % if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers')
-%  g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_fZ_Value = ...
+%  g_strctModule.m_astrctMarkers(iSelectedMarker).m_fZ_Value = ...
 %      str2num(get(g_strctModule.m_strctPanel.m_hZEdit,'string'));
 % end
 % fnSelectMarker();
@@ -1147,7 +1147,7 @@
 % if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers') 
 %     return;
 % end
-% iNumMarkers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers);
+% iNumMarkers = length(g_strctModule.m_astrctMarkers);
 % if iNumMarkers < 4
 %     return;
 % end
@@ -1159,7 +1159,7 @@
 % 
 % % The convension says: [X,Y,Z] = [MidLine, AP, Z]
 % for k=1:iNumMarkers
-%     strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(k);
+%     strctMarker = g_strctModule.m_astrctMarkers(k);
 %     
 %     % Build the configuration from readout values...
 %     q = [strctMarker.m_fAP_Value, ...
@@ -1193,13 +1193,13 @@
 % %% Compute Chamber Center and Direction in Stereotactic coordinates
 % % Now, compute the position of the chamber in stereotatic coordinate
 % iSelectedChamber = get(g_strctModule.m_strctPanel.m_hChambersList,'value');
-% if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+% if isempty(g_strctModule.m_astrctChambers)
 %     return;
 % end
-% pt3fChamberPosInMRICoord = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iSelectedChamber).m_a2fM(1:3,4);
+% pt3fChamberPosInMRICoord = g_strctModule.m_astrctChambers(iSelectedChamber).m_a2fM(1:3,4);
 % pt3fChamberPosInStereoTactic = a2fTrans * [pt3fChamberPosInMRICoord;1];
 % 
-% a2fChamberInMRI = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(iSelectedChamber).m_a2fM;
+% a2fChamberInMRI = g_strctModule.m_astrctChambers(iSelectedChamber).m_a2fM;
 % a2fChamberInMRI(1:3,3) = -a2fChamberInMRI(1:3,3);
 % a2fChamberInStereoTacticCoord =  a2fTrans * a2fChamberInMRI;
 % 

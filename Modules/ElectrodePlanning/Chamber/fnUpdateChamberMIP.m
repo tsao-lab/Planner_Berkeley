@@ -3,16 +3,16 @@ function fnUpdateChamberMIP()
     return;
 %     
 % global g_strctModule
-% if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
+% if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_astrctChambers)
 %     return
 % end
-% if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected)
+% if isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected)
 %     return;
 % end
 % % Test if we can do this type of projection....
 % % This is only OK if all holes are pointing along the same direction.
 % % Otherwise, we will need to sample each direction separately....
-% strctGrid = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected);
+% strctGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected);
 % 
 % fNormalX = strctGrid.m_apt3fGridHolesNormals(1,1);
 % fNormalY = strctGrid.m_apt3fGridHolesNormals(1,2);
@@ -38,7 +38,7 @@ function fnUpdateChamberMIP()
 %     
 %     a2fMIP_Func_Min = zeros(strctZoomCrossSection.m_iResHeight,strctZoomCrossSection.m_iResWidth);
 %     a2fMIP_Func_Max = zeros(strctZoomCrossSection.m_iResHeight,strctZoomCrossSection.m_iResWidth);
-%     a2fM = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+%     a2fM = a2fCRS_To_XYZ*g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox();
 %     
 %       a2fTrans = fnBuildElectrodeTransform(0, 0, [fNormalX,fNormalY,fNormalZ], strctGrid.m_fGridThetaDeg+180, 0, a2fM);
 %     a2fTrans = fnRotateAboutSameAxis(a2fTrans, pi);
@@ -71,7 +71,7 @@ function fnUpdateChamberMIP()
 %     
 %     a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
 %     a2fXYZ_To_CRS = inv(a2fCRS_To_XYZ);
-%     a2fM = a2fCRS_To_XYZ*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+%     a2fM = a2fCRS_To_XYZ*g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox();
 %     
 %     a2fTrans = fnBuildElectrodeTransform(0, 0, [fNormalX,fNormalY,fNormalZ], strctGrid.m_fGridThetaDeg+180, 0, a2fM);
 %     a2fTrans = fnRotateAboutSameAxis(a2fTrans, pi);

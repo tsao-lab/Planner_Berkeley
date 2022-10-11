@@ -1,7 +1,7 @@
 
 function fnUpdateChamberList()
 global g_strctModule
-iNumChambers = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers);
+iNumChambers = length(g_strctModule.m_astrctChambers);
 if iNumChambers == 0
     set(g_strctModule.m_strctPanel.m_hChamberList,'String','','value',1);
     return;
@@ -12,7 +12,7 @@ end
     
 strChambers = '';
 for k=1:iNumChambers
-    strChambers = [strChambers,'|', g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(k).m_strName]; %#ok
+    strChambers = [strChambers,'|', g_strctModule.m_astrctChambers(k).m_strName]; %#ok
 end
 if g_strctModule.m_iCurrChamber > iNumChambers
     g_strctModule.m_iCurrChamber = iNumChambers;

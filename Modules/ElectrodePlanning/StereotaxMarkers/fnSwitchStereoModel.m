@@ -22,9 +22,9 @@ set(g_strctModule.m_strctPanel.m_hStereoArmsList,'String',char(acArmNames),'valu
 iSelectedMarker = get(g_strctModule.m_strctPanel.m_hMarkersList,'value');
 
 if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctMarkers') && ...
-        ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers)
+        ~isempty(g_strctModule.m_astrctMarkers)
     
-    strctMarker = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker);
+    strctMarker = g_strctModule.m_astrctMarkers(iSelectedMarker);
     if strcmpi(strctMarker.m_strModelName, g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_strName) == 0
         % Model mismatch
         
@@ -32,13 +32,13 @@ if ~isempty(iSelectedMarker) && iSelectedMarker > 0 && isfield(g_strctModule.m_a
             'Important Question', ...
             'Yes', 'No', 'No');
         if strcmp(ButtonName,'Yes')
-            g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_strModelName = ...
+            g_strctModule.m_astrctMarkers(iSelectedMarker).m_strModelName = ...
                 g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_strName;
             
-            g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_strArmType = ...
+            g_strctModule.m_astrctMarkers(iSelectedMarker).m_strArmType = ...
                 g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_astrctArms(1).m_strctRobot.m_strName;
             
-            g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_astrctJointDescirptions = ...
+            g_strctModule.m_astrctMarkers(iSelectedMarker).m_astrctJointDescirptions = ...
                 g_strctModule.m_astrctStereoTaxticModels(g_strctModule.m_iStereoModelSelected).m_astrctArms(g_strctModule.m_iStereoArmSelected).m_strctRobot.m_astrctJointsDescription;
             
         end

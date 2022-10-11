@@ -14,15 +14,15 @@ if ~isempty(iSubModelIndex)
 end
 strctGrid.m_strctModel =  feval(strctGrid.m_strctGeneral.m_strBuildModel, strctGridParams);
 strctGrid.m_fChamberDepthOffset = 0;
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids = strctGrid;
+if isempty(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)
+    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids = strctGrid;
     iNewIndex = 1;
 else
-    iNewIndex = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)+1;
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iNewIndex) = strctGrid;
+    iNewIndex = length(g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids)+1;
+    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iNewIndex) = strctGrid;
 end
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected = ...
-    length( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
+g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected = ...
+    length( g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids);
 fnUpdateGridList();
 fnUpdateGridAxes(false);
 

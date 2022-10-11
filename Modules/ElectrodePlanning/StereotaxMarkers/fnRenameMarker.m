@@ -10,11 +10,11 @@ if length(iSelectedMarker) > 1
     return;
 end
 if iSelectedMarker > 0
-    answer=inputdlg({'New Marker Name'},'Change Marker Name',1,{g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_strName});
+    answer=inputdlg({'New Marker Name'},'Change Marker Name',1,{g_strctModule.m_astrctMarkers(iSelectedMarker).m_strName});
     if isempty(answer)
         return;
     end
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctMarkers(iSelectedMarker).m_strName = answer{1};
+    g_strctModule.m_astrctMarkers(iSelectedMarker).m_strName = answer{1};
     fnUpdateMarkerList();
 end
 

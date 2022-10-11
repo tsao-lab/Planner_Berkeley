@@ -4,8 +4,7 @@ global g_strctModule
 % if chamber has a grid, draw it as well. 
 % if there are electrodes in the grid, draw them as well
 
-a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM; 
-a2fM = a2fCRS_To_XYZ*strctChamber.m_a2fM_vox;
+a2fM = strctChamber.m_a2fM;
 
 % start by drawing the actual chamber
 % 1. Build chamber model

@@ -13,15 +13,11 @@ strctMouseOp = g_strctModule.m_strctPrevMouseOp;
 
 if ~isempty(g_strctModule.m_acAnatVol)
     if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctChambers')
-        if ~isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers)
-            
-            a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
-
-            a2fChamberXYZ = inv(a2fXYZ_To_CRS) * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM_vox;
+        if ~isempty(g_strctModule.m_astrctChambers)
+            a2fChamberXYZ = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
             angleXY = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), -g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,3)))))/pi*180;
             angleXZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,3)))))/pi*180;
             angleYZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), g_strctModule.m_strctCrossSectionYZ.m_a2fM(1:3,3)))))/pi*180;
-            
             set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(12),'String', ...
                 sprintf('Chamber Angles: XY: %.2f, XZ: %.2f, YZ: %.2f',angleXY,angleXZ,angleYZ));
         end

@@ -10,7 +10,7 @@ if isempty(iSelectedGrid)
     return;
 end
 fRotationAngle = round(get(g_strctModule.m_strctPanel.m_strctGrid.m_hScroll,'value'));
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_fGridThetaDeg = fRotationAngle;
+g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_fGridThetaDeg = fRotationAngle;
 
 fnUpdateGridAxes();
 fnUpdateChamberMIP();

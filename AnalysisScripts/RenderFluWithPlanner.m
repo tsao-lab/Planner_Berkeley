@@ -39,9 +39,8 @@ iNumAnnotations = size(apt3fAnnotationInMRImm,1);
 
 
 % First, convert chamber/grid to MM space
-a2fXYZ_To_CRS = inv(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fM) * inv(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fReg);  
-a2fChamberVox = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_a2fM_vox;
-a2fChamberMM = inv(a2fXYZ_To_CRS)*a2fChamberVox;
+% a2fXYZ_To_CRS = inv(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fM) * inv(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_a2fReg);  
+a2fChamberMM = strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_a2fM;
 a2fChamberMM(1:3,3) = -a2fChamberMM(1:3,3); % Positive direction is now down...
 % Shift the chamber center and align the origin with the electrode of
 % interest....
@@ -51,22 +50,22 @@ iArch_Hole = 79;
 iHalo_Hole = 96;
 % figure(11);
 % clf;
-% plot(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX,...
-%     strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY,'ko');
+% plot(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX,...
+%     strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY,'ko');
 % hold on;
-% plot(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iChR2_Hole),...
-%     strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iChR2_Hole),'bo','LineWidth',4);
-% plot(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iArch_Hole),...
-%     strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iArch_Hole),'go','LineWidth',4);
-% plot(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iHalo_Hole),...
-%     strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iHalo_Hole),'yo','LineWidth',4);
+% plot(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iChR2_Hole),...
+%     strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iChR2_Hole),'bo','LineWidth',4);
+% plot(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iArch_Hole),...
+%     strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iArch_Hole),'go','LineWidth',4);
+% plot(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(iHalo_Hole),...
+%     strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(iHalo_Hole),'yo','LineWidth',4);
 
 %%
-aiInjectionSites = find(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles);
+aiInjectionSites = find(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles);
 iInjectionSiteIndex = 1; % ChR2
 
-fX_Offset = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(aiInjectionSites(iInjectionSiteIndex));
-fY_Offset = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(aiInjectionSites(iInjectionSiteIndex));
+fX_Offset = strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX(aiInjectionSites(iInjectionSiteIndex));
+fY_Offset = strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY(aiInjectionSites(iInjectionSiteIndex));
 a2fGridMM = a2fChamberMM;
 a2fGridMM(1:3,4) = a2fChamberMM(1:3,4) - a2fChamberMM(1:3,1) * fX_Offset + a2fChamberMM(1:3,2) * fY_Offset;
 
@@ -230,10 +229,10 @@ plot3(a2fGridMM(1,4)+[0,a2fGridMM(1,3)*50],a2fGridMM(2,4)+[0,a2fGridMM(2,3)*50],
 
 
 
-iNumHoles = length(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX);
-afX = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX;
-afY = strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY;
-aiInjectionSites = find(strctPlanner.g_strctModule.m_acAnatVol{iAnatomical}.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles);
+iNumHoles = length(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX);
+afX = strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesX;
+afY = strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_afGridHolesY;
+aiInjectionSites = find(strctPlanner.g_strctModule.m_astrctChambers(iChamber).m_astrctGrids(iGrid).m_strctModel.m_strctGridParams.m_abSelectedHoles);
 for k=1:iNumHoles
     pt3fPos = a2fChamberMM(1:3,4) - a2fChamberMM(1:3,1) * afX(k) + a2fChamberMM(1:3,2) * afY(k);
     
