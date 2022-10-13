@@ -484,6 +484,7 @@ uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI', 'Callback', {@fnCallback,'
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI From Atlas', 'Callback', {@fnCallback,'AddNewROIUsingAtlas'});
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'Toggle Visibility', 'Callback', {@fnCallback,'ToggleVisibilityROI'});
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'Rename ROI', 'Callback', {@fnCallback,'RenameROI'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Change ROI Color', 'Callback', {@fnCallback,'ChangeROIColor'});
 %uimenu(strctPanel.m_hROIListMenu, 'Label', 'Project On Surface', 'Callback', {@fnCallback,'ProjectROIonSurface'});
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'Clear ROI', 'Callback', {@fnCallback,'ClearROI'});
 uimenu(strctPanel.m_hROIListMenu, 'Label', 'Delete ROI', 'Callback', {@fnCallback,'DeleteROI'});
@@ -951,30 +952,33 @@ strctPanel.m_hAtlasRegionText = uicontrol('style','text','String','Atlas regions
    strctPanel.m_ahRightPanels(3),'horizontalalignment','left','foregroundcolor',[1 0 0]);
 
 
-if exist('Saleem_Logothetis_Atlas.mat','file')
-    strctTmp = load('Saleem_Logothetis_Atlas');
-    strctAtlas = strctTmp.strctAtlas;
-    for k=1:length(strctAtlas.m_astrctMesh)
-        strctAtlas.m_astrctMesh(k).visible = k==1;
-    end
-    acAtlasOptions = {'Saleem-Logothetis','Load...'};
-elseif  exist('Saleem_Logothetis_Atlas_Cropped.mat','file')
-    strctTmp = load('Saleem_Logothetis_Atlas_Cropped');
-    strctAtlas = strctTmp.strctAtlas;
-    for k=1:length(strctAtlas.m_astrctMesh)
-        strctAtlas.m_astrctMesh(k).visible = k==1;
-    end
-    acAtlasOptions = {'Saleem-Logothetis','Load...'};
-else    
-    strctAtlas.m_acRegions = {};
-    acAtlasOptions = {'Load...'};
-end
-strctAtlas=fnConvertAtlasToLongNames(strctAtlas);
+% if exist('Saleem_Logothetis_Atlas.mat','file')
+%     strctTmp = load('Saleem_Logothetis_Atlas');
+%     strctAtlas = strctTmp.strctAtlas;
+%     for k=1:length(strctAtlas.m_astrctMesh)
+%         strctAtlas.m_astrctMesh(k).visible = k==1;
+%     end
+%     acAtlasOptions = {'Saleem-Logothetis','Load...'};
+% elseif  exist('Saleem_Logothetis_Atlas_Cropped.mat','file')
+%     strctTmp = load('Saleem_Logothetis_Atlas_Cropped');
+%     strctAtlas = strctTmp.strctAtlas;
+%     for k=1:length(strctAtlas.m_astrctMesh)
+%         strctAtlas.m_astrctMesh(k).visible = k==1;
+%     end
+%     acAtlasOptions = {'Saleem-Logothetis','Load...'};
+% else    
+%     strctAtlas.m_acRegions = {};
+%     acAtlasOptions = {'Load...'};
+% end
+% strctAtlas=fnConvertAtlasToLongNames(strctAtlas);
 
+g_strctApp.m_bAtlasLoaded = false;
+tmp = 0;
 if exist('D99_atlas_v2.0.mat', 'file')
     strctTmp = load('D99_atlas_v2.0');
     strctAtlasNew = strctTmp.strctAtlas;
     g_strctApp.m_strctAtlasNew = strctAtlasNew;
+    tmp = tmp+1;
 end
 if exist('D99_atlas_v2.0_edge.mat', 'file')
     strctTmp = load('D99_atlas_v2.0_edge');
@@ -983,22 +987,32 @@ if exist('D99_atlas_v2.0_edge.mat', 'file')
     colormap(strctPanel.m_strctXY.m_hAxes, strctAtlasNew.m_tableRegions.color);
     colormap(strctPanel.m_strctYZ.m_hAxes, strctAtlasNew.m_tableRegions.color);
     colormap(strctPanel.m_strctXZ.m_hAxes, strctAtlasNew.m_tableRegions.color);
+    tmp = tmp+1;
+end
+g_strctApp.m_bAtlasLoaded = tmp==2;
+if g_strctApp.m_bAtlasLoaded
+    g_strctApp.m_tableRegions = [{0, '%all', 'all regions', [1 1 1], true}; 
+        g_strctApp.m_strctAtlasNew.m_tableRegions];
 end
 
-
+acAtlasOptions = {'Saleem-Logothetis'};
 strctPanel.m_hAtlasList = uicontrol('style','popupmenu','String',acAtlasOptions,'HorizontalAlignment','left',...
     'Position',[90 strctPanel.m_aiRightPanelSize(4)-40 180 30],...
     'parent',strctPanel.m_ahRightPanels(3),'FontSize',8,'callback',{@fnCallback,'SetNewAtlas'},...
     'value',1,'Fontsize',12);
 
-g_strctModule.m_strctAtlas = strctAtlas;
+% g_strctModule.m_strctAtlas = strctAtlas;
 
 
-a2cData = cell(0,3);
+% a2cData = table('Size', [0, 3], 'VariableTypes', {'char','logical','char'}, ...
+%     'VariableNames', {'Region', 'Visible', 'Color'});
 strctPanel.m_hAtlasTable = uitable('parent',strctPanel.m_ahRightPanels(3),'position',...
     [10 strctPanel.m_aiRightPanelSize(4)-260 iRightPanelWidth-20 200],...
-    'ColumnName',{'Region','Visible','Color'},'Data',a2cData,'ColumnFormat',{'char','logical','char'},'columneditable',...
-    [false true false],'CellSelectionCallback',@fnConditionCellSelectCallback,'CellEditCallback',@fnConditionCellEditCallback);
+    'Data', cell(0, 3), 'ColumnEditable', [false true false], ...
+    'ColumnName', {'Region', 'Visible', 'Color'}, ...
+    'ColumnFormat', {'char','logical','char'}, ...
+    'CellSelectionCallback', @fnConditionCellSelectCallback,...
+    'CellEditCallback', @fnConditionCellEditCallback);
 
 
 strctPanel.m_hRegionSearchEdit= uicontrol('style','edit','String','',...
@@ -1093,27 +1107,27 @@ end
 
 function fnConditionCellSelectCallback(hTable,Tmp)
 global g_strctModule
-aiIndices=Tmp.Indices;
-if size(aiIndices,1) == 1 && aiIndices(2) == 3
-    iRegionIndex = aiIndices(1);
-     RGB=uisetcolor();
-     if length(RGB) == 3
-        g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).color = RGB;
-        fnUpdateAtlasTable;
-        feval(g_strctModule.m_hCallbackFunc,'Invalidate');
-     end
-end
+% aiIndices=Tmp.Indices;
+% if size(aiIndices,1) == 1 && aiIndices(2) == 3
+%     iRegionIndex = aiIndices(1);
+%      RGB=uisetcolor();
+%      if length(RGB) == 3
+%         g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).color = RGB;
+%         fnUpdateAtlasTable;
+%         feval(g_strctModule.m_hCallbackFunc,'Invalidate');
+%      end
+% end
 end
 
 function fnConditionCellEditCallback(hTable,Tmp)
 global g_strctModule
 
-aiIndices=Tmp.Indices;
-if size(aiIndices,1) == 1 && aiIndices(2) == 2
-    iRegionIndex = aiIndices(1);
-    g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).visible = ~g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).visible;
-     fnUpdateAtlasTable;
-    feval(g_strctModule.m_hCallbackFunc,'Invalidate');
-end
+% aiIndices=Tmp.Indices;
+% if size(aiIndices,1) == 1 && aiIndices(2) == 2
+%     iRegionIndex = aiIndices(1);
+%     g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).visible = ~g_strctModule.m_strctAtlas.m_astrctMesh(iRegionIndex).visible;
+%     fnUpdateAtlasTable;
+%     feval(g_strctModule.m_hCallbackFunc,'Invalidate');
+% end
 end
 

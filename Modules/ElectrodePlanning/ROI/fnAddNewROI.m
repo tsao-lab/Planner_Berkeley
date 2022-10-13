@@ -14,14 +14,14 @@ if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctROI
         isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
      g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs = strctROI;
 else
-    iNumROI= length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs);    
+    iNumROI = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs);    
     % Modifu the color and name...
     a2fColors = colorcube(50);
     strctROI.m_strColor = a2fColors(1+iNumROI,:);
     strctROI.m_strName = sprintf('ROI %d',1+iNumROI);
     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(iNumROI+1) = strctROI;
 end
-iNewROIIndex= length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs);
+iNewROIIndex = length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs);
 fnUpdateROIList();
 
 return;

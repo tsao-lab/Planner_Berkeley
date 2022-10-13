@@ -1,21 +1,22 @@
-function a3bBrainMask=fnGetBrainMask()
-global g_strctModule
+function a3bBrainMask = fnGetBrainMask()
+global g_strctModule g_strctApp
 
 if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_a2fAtlasReg')
     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = eye(4);
 end
 
-iMetaRegionAll = 1;
-P = [g_strctModule.m_strctAtlas.m_astrctMesh(iMetaRegionAll).vertices'; ...
-    ones(1,size(g_strctModule.m_strctAtlas.m_astrctMesh(iMetaRegionAll).vertices,1))];
-Pmm = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * P;
- a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg);
+P = [g_strctApp.m_strctAtlasNew.m_strctSurface.vertices'; ...
+    ones(1, size(g_strctApp.m_strctAtlasNew.m_strctSurface.vertices, 1))];
+Pmm = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * ...
+    g_strctApp.m_strctAtlasNew.m_strctMRI.vox2ras0 * P;
+a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * ...
+    inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg);
 
 % Convert back to CRS...
 Pcrs = a2fXYZ_To_CRS* Pmm;
 % Compute convex hull....
 X = Pcrs(1:3,:)';
-K=convhulln(X);
+K = convhulln(X);
 % binarize the convex hull somehow....
 iNumSlices = size(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol,3);
 a3bBrainMask = zeros(size(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol),'uint8')>0;

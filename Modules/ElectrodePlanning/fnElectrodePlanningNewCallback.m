@@ -404,6 +404,8 @@ switch strCallback
         fnAddNewROI();
     case 'RenameROI'
         fnRenameROI();
+    case 'ChangeROIColor'
+        fnChangeROIColor();
     case 'ProjectROIonSurface'
     case 'DeleteROI'
         fnDeleteROIs();

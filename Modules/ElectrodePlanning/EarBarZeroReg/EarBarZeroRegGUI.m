@@ -551,7 +551,8 @@ pt2fPt= fnCrossSection_MM_To_Image(strctAnatVol.m_strctCrossSectionCoronal, pt2f
 set(strctXZ.m_hRotationPoint,'xdata',pt2fPt(1),'ydata',pt2fPt(2));
 
      
-bDrawAtlas = get(handles.ToggleAtlas,'value');
+% bDrawAtlas = get(handles.ToggleAtlas,'value');
+bDrawAtlas = false;
 if bDrawAtlas
 
             ahHandles=getappdata(handles.figure1,'ahHandles');

@@ -510,7 +510,7 @@ else
         aiHist = histc(a3iLabeled(:),1:iNumCC);
         if bPickLargest
             % Pick biggest one
-            [fDummy, iIndex]=max(aiHist);
+            [~, iIndex]=max(aiHist);
             %a3bVol = fndllSelectLabels(uint16(a3iLabeled), uint16(find(aiHist > strctVol.m_strctIsoSurfParam.m_iLargeCCSize))) > 0;
             a3bVol =a3iLabeled == iIndex;
         else
@@ -526,13 +526,14 @@ a3bVolume = a3bVol;
 a3bVolSub = a3bVol(1:2:end,1:2:end,1:2:end);
 aiVolSize = size(a3bVol);
 [a3iX,a3iY, a3iZ] = ...
-    meshgrid([0:2:aiVolSize(2)-1],...
-    [0:2:aiVolSize(1)-1],...
-    [0:2:aiVolSize(3)-1]);
+    meshgrid(0:2:aiVolSize(2)-1,...
+    0:2:aiVolSize(1)-1,...
+    0:2:aiVolSize(3)-1);
 
 
 strctSurfaceLargeMesh = isosurface(a3iX,a3iY, a3iZ,a3bVolSub, 0.5);
 strctSurface = reducepatch(strctSurfaceLargeMesh, strctVol.m_strctIsoSurfParam.m_iNumFaces);
+strctSurface.faces = int16(strctSurface.faces);
 
 return;
 
