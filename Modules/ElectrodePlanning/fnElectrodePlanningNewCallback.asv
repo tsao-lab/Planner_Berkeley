@@ -2,7 +2,7 @@ function fnElectrodePlanningNewCallback(strCallback, varargin)
 global g_strctWindows g_strctModule %#ok
 
 if g_strctModule.m_bFirstInvalidate && ~ismember(strCallback, ...
-        {'LoadSession', 'LoadAnatVol', 'SetNormalMode', 'SetAtlasMode', 'SetChamberMode', 'ModuleSwitch'})
+        {'LoadAnatVol', 'SetNormalMode', 'SetAtlasMode', 'SetChamberMode', 'ModuleSwitch'})
     return
 end
 
@@ -486,11 +486,6 @@ switch lower(strctKey.Key)
         fnChangeMouseMode('ZoomLinked');
     case 'c'
         fnChangeMouseMode('Contrast');
-    case 't'
-        fnToggleAtlas();
-    case 'v'
-        fnSetDefaultCrossSections();
-        fnInvalidate();
     case 'shift'
         g_strctModule.m_bShiftPressed = true;
     case 'space'

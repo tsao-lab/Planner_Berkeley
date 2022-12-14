@@ -41,7 +41,7 @@ cq = interp1(linspace(0, 1, 5)', cv, vq, 'linear');
 
 %%
 figure;
-scatter(cos(2*pi*vq), sin(2*pi*vq), 10, cq, 'filled', 'MarkerEdgeColor', 'k');
+scatter(cos(2*pi*vq), sin(2*pi*vq), 20, cq, 'filled', 'MarkerEdgeColor', 'k');
 
 
 

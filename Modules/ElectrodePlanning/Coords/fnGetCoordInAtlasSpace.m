@@ -5,5 +5,5 @@ if isempty(g_strctModule.m_acAnatVol) ||  g_strctModule.m_iCurrAnatVol == 0 || ~
     return;
 end
 Tmp = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg) * pt3fPosIn3DSpace; %#ok
-pt3fPosInAtlasSpace = [Tmp(3), -Tmp(1), Tmp(2)]; % AP, ML, DV
+pt3fPosInAtlasSpace = [Tmp(2), -Tmp(1), -Tmp(3)]; % AP, ML, DV
 return;

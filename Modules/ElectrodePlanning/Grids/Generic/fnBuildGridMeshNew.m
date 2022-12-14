@@ -1,0 +1,64 @@
+function astrctMesh = fnBuildGridMeshNew(strctGridModel, bDrawShort, bHighlight)
+
+if ~exist('bHighlight','var')
+    bHighlight = false;
+end
+
+iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
+astrctMesh = [];
+
+for iGroupIter = 1:iNumGroups
+    iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iGroupIter, 1, 'first');
+    afNormal = strctGridModel.m_apt3fGridHolesNormals(:, iHoleInGroup);
+    afGroupColor = strctGridModel.m_strctGridParams.m_a2fGroupColor(:, iGroupIter);
+    % Analyze the sub-groups...
+    if isfield(strctGridModel,'m_acGroupBoundaries')
+        iNumSubGroups = length(strctGridModel.m_acGroupBoundaries{iGroupIter});
+        for iSubGroupIter = 1:iNumSubGroups
+            iNumPts = size(strctGridModel.m_acGroupBoundaries{iGroupIter}{iSubGroupIter},2);
+            P0 = [strctGridModel.m_acGroupBoundaries{iGroupIter}{iSubGroupIter}; zeros(1, iNumPts)]';
+            if bDrawShort
+                P1 = P0 + repmat(afNormal', iNumPts,1) * strctGridModel.m_strctGridParams.m_fGridHeightMM;
+            else
+                P1 = P0 + repmat(afNormal', iNumPts,1) * 40;
+            end
+            strctMesh= fnCreateMeshFromTwoPolygons(P0, P1, afGroupColor);
+            astrctMesh = [astrctMesh,strctMesh];
+        end
+    end
+
+end
+
+% Now place electrodes...
+if bDrawShort
+    fAboveGridMM = 0;
+    fElectrodeLengthMM = 2*fGridHeightMM;
+else
+    fAboveGridMM = 25;
+    fElectrodeLengthMM = 60;
+end
+
+iNumActiveHoles = sum(strctGridModel.m_strctGridParams.m_abSelectedHoles);
+aiActiveHoles = find(strctGridModel.m_strctGridParams.m_abSelectedHoles);
+if iNumActiveHoles > 0
+    clear astrctMeshElectrode
+    
+    if bHighlight
+        afColor = [1 0 1];
+    else
+        afColor = [0.5 0 0.5];
+    end
+    fGridHoleDiameterMM = strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM;
+    for iHoleIter=1:iNumActiveHoles
+        afNrm = strctGridModel.m_apt3fGridHolesNormals(:, aiActiveHoles(iHoleIter))';
+        astrctMeshElectrode(iHoleIter) = fnCreateRotatedCylinderMesh(afNrm,...
+            strctGridModel.m_afGridHolesX(aiActiveHoles(iHoleIter)),...
+            strctGridModel.m_afGridHolesY(aiActiveHoles(iHoleIter)),...
+            fGridHoleDiameterMM, -(fElectrodeLengthMM), fAboveGridMM, 6, afColor);
+    end
+else
+    astrctMeshElectrode = [];
+end
+astrctMesh = [astrctMesh,astrctMeshElectrode];
+
+

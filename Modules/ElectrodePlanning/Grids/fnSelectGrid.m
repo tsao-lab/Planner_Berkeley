@@ -10,4 +10,3 @@ fnUpdateGridAxes(false);
 fnUpdateChamberMIP();
 
 fnInvalidate();
-return;

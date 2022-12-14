@@ -133,7 +133,7 @@ strctIsoSurfParam.m_fLeftThreshold  = 50;
 strctIsoSurfParam.m_fRightThreshold = 300;
 
 strctIsoSurfParam.m_iLargeCCSize = 30;
-strctIsoSurfParam.m_iNumFaces = 20000;
+strctIsoSurfParam.m_iNumFaces = 5000;
 strctIsoSurfParam.m_fSurfaceOpacity = 0.3;
 strctIsoSurfParam.m_afSurfaceColor = [ 1 1 0];
 strctIsoSurfParam.m_bDisplay = true;

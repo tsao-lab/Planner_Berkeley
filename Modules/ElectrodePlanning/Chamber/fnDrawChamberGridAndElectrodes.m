@@ -16,34 +16,35 @@ astrctMesh = fnChamber_BuildModel(strctChamber, bSelected);
 ahHandles = fnDrawMesh(astrctMesh);
 
 % 3. Draw it in 3D view
-astrctMeshTrans = fnApplyTransformOnMesh(astrctMesh,inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM));
+astrctMeshTrans = fnApplyTransformOnMesh(astrctMesh, ...
+    inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM));
 
 ahHandles = [ahHandles,fnDrawMeshIn3D(astrctMeshTrans,g_strctModule.m_strctPanel.m_strct3D.m_hAxes)];
 
 
 % 4. Draw electrodes
 if strctChamber.m_iGridSelected > 0
-   strctGrid = strctChamber.m_astrctGrids(strctChamber.m_iGridSelected);
-   try
-
-   astrctGridMesh = feval(strctGrid.m_strctGeneral.m_strBuildMesh, strctGrid.m_strctModel,g_strctModule.m_strctGUIOptions.m_bLongGrid,bSelected);
-   
-%    astrctGridMesh(2).m_afColor = [1 1 1];
-%    
-
-%   astrctGridMesh=astrctGridMesh(3:end);
- 
-   a2fGridOffsetTransform = eye(4);
-   a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
-   a2fM_WithMeshOffset =a2fM*a2fGridOffsetTransform;
-   astrctGridMesh = fnApplyTransformOnMesh(astrctGridMesh,a2fM_WithMeshOffset);
-   
-  ahHandles = [ahHandles,fnDrawMesh(astrctGridMesh)];
-  astrctGridTransformed = fnApplyTransformOnMesh(astrctGridMesh,inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM));
-  ahHandles = [ahHandles,fnDrawMeshIn3D(astrctGridTransformed,g_strctModule.m_strctPanel.m_strct3D.m_hAxes)];
-   catch
-   end
+    strctGrid = strctChamber.m_astrctGrids(strctChamber.m_iGridSelected);
+    try
+        
+        astrctGridMesh = feval(strctGrid.m_strctGeneral.m_strBuildMesh, ...
+            strctGrid.m_strctModel, g_strctModule.m_strctGUIOptions.m_bLongGrid, bSelected);
+        
+        %    astrctGridMesh(2).m_afColor = [1 1 1];
+        %    
+        
+        %   astrctGridMesh=astrctGridMesh(3:end);
+        
+        a2fGridOffsetTransform = eye(4);
+        a2fGridOffsetTransform(3,4) = -strctGrid.m_fChamberDepthOffset;
+        a2fM_WithMeshOffset = a2fM*a2fGridOffsetTransform;
+        astrctGridMesh = fnApplyTransformOnMesh(astrctGridMesh, a2fM_WithMeshOffset);
+       
+        ahHandles = [ahHandles,fnDrawMesh(astrctGridMesh)];
+        astrctGridTransformed = fnApplyTransformOnMesh(astrctGridMesh, ...
+            inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM));
+        ahHandles = [ahHandles,fnDrawMeshIn3D(astrctGridTransformed, ...
+            g_strctModule.m_strctPanel.m_strct3D.m_hAxes)];
+    catch
+    end
 end
-
-
-return;

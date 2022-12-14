@@ -1,4 +1,3 @@
-
 function fnUpdateGridAxes(bHideAfter)
 global g_strctModule g_strctWindows
 if ~exist('bHideAfter','var')
@@ -40,13 +39,16 @@ if ~isfield(strctGrid,'m_strctGeneral') || ~isfield(strctGrid.m_strctGeneral,'m_
     strctGrid.m_strctGeneral.m_strGUI = 'GridHelper';
 end
 
-if isfield(g_strctModule,'m_strActiveGridHelperGUI') && ~strcmp(g_strctModule.m_strActiveGridHelperGUI, strctGrid.m_strctGeneral.m_strGUI) && ishandle(g_strctModule.m_hGridHelperGUI)
+if isfield(g_strctModule,'m_strActiveGridHelperGUI') && ...
+        ~strcmp(g_strctModule.m_strActiveGridHelperGUI, strctGrid.m_strctGeneral.m_strGUI) && ...
+        ishandle(g_strctModule.m_hGridHelperGUI)
     close(g_strctModule.m_hGridHelperGUI);
 end
 
 
 try
-g_strctModule.m_hGridHelperGUI=feval(strctGrid.m_strctGeneral.m_strGUI, 'InitNewGrid',strctPlannerInfo, strctGrid.m_strctModel, strctGrid.m_strctGeneral,strctGrid.m_strName);
+g_strctModule.m_hGridHelperGUI=feval(strctGrid.m_strctGeneral.m_strGUI, 'InitNewGrid', ...
+    strctPlannerInfo, strctGrid.m_strctModel, strctGrid.m_strctGeneral,strctGrid.m_strName);
 g_strctModule.m_strActiveGridHelperGUI = strctGrid.m_strctGeneral.m_strGUI;
 catch %#ok
 end
@@ -54,5 +56,4 @@ end
 if bHideAfter
     figure(g_strctWindows.m_hFigure);
 end
-return;
 

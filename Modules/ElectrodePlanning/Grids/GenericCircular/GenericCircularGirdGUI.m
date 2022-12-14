@@ -173,8 +173,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 function strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles)
-strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiSelectedHoles) = [];
+strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = [];
+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = [];
 strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = [];
 strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(aiSelectedHoles) = [];
 strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiSelectedHoles) = [];
@@ -259,17 +259,17 @@ bAutoShift = get(handles.hAutoShiftPosWhenTilt,'value')>0;
 
 fCurrentDistanceMM = 1 / cos(strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles(1))/180*pi);
 
-afDistToCenter = sqrt(strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles).^2+strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles).^2);
+afDistToCenter = sqrt(strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles).^2+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles).^2);
 [fMin, iMinIndex]=min(afDistToCenter);
-afXGrid = (strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
-afYGrid = (strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
+afXGrid = (strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
+afYGrid = (strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
 fNewDistanceMM = 1 / cos(fNewTiltAngle/180*pi);
 
 strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles) = fNewTiltAngle;
 
 if iNumRelevantHoles > 1  && bAutoShift 
-    strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(iMinIndex)) + afXGrid * fNewDistanceMM;
-    strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(iMinIndex)) + afYGrid * fNewDistanceMM;
+    strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(iMinIndex)) + afXGrid * fNewDistanceMM;
+    strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(iMinIndex)) + afYGrid * fNewDistanceMM;
 end
 
 
@@ -317,7 +317,7 @@ fShiftY = get(hObject,'value');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiSelectedHoles) + fShiftY;
+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) + fShiftY;
 fnUpdateGridModel(handles,strctGridModel);
 set(hObject,'value',0);
 return;
@@ -493,8 +493,8 @@ switch strMouseMode
         pt2fMouseDownPosition = fnGetMouseCoordinate(handles.axes1);
         % Find closest hole...
              strctGridModel = getappdata(handles.figure1,'strctGridModel');
-        [fMinDistMM, iHoleIndex]=min(sqrt((strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm - pt2fMouseDownPosition(1)).^2+...
-        (strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm - pt2fMouseDownPosition(2)).^2));
+        [fMinDistMM, iHoleIndex]=min(sqrt((strctGridModel.m_strctGridParams.m_afGridHoleXMM - pt2fMouseDownPosition(1)).^2+...
+        (strctGridModel.m_strctGridParams.m_afGridHoleYMM - pt2fMouseDownPosition(2)).^2));
         if (fMinDistMM < strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2)
             if strcmp(strMouseClick,'Left')
                 % Place / Remove
@@ -631,8 +631,8 @@ strctGridModel.m_strctGridParams.m_a2fGroupColor = [strctGridModel.m_strctGridPa
 strctGridModel.m_strctGridParams.m_acGroupNames = [strctGridModel.m_strctGridParams.m_acGroupNames, sprintf('New Group %d',iNewGroupIndex)];
 
 strctGridModel.m_strctGridParams.m_aiGroupAssignment = [strctGridModel.m_strctGridParams.m_aiGroupAssignment, ones(1,iNumNewHoles)*iNewGroupIndex ];
-strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm = [strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm, afAllX(aiMissingHoles)'];
-strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm = [strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm, afAllY(aiMissingHoles)'];
+strctGridModel.m_strctGridParams.m_afGridHoleXMM = [strctGridModel.m_strctGridParams.m_afGridHoleXMM, afAllX(aiMissingHoles)'];
+strctGridModel.m_strctGridParams.m_afGridHoleYMM = [strctGridModel.m_strctGridParams.m_afGridHoleYMM, afAllY(aiMissingHoles)'];
 strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg = [strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg, zeros(1,iNumNewHoles)];
 strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg= [strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg, zeros(1,iNumNewHoles)];
 
@@ -682,7 +682,7 @@ fShiftX = get(hObject,'value');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiSelectedHoles) + fShiftX;
+strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) + fShiftX;
 fnUpdateGridModel(handles,strctGridModel);
 set(hObject,'value',0);
 return;
@@ -728,7 +728,7 @@ fShiftX = str2num(get(handles.hTranslationXEdit,'string'));
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiSelectedHoles) + fShiftX;
+strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) + fShiftX;
 fnUpdateGridModel(handles,strctGridModel);
 set(handles.hTranslationXEdit,'string','0');
 
@@ -738,7 +738,7 @@ fShiftY = str2num(get(handles.hTranslationYEdit,'string'));
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiSelectedHoles) + fShiftY;
+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) + fShiftY;
 fnUpdateGridModel(handles,strctGridModel);
 set(handles.hTranslationYEdit,'string','0');
 
@@ -793,7 +793,7 @@ chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
     m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
 
 %
-P = [strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm;strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm];
+P = [strctGridModel.m_strctGridParams.m_afGridHoleXMM;strctGridModel.m_strctGridParams.m_afGridHoleYMM];
 N = size(P,2);
 Tilt = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg;
 Rot = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg;
@@ -879,7 +879,7 @@ if strFile(1) == 0
 end
 
 numCirclePoints = 30;
-numGridPoints = length(strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm);
+numGridPoints = length(strctGridModel.m_strctGridParams.m_afGridHoleXMM);
 
 hFileID = fopen(fullfile(strPath,strFile),'w+');
 
@@ -897,7 +897,7 @@ end
 fprintf(hFileID,'        </POLYGON>\n');
 for k=1:numGridPoints
     fprintf(hFileID,'        <ADVANCER_LOCATION x="%.2f" y="%.2f" rad="%.3f"/>\n',...
-        strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(k),strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(k),...
+        strctGridModel.m_strctGridParams.m_afGridHoleXMM(k),strctGridModel.m_strctGridParams.m_afGridHoleYMM(k),...
         strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2);
 end
 fprintf(hFileID,'</CONTAINER>\n');

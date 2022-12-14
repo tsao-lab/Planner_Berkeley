@@ -38,12 +38,14 @@ fChamberHeightMM = 20;
 strctParams.m_strManufacterer = 'Rectangular';
 strctParams.m_strName = sprintf('Rect %d mm',fChamberWidthMM);
 strctParams.m_fWidthMM = fChamberWidthMM;
+strctParams.m_fLengthMM = fChamberWidthMM;
 strctParams.m_fHeightMM = fChamberHeightMM;
+strctParams.m_hInChamberFunc = @(x, y) abs(x)<fChamberWidthMM/2 & abs(y)<fChamberLengthMM/2;
 
 return;
 
 function astrctMesh = fnBuildRectModel(strctChamberParams, fDepthMM)
-astrctMesh= fnCreateRectChamberMesh(strctChamberParams.m_fWidthMM, strctChamberParams.m_fHeightMM,fDepthMM,...
+astrctMesh= fnCreateRectChamberMesh(strctChamberParams.m_fWidthMM, strctChamberParams.m_fWidthMM, strctChamberParams.m_fHeightMM,fDepthMM,...
      [1 0 1]);
 return;
 

@@ -14,7 +14,7 @@ function strctGridModel = fnBuildGridModel_DominoProbe(strctGridParam)
 %
 %
 
-% iNumHoles = length(strctGridParam.m_afGridHoleXpos_mm);
+% iNumHoles = length(strctGridParam.m_afGridHoleXMM);
 % 
 % afZ=-cos(strctGridParam.m_afGridHoleTiltDeg/180*pi);
 % afX=-sin(strctGridParam.m_afGridHoleRotationDeg/180*pi).*sin(strctGridParam.m_afGridHoleTiltDeg/180*pi);
@@ -24,8 +24,8 @@ function strctGridModel = fnBuildGridModel_DominoProbe(strctGridParam)
 
 
 strctGridModel.m_strctGridParams = strctGridParam;
-% strctGridModel.m_afGridHolesX = strctGridParam.m_afGridHoleXpos_mm;
-% strctGridModel.m_afGridHolesY = strctGridParam.m_afGridHoleYpos_mm;
+% strctGridModel.m_afGridHolesX = strctGridParam.m_afGridHoleXMM;
+% strctGridModel.m_afGridHolesY = strctGridParam.m_afGridHoleYMM;
 % strctGridModel.m_apt3fGridHolesNormals = [afX;afY;afZ];
 % if ~isfield(strctGridModel.m_strctGridParams,'m_abSelectedHoles')
 %     strctGridModel.m_strctGridParams.m_abSelectedHoles = zeros(1, iNumHoles)>0;
@@ -54,8 +54,8 @@ return;
 %     end
 %     if length(aiRelevantHoles) == 1
 %         % Just one region, which is the hole itself
-%             Xc = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(1));
-%             Yc = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(1));
+%             Xc = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(1));
+%             Yc = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(1));
 %             afAngles = linspace(0,2*pi,20);
 %             afCos = cos(afAngles);
 %             afSin = sin(afAngles);
@@ -66,10 +66,10 @@ return;
 %         % pick the first hole and measure everything relative to that
 %         % one....
 %         fCurrentDistanceMM = 1 / cos(strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles(1))/180*pi);
-%         Xc = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(1));
-%         Yc = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(1));
-%         afXDist = round((strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles) - Xc)/fCurrentDistanceMM);
-%         afYDist = round((strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles) - Yc)/fCurrentDistanceMM);
+%         Xc = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(1));
+%         Yc = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(1));
+%         afXDist = round((strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles) - Xc)/fCurrentDistanceMM);
+%         afYDist = round((strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles) - Yc)/fCurrentDistanceMM);
 %         fMinX = floor(min(afXDist));
 %         fMaxX = ceil(max(afXDist));
 %         fMinY = floor(min(afYDist));

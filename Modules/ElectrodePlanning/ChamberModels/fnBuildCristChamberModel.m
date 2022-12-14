@@ -33,10 +33,13 @@ strctParams.m_strManufacterer = 'Crist';
 strctParams.m_strName = sprintf('Crist %d Deg',fChamberAngle);
 strctParams.m_fOuterDiameterMM = fOuterDiameterMM;
 strctParams.m_fInnerDiameterMM = fInnerDiameterMM;
+strctParams.m_fWidthMM = fInnerDiameterMM;
+strctParams.m_fLengthMM = fInnerDiameterMM;
 strctParams.m_fChamberH1 = fChamberH1;
 strctParams.m_fChamberH2 = fChamberH2;
 strctParams.m_fChamberAngleDeg = fChamberAngle;
 strctParams.m_iQuat = 20;
+strctParams.m_hInChamberFunc = @(x, y) sqrt(x.^2+y.^2)<fInnerDiameterMM/2;
 return;
 
 function astrctMeshShort = fnBuildShortModel(strctChamberParams)

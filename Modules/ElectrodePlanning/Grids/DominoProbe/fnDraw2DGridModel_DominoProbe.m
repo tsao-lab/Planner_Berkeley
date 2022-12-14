@@ -146,8 +146,8 @@ return;
 %     if length(aiRelevantHoles) == 1
 %         % Just one region, which is the hole itself
 %       for iSubRegionIter=1:iNumSubRegions
-%             Xc = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(1));
-%             Yc = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(1));
+%             Xc = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(1));
+%             Yc = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(1));
 %             plot(hAxes, Xc+afCos*strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2,  Yc+afSin*strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2, 'color',afGroupColor,'linewidth',2);
 %       end
 %         
@@ -156,10 +156,10 @@ return;
 %         % pick the first hole and measure everything relative to that
 %         % one....
 %         fCurrentDistanceMM = 1 / cos(strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles(1))/180*pi);
-%         Xc = strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles(1));
-%         Yc = strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles(1));
-%         afXDist = round((strctGridModel.m_strctGridParams.m_afGridHoleXpos_mm(aiRelevantHoles) - Xc)/fCurrentDistanceMM);
-%         afYDist = round((strctGridModel.m_strctGridParams.m_afGridHoleYpos_mm(aiRelevantHoles) - Yc)/fCurrentDistanceMM);
+%         Xc = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(1));
+%         Yc = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(1));
+%         afXDist = round((strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles) - Xc)/fCurrentDistanceMM);
+%         afYDist = round((strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles) - Yc)/fCurrentDistanceMM);
 %         fMinX = floor(min(afXDist));
 %         fMaxX = ceil(max(afXDist));
 %         fMinY = floor(min(afYDist));

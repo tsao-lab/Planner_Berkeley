@@ -17,8 +17,8 @@ iNumHoles = sum(a2bFeasibleTop(:));
 strctGridParam.m_a2fGroupColor = [0;1;0];
 strctGridParam.m_acGroupNames = {'All'};
 strctGridParam.m_aiGroupAssignment = ones(1,iNumHoles);  % one is the default group!
-strctGridParam.m_afGridHoleXpos_mm = a2fXc(a2bFeasibleTop)';
-strctGridParam.m_afGridHoleYpos_mm =  a2fYc(a2bFeasibleTop)';
+strctGridParam.m_afGridHoleXMM = a2fXc(a2bFeasibleTop)';
+strctGridParam.m_afGridHoleYMM =  a2fYc(a2bFeasibleTop)';
 strctGridParam.m_afGridHoleRotationDeg = zeros(1,iNumHoles);
 strctGridParam.m_afGridHoleTiltDeg = zeros(1,iNumHoles);
 

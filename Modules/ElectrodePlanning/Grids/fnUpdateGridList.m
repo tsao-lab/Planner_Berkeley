@@ -32,4 +32,3 @@ if iNumGrids == 0
     set(g_strctModule.m_strctPanel.m_hGridList,'string',strGrids(2:end),'value',g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected);
 end
 
-return;

@@ -9,9 +9,9 @@ global g_strctWindows g_strctApp g_strctModule g_acModules g_iCurrModule
 warning off
 %clear all
 fdir = fileparts(mfilename('fullpath'));
-addpath(genpath(fdir))
-% addpath(fullfile('.', 'MEX'));
-% addpath(genpath(fullfile('.', 'Modules')));
+addpath(genpath('.'))
+addpath(fullfile('.', 'MEX'));
+addpath(genpath(fullfile('.', 'Modules')));
 %addpath(genpath(fullfile('.', 'RegisterationMatrices')));
 %addpath(genpath(fullfile('..', 'PublicLib')));
 

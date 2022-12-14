@@ -89,7 +89,7 @@ else
     apt3fPrevPlanePointsXZ = apt3fPlanePointsXZ;
     strctPrevCrossSectionXZ = g_strctModule.m_strctCrossSectionXZ;
     
-     if g_strctModule.m_strctGUIOptions.m_bShow3DPlanes % Set Crosshairs planes on 3D axes
+    if g_strctModule.m_strctGUIOptions.m_bShow3DPlanes % Set Crosshairs planes on 3D axes
         set(g_strctModule.m_strctPanel.m_hPlaneXZ,'Xdata', reshape(apt3fPlanePointsXZ(1,:),2,2),'Ydata',reshape(apt3fPlanePointsXZ(2,:),2,2),'ZData',reshape(apt3fPlanePointsXZ(3,:),2,2));
     end
     if ~isempty(g_strctModule.m_acFuncVol) &&  g_strctModule.m_iCurrFuncVol > 0 && g_strctModule.m_strctGUIOptions.m_bShowFunctional

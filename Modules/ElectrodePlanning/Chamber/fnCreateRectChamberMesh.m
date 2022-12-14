@@ -1,4 +1,4 @@
-function astrctMesh= fnCreateRectChamberMesh(fWidthMM, fHeightMM,fDepthMM,afColor)
+function astrctMesh= fnCreateRectChamberMesh(fWidthMM, fLengthMM, fHeightMM, fDepthMM, afColor)
 % creates a bunch of triangles that correspond to a box (without the top
 % and bottom faces, and with an inside edge to indicate the direction...
 % 
@@ -11,9 +11,9 @@ function astrctMesh= fnCreateRectChamberMesh(fWidthMM, fHeightMM,fDepthMM,afColo
 % add the inner edge
 
 strctMesh.m_a2fVertices= [0, 0, 0;
-                          0, +fWidthMM/2, 0;
+                          0, +fLengthMM/2, 0;
                           0, 0, -fHeightMM;
-                          0, +fWidthMM/2, -fHeightMM]';
+                          0, +fLengthMM/2, -fHeightMM]';
                           
 strctMesh.m_a2iFaces = [1, 3;
                         2, 4;
@@ -23,11 +23,12 @@ strctMesh.m_fOpacity = 0.4;
 
 astrctMesh(1) = strctMesh;
 
-astrctMesh(2) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, 0, afColor);
+astrctMesh(2) = fnCreateRectChamberMeshAux(fWidthMM, fLengthMM, -fHeightMM, 0, afColor);
 
 if fDepthMM > 0
 %     astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM, -fHeightMM, -fHeightMM-fDepthMM, afColor*0.5);
-    astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM+5, -fHeightMM-fDepthMM, 0, afColor*0.5); %modified by Hongsun
+    astrctMesh(3) = fnCreateRectChamberMeshAux(fWidthMM+6, fLengthMM+6, ...
+        -fHeightMM-fDepthMM, 0, afColor*0.5); %modified by Hongsun
 end
 % 
 % a2fT = eye(4);
@@ -56,15 +57,15 @@ return;
 
 
 
-function strctMesh = fnCreateRectChamberMeshAux(fWidthMM, fLowZ, fHighZ, afColor)
-strctMesh.m_a2fVertices= [-fWidthMM/2, -fWidthMM/2, fLowZ;
-                          -fWidthMM/2, +fWidthMM/2, fLowZ;
-                          +fWidthMM/2, -fWidthMM/2, fLowZ;
-                          +fWidthMM/2, +fWidthMM/2, fLowZ;
-                          -fWidthMM/2, -fWidthMM/2, fHighZ;
-                          -fWidthMM/2, +fWidthMM/2, fHighZ;
-                          +fWidthMM/2, -fWidthMM/2, fHighZ;
-                          +fWidthMM/2, +fWidthMM/2, fHighZ]';
+function strctMesh = fnCreateRectChamberMeshAux(fWidthMM, fLengthMM, fLowZ, fHighZ, afColor)
+strctMesh.m_a2fVertices= [-fWidthMM/2, -fLengthMM/2, fLowZ;
+                          -fWidthMM/2, +fLengthMM/2, fLowZ;
+                          +fWidthMM/2, -fLengthMM/2, fLowZ;
+                          +fWidthMM/2, +fLengthMM/2, fLowZ;
+                          -fWidthMM/2, -fLengthMM/2, fHighZ;
+                          -fWidthMM/2, +fLengthMM/2, fHighZ;
+                          +fWidthMM/2, -fLengthMM/2, fHighZ;
+                          +fWidthMM/2, +fLengthMM/2, fHighZ]';
                           
 strctMesh.m_a2iFaces = [1, 1, 1, 3, 3, 3, 2, 4;
                         2, 6, 3, 5, 8, 4, 4, 6;

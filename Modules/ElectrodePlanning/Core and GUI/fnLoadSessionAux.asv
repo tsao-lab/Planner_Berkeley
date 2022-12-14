@@ -17,9 +17,6 @@ g_strctModule.m_iCurrFuncVol = strctSavedSession.g_strctModule.m_iCurrFuncVol;
 g_strctModule.m_iCurrChamber = strctSavedSession.g_strctModule.m_iCurrChamber;
 g_strctModule.m_bFuncVolLoaded = strctSavedSession.g_strctModule.m_bFuncVolLoaded;
 g_strctModule.m_fCurrentDepth = strctSavedSession.g_strctModule.m_fCurrentDepth;
-g_strctModule.m_astrctChambers = strctSavedSession.g_strctModule.m_astrctChambers;
-g_strctModule.m_astrctTargets = strctSavedSession.g_strctModule.m_astrctTargets;
-g_strctModule.m_astrctMarkers = strctSavedSession.g_strctModule.m_astrctMarkers;
 
 acFieldNames = fieldnames(g_strctModule.m_strctGUIOptions);
 for k=1:length(acFieldNames)

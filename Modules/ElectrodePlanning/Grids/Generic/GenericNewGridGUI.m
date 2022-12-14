@@ -1,4 +1,4 @@
-function varargout = GenericCircularGirdGUI(varargin)
+function varargout = GenericNewGridGUI(varargin)
 %added by Hongsun
 global g_strctModule
 % GENERICCIRCULARGIRDGUI M-file for GenericCircularGirdGUI.fig
@@ -24,14 +24,14 @@ global g_strctModule
 
 % Edit the above text to modify the response to help GenericCircularGirdGUI
 
-% Last Modified by GUIDE v2.5 23-Nov-2020 01:53:21
+% Last Modified by GUIDE v2.5 07-Dec-2022 19:35:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @GenericCircularGirdGUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @GenericCircularGirdGUI_OutputFcn, ...
+                   'gui_OpeningFcn', @GenericNewGridGUI_OpeningFcn, ...
+                   'gui_OutputFcn',  @GenericNewGridGUI_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -47,7 +47,7 @@ end
 
 
 % --- Executes just before GenericCircularGirdGUI is made visible.
-function GenericCircularGirdGUI_OpeningFcn(hObject, eventdata, handles, varargin)
+function GenericNewGridGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -70,56 +70,51 @@ if length(varargin) >= 1
             strctGridFunc = varargin{4};
             strctGridName = varargin{5};
 
-             set(handles.hRotationSlider,'min',-180,'max',180);
-            set(handles.hTiltSlider,'min',0,'max',89);
-            set(handles.hTranslationXSlider,'min',-1,'max',1,'value',0);
-            set(handles.hTranslationYSlider,'min',-1,'max',1,'value',0);
-            
-            
-            set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',1);
-                 setappdata(handles.figure1,'strctGridName',strctGridName);
-                 
+            set(handles.hRotationSlider,'min',-180,'max',180,'value',0);
+            set(handles.hTiltSlider,'min',0,'max',45,'value',0);
+            set(handles.hTranslationXSlider,'min',-30,'max',30,'value',0);
+            set(handles.hTranslationYSlider,'min',-30,'max',30,'value',0);
+                        
+            set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,...
+                'value',1);
+            setappdata(handles.figure1,'strctGridName',strctGridName);
             setappdata(handles.figure1,'strctPlannerInfo',strctPlannerInfo);
             setappdata(handles.figure1,'strctGridModel',strctGridModel);
             setappdata(handles.figure1,'strctGridFunc',strctGridFunc);
             
-            %added by Hongsun
-            set(handles.hInnerDiameterEdit, 'string', ...
-                num2str(strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM));
+%             %added by Hongsun
+%             set(handles.hInnerDiameterEdit, 'string', ...
+%                 num2str(strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM));
     end
 end
-          set(handles.figure1,'visible','on');
+set(handles.figure1,'visible','on');
 
-          if get(handles.hPlaceElectrodes,'value')
-                setappdata(handles.figure1,'strMouseMode','PlaceElectrodes'); 
-          else
-              setappdata(handles.figure1,'strMouseMode','SelectHoles'); 
-          end
+if get(handles.hPlaceElectrodes,'value')
+    setappdata(handles.figure1,'strMouseMode','PlaceElectrodes'); 
+else
+    setappdata(handles.figure1,'strMouseMode','SelectHoles'); 
+end
           
-    fnInvalidate(handles);
+fnInvalidate(handles);
 if ishandle(handles.figure1)
     set(handles.figure1,'WindowButtonMotionFcn',{@fnMouseMove,handles});
     set(handles.figure1,'WindowButtonDownFcn',{@fnMouseDown,handles});
     set(handles.figure1,'WindowButtonUpFcn',{@fnMouseUp,handles});
     set(handles.figure1,'KeyPressFcn',@fnKeyDown);
     set(handles.figure1,'KeyReleaseFcn',@fnKeyUp);
-
     guidata(hObject, handles);
-
 end
 
 
 function fnKeyDown(a,b)
-if ~isempty(b) && isfield(b,'Key') && strcmp(b.Key,'control')
+if ~isempty(b) && strcmp(b.Key,'control')
     setappdata(a,'bControlDown',true);
 end
-return;
 
 function fnKeyUp(a,b)
-if ~isempty(b) && isfield(b,'Key') && strcmp(b.Key,'control')
+if ~isempty(b) && strcmp(b.Key,'control')
     setappdata(a,'bControlDown',false);
 end
-return;
 
 function fnInvalidate(handles)
 strctPlannerInfo = getappdata(handles.figure1,'strctPlannerInfo');
@@ -131,20 +126,25 @@ iActiveGroup = get(handles.hGridHoleGroups,'value');
 strctDisplayParam.m_aiSelectedHoles = aiSelectedHoles;
 strctDisplayParam.m_aiHighlightedGroups = iActiveGroup;
 strctDisplayParam.m_bDisplayHoleDirection = get(handles.hDisplayHoleDirection,'value')>0;
-feval(strctGridFunc.m_strDraw2D,strctGridModel,handles.axes1, strctDisplayParam);
+feval(strctGridFunc.m_strDraw2D, strctGridModel, handles.axes1, strctDisplayParam);
 % Update controllers
 iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup,1,'first');
-fRotationDeg = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(iHoleInGroup);
-fTiltDeg = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(iHoleInGroup);
-set(handles.hRotationSlider,'value',fRotationDeg);
-set(handles.hTiltSlider,'value',fTiltDeg);
-set(handles.hTiltEdit,'string', sprintf('%.2f',fTiltDeg));
-set(handles.hRotationEdit,'string', sprintf('%.2f',fRotationDeg));
+fRotationDeg = strctGridModel.m_afGridHoleRotationDeg(iHoleInGroup);
+fTiltDeg = strctGridModel.m_afGridHoleTiltDeg(iHoleInGroup);
+fXMM = strctGridModel.m_strctGridParams.m_afGroupXMM(iActiveGroup);
+fYMM = strctGridModel.m_strctGridParams.m_afGroupYMM(iActiveGroup);
+set(handles.hRotationSlider, 'value', fRotationDeg);
+set(handles.hRotationEdit, 'string', sprintf('%.2f',fRotationDeg));
+set(handles.hTiltSlider, 'value', fTiltDeg);
+set(handles.hTiltEdit, 'string', sprintf('%.2f',fTiltDeg));
+set(handles.hTranslationXSlider, 'value', fXMM);
+set(handles.hTranslationXEdit, 'string', sprintf('%.1f',fXMM));
+set(handles.hTranslationYSlider, 'value', fYMM);
+set(handles.hTranslationYEdit, 'string', sprintf('%.1f',fYMM));
 
-return;
 
 % --- Outputs from this function are returned to the command line.
-function varargout = GenericCircularGirdGUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = GenericNewGridGUI_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -172,16 +172,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles)
-strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiSelectedHoles) = [];
-strctGridModel.m_strctGridParams.m_abSelectedHoles(aiSelectedHoles) = [];
-strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
-return;
-     
 
 
 function hDeleteHoles_Callback(hObject, eventdata, handles)
@@ -194,48 +184,39 @@ strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles);
 setappdata(handles.figure1,'aiSelectedHoles',[]);
 fnUpdateGridModel(handles,strctGridModel);
 
-return;
-
 % --- Executes on button press in hAddHolesToGroup.
-function hAddHolesToGroup_Callback(hObject, eventdata, handles)
-iActiveGroup = get(handles.hGridHoleGroups,'value');
-aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
-strctGridModel = getappdata(handles.figure1,'strctGridModel');
-if isempty(aiSelectedHoles)
-    return;
-end
-
-iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup,1,'first');
-if ~isempty(iHoleInGroup)
-    strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(iHoleInGroup);
-    strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(iHoleInGroup);
-end
-strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = iActiveGroup;
-strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
-
-setappdata(handles.figure1,'aiSelectedHoles',[]);
-fnUpdateGridModel(handles,strctGridModel);
+% function hAddHolesToGroup_Callback(hObject, eventdata, handles)
+% iActiveGroup = get(handles.hGridHoleGroups,'value');
+% aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
+% strctGridModel = getappdata(handles.figure1,'strctGridModel');
+% if isempty(aiSelectedHoles)
+%     return;
+% end
+% 
+% iHoleInGroup = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup,1,'first');
+% if ~isempty(iHoleInGroup)
+%     strctGridModel.m_afGridHoleRotationDeg(aiSelectedHoles) = strctGridModel.m_afGridHoleRotationDeg(iHoleInGroup);
+%     strctGridModel.m_afGridHoleTiltDeg(aiSelectedHoles) = strctGridModel.m_afGridHoleTiltDeg(iHoleInGroup);
+% end
+% strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = iActiveGroup;
+% strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
+% 
+% setappdata(handles.figure1,'aiSelectedHoles',[]);
+% fnUpdateGridModel(handles,strctGridModel);
      
-return;
-
-
 function fnModifyActiveGroupRotation(handles, fNewRotationAngle)
-
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
-
-aiRelevantHoles =  find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg(aiRelevantHoles) = fNewRotationAngle;
- strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
+% aiRelevantHoles =  find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
+strctGridModel.m_strctGridParams.m_afGroupRotationDeg(iActiveGroup) = fNewRotationAngle;
+strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
 fnUpdateGridModel(handles,strctGridModel);
-return;
 
 % --- Executes on slider movement.
 function hRotationSlider_Callback(hObject, eventdata, handles)
 fNewRotationAngle = get(hObject,'value');
 fnModifyActiveGroupRotation(handles, fNewRotationAngle);     
 fnInvalidate(handles);
-return;
 
 % --- Executes during object creation, after setting all properties.
 function hRotationSlider_CreateFcn(hObject, eventdata, handles)
@@ -251,32 +232,23 @@ end
 function fnModifyActiveGroupTilt(handles, fNewTiltAngle)
 iActiveGroup = get(handles.hGridHoleGroups,'value');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
-
 aiRelevantHoles =  find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
 iNumRelevantHoles = length(aiRelevantHoles);
+fCurrentTiltAngle = strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iActiveGroup);
 bAutoShift = get(handles.hAutoShiftPosWhenTilt,'value')>0;
-% First, determine the current ordering.... 
-
-fCurrentDistanceMM = 1 / cos(strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles(1))/180*pi);
-
-afDistToCenter = sqrt(strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles).^2+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles).^2);
-[fMin, iMinIndex]=min(afDistToCenter);
-afXGrid = (strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
-afYGrid = (strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles)-strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(iMinIndex))) / fCurrentDistanceMM;
-fNewDistanceMM = 1 / cos(fNewTiltAngle/180*pi);
-
-strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg(aiRelevantHoles) = fNewTiltAngle;
-
-if iNumRelevantHoles > 1  && bAutoShift 
-    strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles(iMinIndex)) + afXGrid * fNewDistanceMM;
-    strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles(iMinIndex)) + afYGrid * fNewDistanceMM;
+if bAutoShift
+    fCurrentDistanceMM = 1/cos(fCurrentTiltAngle/180*pi);
+    fNewDistanceMM = 1/cos(fNewTiltAngle/180*pi);
+    fRatio = fNewDistanceMM./fCurrentDistanceMM;
+    strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles) = ...
+        strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiRelevantHoles).*fRatio;
+    strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles) = ...
+        strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiRelevantHoles).*fRatio;
 end
+strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iActiveGroup) = fNewTiltAngle;
+strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
+fnUpdateGridModel(handles, strctGridModel);
 
-
- strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
-fnUpdateGridModel(handles,strctGridModel);
-
-return;
 
 % --- Executes on slider movement.
 function hTiltSlider_Callback(hObject, eventdata, handles)
@@ -299,77 +271,9 @@ end
 
 
 
-% --- Executes during object creation, after setting all properties.
-function hTranslationXSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to hTranslationXSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
-% --- Executes on slider movement.
-function hTranslationYSlider_Callback(hObject, eventdata, handles)
-fShiftY = get(hObject,'value');
-strctGridModel = getappdata(handles.figure1,'strctGridModel');
-iActiveGroup = get(handles.hGridHoleGroups,'value');
-aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) + fShiftY;
-fnUpdateGridModel(handles,strctGridModel);
-set(hObject,'value',0);
-return;
-
-% --- Executes during object creation, after setting all properties.
-function hTranslationYSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to hTranslationYSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
-% --- Executes on button press in hToggleView.
-function hToggleView_Callback(hObject, eventdata, handles)
-% hObject    handle to hToggleView (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    
-
-
-% --- Executes on button press in hAddHole.
-function hAddHole_Callback(hObject, eventdata, handles)
-% hObject    handle to hAddHole (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in hMergeGroups.
-function hMergeGroups_Callback(hObject, eventdata, handles)
-% hObject    handle to hMergeGroups (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
 % --- Executes on button press in hDisplayHoleDirection.
 function hDisplayHoleDirection_Callback(hObject, eventdata, handles)
 fnInvalidate(handles);
-
-% --- Executes on button press in hAutoShiftPosWhenTilt.
-function hAutoShiftPosWhenTilt_Callback(hObject, eventdata, handles)
-% hObject    handle to hAutoShiftPosWhenTilt (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of hAutoShiftPosWhenTilt
-
-
 
 function fnMouseUp(obj,eventdata,handles)
 strMouseMode = getappdata(handles.figure1,'strMouseMode');
@@ -384,36 +288,27 @@ switch strMouseMode
         end
         afX = get(hContourObject,'xdata');
         afY = get(hContourObject,'ydata');
-         bControlDown = getappdata(handles.figure1,'bControlDown');
-
-        fnSelectHoles(handles, [afX;afY],bControlDown);
+        bControlDown = getappdata(handles.figure1, 'bControlDown');
+        fnSelectHoles(handles, [afX;afY], bControlDown);
         if ishandle(hContourObject)
             delete(hContourObject);
         end
         setappdata(handles.figure1,'hContourObject',hContourObject);
-        
-   
 end
-
-
-
-return;
-
 
 function fnSelectHoles(handles, apt2fPolygon, bAddToExistingSelection)
-  aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
-  strctGridModel = getappdata(handles.figure1,'strctGridModel');
-  if isempty(apt2fPolygon)
+aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
+strctGridModel = getappdata(handles.figure1,'strctGridModel');
+if isempty(apt2fPolygon)
     aiSelectedHoles = [];
-  else
-      
-  abInside = fnInsidePolygon([strctGridModel.m_afGridHolesX(:),strctGridModel.m_afGridHolesY(:)],apt2fPolygon');
-if bAddToExistingSelection
-    aiSelectedHoles = unique([aiSelectedHoles;  find(abInside)]);
 else
-    aiSelectedHoles =  find(abInside);
+    abInside = fnInsidePolygon([strctGridModel.m_afGridHolesX(:),strctGridModel.m_afGridHolesY(:)],apt2fPolygon');
+    if bAddToExistingSelection
+        aiSelectedHoles = unique([aiSelectedHoles;  find(abInside)]);
+    else
+        aiSelectedHoles =  find(abInside);
+    end
 end
-  end
 
 setappdata(handles.figure1,'aiSelectedHoles',aiSelectedHoles);
 fnInvalidate(handles);
@@ -427,10 +322,9 @@ switch strMouseMode
     case 'SelectHoles'
         if bMouseDown
             pt2fMousePosition = fnGetMouseCoordinate(handles.axes1);
-            
-            if ~all(abs(pt2fMousePosition) < 10)
-                return;
-            end
+%             if ~all(abs(pt2fMousePosition) < 10)
+%                 return;
+%             end
             hContourObject = getappdata(handles.figure1,'hContourObject');
             if ~isempty(hContourObject) && ishandle(hContourObject)
                 afX = get(hContourObject,'xdata');
@@ -447,41 +341,6 @@ switch strMouseMode
         end
 end
 
-return;
-    
-    pt2fPos = fnGetMouseCoordinate(handles.hGridAxes);
-    
-    strctGridModel = getappdata(handles.figure1,'strctGridModel');
-    if isempty(strctGridModel)
-        return;
-    end
-    
-    afDistToHoleMM = sqrt( (strctGridModel.m_afGridHolesX-pt2fPos(1)).^2+(strctGridModel.m_afGridHolesY-pt2fPos(2)).^2);
-    [fMinDistMM, iHoleIndex] = min(afDistToHoleMM);
-    
-    fHoleDiameterMM = fnGetGridParameter(strctGridModel.m_strctGridParams,'HoleDiam');
-    
-    if fMinDistMM <= fHoleDiameterMM
-        setappdata(handles.figure1,'iSelectedHole',iHoleIndex);
-        
-%         hHoleSelected = getappdata(handles.figure1,'hHoleSelected');
-%         if isempty(hHoleSelected) || (~isempty(hHoleSelected) && ~ishandle(hHoleSelected))
-%             hHoleSelected = plot(handles.hGridAxes,0,0,'g','uicontextmenu', handles.hGridAxesMenu);
-%             setappdata(handles.figure1,'hHoleSelected',hHoleSelected);
-%         end
-%         afTheta = linspace(0,2*pi,20);
-%         afCos = cos(afTheta);
-%         afSin = sin(afTheta);
-%         set(hHoleSelected,...
-%             'xdata',strctGridModel.m_afGridHolesX(iHoleIndex) + afCos*fHoleDiameterMM/2,...
-%             'ydata',strctGridModel.m_afGridHolesY(iHoleIndex) + afSin*fHoleDiameterMM/2,...
-%             'visible','on','LineWidth',2);
-    else
-        setappdata(handles.figure1,'iSelectedHole',[]);
-    end
-return;
-
-
 
 
 function fnMouseDown(obj,eventdata,handles)
@@ -493,41 +352,33 @@ switch strMouseMode
         pt2fMouseDownPosition = fnGetMouseCoordinate(handles.axes1);
         % Find closest hole...
              strctGridModel = getappdata(handles.figure1,'strctGridModel');
-        [fMinDistMM, iHoleIndex]=min(sqrt((strctGridModel.m_strctGridParams.m_afGridHoleXMM - pt2fMouseDownPosition(1)).^2+...
-        (strctGridModel.m_strctGridParams.m_afGridHoleYMM - pt2fMouseDownPosition(2)).^2));
+        [fMinDistMM, iHoleIndex]=min(sqrt((strctGridModel.m_afGridHolesX - pt2fMouseDownPosition(1)).^2+...
+        (strctGridModel.m_afGridHolesY - pt2fMouseDownPosition(2)).^2));
         if (fMinDistMM < strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2)
             if strcmp(strMouseClick,'Left')
                 % Place / Remove
-              strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = ~strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex);
-              fnUpdateGridModel(handles,strctGridModel);
+                strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = ~strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex);
+                fnUpdateGridModel(handles,strctGridModel);
             else
-                 strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = true;
-                 fnUpdateGridModel(handles,strctGridModel);
+                strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = true;
+                fnUpdateGridModel(handles,strctGridModel);
                 % Align to grid hole
                 strctPlannerInfo = getappdata(handles.figure1,'strctPlannerInfo');
                 feval(strctPlannerInfo.m_strCallback,'AlignToGridHole',iHoleIndex);
-                
             end
         end
-
-        
     case 'SelectHoles'
-            pt2fMouseDownPosition = fnGetMouseCoordinate(handles.axes1);
-         if ~all(abs(pt2fMouseDownPosition) < 10)
-                return;
-            end            
-            hContourObject = getappdata(handles.figure1,'hContourObject');
-            if ~isempty(hContourObject) && ishandle(hContourObject)
-                delete(hContourObject);
-            end
-            
-             hContourObject = plot(handles.axes1,pt2fMouseDownPosition(1),pt2fMouseDownPosition(2),'r','LineWidth',2);
-             setappdata(handles.figure1,'hContourObject',hContourObject);
+        pt2fMouseDownPosition = fnGetMouseCoordinate(handles.axes1);
+        if ~all(abs(pt2fMouseDownPosition) < 10)
+            return
+        end            
+        hContourObject = getappdata(handles.figure1,'hContourObject');
+        if ~isempty(hContourObject) && ishandle(hContourObject)
+            delete(hContourObject);
+        end
+        hContourObject = plot(handles.axes1,pt2fMouseDownPosition(1),pt2fMouseDownPosition(2),'r','LineWidth',2);
+        setappdata(handles.figure1,'hContourObject',hContourObject);
 end
-
-
-
-return;
 
 
 function pt2fMouseDownPosition = fnGetMouseCoordinate(hAxes)
@@ -537,30 +388,40 @@ if size(pt2fMouseDownPosition,2) ~= 3
 else
     pt2fMouseDownPosition = [pt2fMouseDownPosition(1,1), pt2fMouseDownPosition(1,2)];
 end
-return;
 
 
-function hSplit_Callback(hObject, eventdata, handles)
-aiSelectedHoles = getappdata(handles.figure1,'aiSelectedHoles');
+
+% --- Executes on button press in hAddGroup.
+function hAddGroup_Callback(hObject, eventdata, handles)
+% hObject    handle to hAddGroup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
-if isempty(aiSelectedHoles)
-    return;
-end
-
 iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
 iNewGroupIndex = iNumGroups+1;
 a2fColors = lines(iNewGroupIndex);
 afNextColor = a2fColors(end,:);
+strctHoleGroup = fnDefaultHoleGroup();
+iNumHoles = length(strctHoleGroup.a2fXc);
 
-strctGridModel.m_strctGridParams.m_a2fGroupColor = [strctGridModel.m_strctGridParams.m_a2fGroupColor, afNextColor'];
-strctGridModel.m_strctGridParams.m_acGroupNames = [strctGridModel.m_strctGridParams.m_acGroupNames, sprintf('New Group %d',iNewGroupIndex)];
-strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = iNewGroupIndex;
+strctGridModel.m_strctGridParams.m_a2fGroupColor = ...
+    [strctGridModel.m_strctGridParams.m_a2fGroupColor, afNextColor'];
+strctGridModel.m_strctGridParams.m_acGroupNames = [strctGridModel.m_strctGridParams.m_acGroupNames ...
+    sprintf('%d',iNewGroupIndex)];
+strctGridModel.m_strctGridParams.m_aiGroupAssignment = [strctGridModel.m_strctGridParams.m_aiGroupAssignment ...
+    repmat(iNewGroupIndex, 1, iNumHoles)];
+strctGridModel.m_strctGridParams.m_afGridHoleXMM = [strctGridModel.m_strctGridParams.m_afGridHoleXMM ...
+    strctHoleGroup.a2fXc];
+strctGridModel.m_strctGridParams.m_afGridHoleYMM = [strctGridModel.m_strctGridParams.m_afGridHoleYMM ...
+    strctHoleGroup.a2fYc];
+strctGridModel.m_strctGridParams.m_afGroupRotationDeg(iNewGroupIndex) = 0;
+strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iNewGroupIndex) = 0;
+strctGridModel.m_strctGridParams.m_afGroupXMM(iNewGroupIndex) = 0;
+strctGridModel.m_strctGridParams.m_afGroupYMM(iNewGroupIndex) = 0;
 
 setappdata(handles.figure1,'aiSelectedHoles',[]);
 fnUpdateGridModel(handles,strctGridModel);
 set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',iNewGroupIndex);
-       
-return;
 
 
 % --- Executes on button press in hDeleteGroup.
@@ -573,10 +434,14 @@ end
 aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
 % We need to re-order the groups assignments....
 
-strctGridModel.m_strctGridParams.m_aiGroupAssignment(strctGridModel.m_strctGridParams.m_aiGroupAssignment >iActiveGroup) = ...
-        strctGridModel.m_strctGridParams.m_aiGroupAssignment(strctGridModel.m_strctGridParams.m_aiGroupAssignment >iActiveGroup) - 1;
+strctGridModel.m_strctGridParams.m_aiGroupAssignment(strctGridModel.m_strctGridParams.m_aiGroupAssignment>iActiveGroup) = ...
+    strctGridModel.m_strctGridParams.m_aiGroupAssignment(strctGridModel.m_strctGridParams.m_aiGroupAssignment>iActiveGroup) - 1;
 strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup) = [];
 strctGridModel.m_strctGridParams.m_acGroupNames(iActiveGroup) = [];
+strctGridModel.m_strctGridParams.m_afGroupRotationDeg(iActiveGroup) = [];
+strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iActiveGroup) = [];
+strctGridModel.m_strctGridParams.m_afGroupXMM(iActiveGroup) = [];
+strctGridModel.m_strctGridParams.m_afGroupYMM(iActiveGroup) = [];
 if ~isempty(aiSelectedHoles)
     strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles);
 end
@@ -585,6 +450,16 @@ setappdata(handles.figure1,'aiSelectedHoles',[]);
 fnUpdateGridModel(handles,strctGridModel);
 set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',length(strctGridModel.m_strctGridParams.m_acGroupNames));
        
+
+function strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles)
+strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = [];
+strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = [];
+strctGridModel.m_strctGridParams.m_aiGroupAssignment(aiSelectedHoles) = [];
+% strctGridModel.m_afGridHoleRotationDeg(aiSelectedHoles) = [];
+% strctGridModel.m_afGridHoleTiltDeg(aiSelectedHoles) = [];
+strctGridModel.m_strctGridParams.m_abSelectedHoles(aiSelectedHoles) = [];
+strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
+     
 
 
 % --- Executes on button press in hDeleteInvalid.
@@ -600,52 +475,33 @@ fnUpdateGridModel(handles,strctGridModel);
 
 
 
-% --- Executes on button press in hMakeEquidist.
-function hMakeEquidist_Callback(hObject, eventdata, handles)
-% hObject    handle to hMakeEquidist (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-function hAddMissingHoles_Callback(hObject, eventdata, handles)
+function hAddHole_Callback(hObject, eventdata, handles)
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
-% Build grid
-afCenter = -7:7;
-[a2fXc, a2fYc] = meshgrid(afCenter, afCenter);
-a2bFeasibleTop =  sqrt(a2fXc.^2 + a2fYc.^2) + strctGridModel.m_strctGridParams.m_fGridHoleDiameterMM/2 < strctGridModel.m_strctGridParams.m_fGridInnerDiameterMM/2;
-afAllX = a2fXc(a2bFeasibleTop);
-afAllY = a2fYc(a2bFeasibleTop);
-afAllZ = zeros(sum(a2bFeasibleTop(:)),1);
-Pall = [afAllX';afAllY';afAllZ'];
-Pexist = [strctGridModel.m_afGridHolesX;strctGridModel.m_afGridHolesY;zeros(1, length(strctGridModel.m_afGridHolesY))];
-[afDist,aiInd]=fndllPointPointDist(Pall,Pexist);
-aiMissingHoles = find(afDist >= strctGridModel.m_strctGridParams.m_fMinimumDistanceBetweenHolesMM);
-iNumNewHoles = length(aiMissingHoles);
-% Create a new group!
-iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
-iNewGroupIndex = iNumGroups+1;
-a2fColors = lines(iNewGroupIndex);
-afNextColor = a2fColors(end,:);
+iActiveGroup = get(handles.hGridHoleGroups,'value');
+if iActiveGroup == 0
+    return;
+end
+iNumHoles = length(strctGridModel.m_strctGridParams.m_afGridHoleXMM);
+iNewIndex = iNumHoles+1;
+acCoord = inputdlg({'X:', 'Y:'}, 'Enter the XY-coordinate of the new hole');
+fX = round(str2double(acCoord{1}));
+fY = round(str2double(acCoord{2}));
+if get(handles.hAutoShiftPosWhenTilt,'value')>0
+    fCurrentTiltAngle = strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iActiveGroup);
+    fCurrentDistanceMM = 1/cos(fCurrentTiltAngle/180*pi);
+    fX = fX.*fCurrentDistanceMM;
+    fY = fY.*fCurrentDistanceMM;
+end
+strctGridModel.m_strctGridParams.m_aiGroupAssignment(iNewIndex) = iActiveGroup;
+strctGridModel.m_strctGridParams.m_afGridHoleXMM(iNewIndex) = fX;
+strctGridModel.m_strctGridParams.m_afGridHoleYMM(iNewIndex) = fY;
 
-strctGridModel.m_strctGridParams.m_a2fGroupColor = [strctGridModel.m_strctGridParams.m_a2fGroupColor, afNextColor'];
-strctGridModel.m_strctGridParams.m_acGroupNames = [strctGridModel.m_strctGridParams.m_acGroupNames, sprintf('New Group %d',iNewGroupIndex)];
-
-strctGridModel.m_strctGridParams.m_aiGroupAssignment = [strctGridModel.m_strctGridParams.m_aiGroupAssignment, ones(1,iNumNewHoles)*iNewGroupIndex ];
-strctGridModel.m_strctGridParams.m_afGridHoleXMM = [strctGridModel.m_strctGridParams.m_afGridHoleXMM, afAllX(aiMissingHoles)'];
-strctGridModel.m_strctGridParams.m_afGridHoleYMM = [strctGridModel.m_strctGridParams.m_afGridHoleYMM, afAllY(aiMissingHoles)'];
-strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg = [strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg, zeros(1,iNumNewHoles)];
-strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg= [strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg, zeros(1,iNumNewHoles)];
-
- strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
+strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
 set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',length(strctGridModel.m_strctGridParams.m_acGroupNames));
 setappdata(handles.figure1,'aiSelectedHoles',[]);
- fnUpdateGridModel(handles,strctGridModel);
+fnUpdateGridModel(handles,strctGridModel);
 
 
-
-
-
-return;
 
 % --- Executes on button press in hRenameGroup.
 function hRenameGroup_Callback(hObject, eventdata, handles)
@@ -672,23 +528,14 @@ iActiveGroup = get(handles.hGridHoleGroups,'value');
 if iActiveGroup == 0
     return;
 end
-strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup) = uisetcolor(strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup));
+strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup) = ...
+    uisetcolor(strctGridModel.m_strctGridParams.m_a2fGroupColor(:,iActiveGroup));
 fnUpdateGridModel(handles,strctGridModel);
 
 
-% --- Executes on slider movement.
-function hTranslationXSlider_Callback(hObject, eventdata, handles)
-fShiftX = get(hObject,'value');
-strctGridModel = getappdata(handles.figure1,'strctGridModel');
-iActiveGroup = get(handles.hGridHoleGroups,'value');
-aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) + fShiftX;
-fnUpdateGridModel(handles,strctGridModel);
-set(hObject,'value',0);
-return;
 
 function fnUpdateGridModel(handles,strctGridModel)
-strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
+strctGridModel = fnBuildGridModelNew(strctGridModel.m_strctGridParams);
 setappdata(handles.figure1,'strctGridModel',strctGridModel);
 strctPlannerInfo = getappdata(handles.figure1,'strctPlannerInfo');
 feval(strctPlannerInfo.m_strCallback,'UpdateGridModel',strctGridModel);
@@ -721,27 +568,70 @@ if (fNewTiltAngle >= 0 && fNewTiltAngle <= 90)
     fnModifyActiveGroupTilt(handles, fNewTiltAngle);
     set(handles.hTiltSlider,'value',fNewTiltAngle);
 end
-return;
 
-function hTranslationXEdit_Callback(hObject, eventdata, handles)
-fShiftX = str2num(get(handles.hTranslationXEdit,'string'));
+
+
+% --- Executes during object creation, after setting all properties.
+function hTranslationXSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to hTranslationXSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function hTranslationYSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to hTranslationYSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+% --- Executes on slider movement.
+function hTranslationXSlider_Callback(hObject, eventdata, handles)
+fShiftX = get(hObject,'value');
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
-aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) + fShiftX;
+strctGridModel.m_strctGridParams.m_afGroupXMM(iActiveGroup) = fShiftX;
 fnUpdateGridModel(handles,strctGridModel);
-set(handles.hTranslationXEdit,'string','0');
+set(handles.hTranslationXEdit,'string',sprintf('%.1f',fShiftX));
+
+
+function hTranslationXEdit_Callback(hObject, eventdata, handles)
+fShiftX = str2double(get(handles.hTranslationXEdit,'string'));
+strctGridModel = getappdata(handles.figure1,'strctGridModel');
+iActiveGroup = get(handles.hGridHoleGroups,'value');
+strctGridModel.m_strctGridParams.m_afGroupXMM(iActiveGroup) = fShiftX;
+fnUpdateGridModel(handles,strctGridModel);
+set(handles.hTranslationXSlider,'value',fShiftX);
+
+
+% --- Executes on slider movement.
+function hTranslationYSlider_Callback(hObject, eventdata, handles)
+fShiftY = get(hObject,'value');
+strctGridModel = getappdata(handles.figure1,'strctGridModel');
+iActiveGroup = get(handles.hGridHoleGroups,'value');
+strctGridModel.m_strctGridParams.m_afGroupYMM(iActiveGroup) = fShiftY;
+fnUpdateGridModel(handles,strctGridModel);
+set(handles.hTranslationYEdit,'string',sprintf('%.1f',fShiftY));
 
 
 function hTranslationYEdit_Callback(hObject, eventdata, handles)
-fShiftY = str2num(get(handles.hTranslationYEdit,'string'));
+fShiftY = str2double(get(handles.hTranslationYEdit,'string'));
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iActiveGroup = get(handles.hGridHoleGroups,'value');
-aiSelectedHoles = find(strctGridModel.m_strctGridParams.m_aiGroupAssignment == iActiveGroup);
-strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) = strctGridModel.m_strctGridParams.m_afGridHoleYMM(aiSelectedHoles) + fShiftY;
+strctGridModel.m_strctGridParams.m_afGroupYMM(iActiveGroup) = fShiftY;
 fnUpdateGridModel(handles,strctGridModel);
-set(handles.hTranslationYEdit,'string','0');
-
+set(handles.hTranslationYSlider,'value',fShiftY);
 
 
 function hExportGrid_Callback(hObject, eventdata, handles)
@@ -793,10 +683,10 @@ chamberParams = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}. ...
     m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel.strctParams;
 
 %
-P = [strctGridModel.m_strctGridParams.m_afGridHoleXMM;strctGridModel.m_strctGridParams.m_afGridHoleYMM];
+P = [strctGridModel.m_afGridHolesX;strctGridModel.m_afGridHolesY];
 N = size(P,2);
-Tilt = strctGridModel.m_strctGridParams.m_afGridHoleTiltDeg;
-Rot = strctGridModel.m_strctGridParams.m_afGridHoleRotationDeg;
+Tilt = strctGridModel.m_afGridHoleTiltDeg;
+Rot = strctGridModel.m_afGridHoleRotationDeg;
 Rad = strctOutput.m_afRad/2;
 
 if ~strcmpi(computer, 'PCWIN64')
@@ -847,7 +737,7 @@ switch iVersion
             strctOutput.m_strGridFileName);  %16
 end
 
-return;
+
 
 function uipanel1_SelectionChangeFcn(hObject, eventdata, handles)
 if get(handles.hSelectHoles,'value')
@@ -855,7 +745,6 @@ if get(handles.hSelectHoles,'value')
 else
     setappdata(handles.figure1,'strMouseMode','PlaceElectrodes'); 
 end
-return;
 
 
 % --- Executes on button press in hExportToMat.
@@ -905,21 +794,3 @@ fprintf(hFileID,'</CONTAINER>\n');
 fclose(hFileID);
 
 
-function hInnerDiameterEdit_CreateFcn(hObject, eventdata, handles)
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-%added by Hongsun 2020-11-22
-function hInnerDiameterEdit_Callback(hObject, eventdata, handles)
-fNewInnerDiameter=str2num(get(handles.hInnerDiameterEdit,'string'));
-if (fNewInnerDiameter<0 ||fNewInnerDiameter>200)
-    return;
-end
-
-strctGridModel = getappdata(handles.figure1,'strctGridModel');
-strctGridParam = fnDefineGridModel_Generic_customize(fNewInnerDiameter);
-strctGridModel.m_strctGridParams = strctGridParam;
-strctGridModel = fnBuildGridModel_Generic(strctGridModel.m_strctGridParams);
-fnUpdateGridModel(handles,strctGridModel);
-return;
