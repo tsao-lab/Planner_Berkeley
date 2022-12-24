@@ -572,7 +572,7 @@ for iRegionIter=1:length(aiVisibleRegions)
         % Apply the transformation
         P = [g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).vertices'; ...
             ones(1,size(g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).vertices,1))];
-        Pt = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * P;
+        Pt = g_strctModule.m_a2fAtlasReg * P;
         strctMeshRegion.m_a2fVertices = Pt(1:3,:);
         strctMeshRegion.m_a2iFaces = g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).faces';
         strctMeshRegion.m_afColor = g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).color;

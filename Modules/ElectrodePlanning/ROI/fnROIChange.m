@@ -45,11 +45,11 @@ aiSelectedROIs = get(g_strctModule.m_strctPanel.m_hROIList,'value');
 
 for k=1:length(aiSelectedROIs)
     if bAdd
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = unique([....
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd]);
+    g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = unique([....
+        g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd]);
     else
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = setdiff(...
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd);        
+g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = setdiff(...
+    g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd);        
     end
 end
 
@@ -84,11 +84,11 @@ aiSelectedROIs = get(g_strctModule.m_strctPanel.m_hROIList,'value');
 
 for k=1:length(aiSelectedROIs)
    if bAdd
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = unique([....
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices;aiInd]);
+    g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = unique([....
+        g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices;aiInd]);
     else
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = setdiff(...
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd);        
+g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices = setdiff(...
+    g_strctModule.m_astrctROIs(aiSelectedROIs(k)).m_aiVolumeIndices,aiInd);        
    end
 end
 

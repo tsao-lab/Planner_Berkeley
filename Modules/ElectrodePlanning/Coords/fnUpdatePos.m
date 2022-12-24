@@ -1,7 +1,8 @@
 function fnUpdatePos()
 global g_strctModule g_strctApp
 strctMouseOp = g_strctModule.m_strctPrevMouseOp;
-[pt3fPosIn3DSpace,pt3fPosInStereoSpace, pt3fVoxelCoordinate, strctCrossSection,pt3fPosInAtlasSpace]=fnGet3DCoord(strctMouseOp); %#ok
+[pt3fPosIn3DSpace, pt3fPosInStereoSpace, pt3fVoxelCoordinate, strctCrossSection, pt3fPosInAtlasSpace] = ...
+    fnGet3DCoord(strctMouseOp); %#ok
 % 
 % try
 % NearestValue = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol( round(pt3fVoxelCoordinate(2)),round(pt3fVoxelCoordinate(1)),round(pt3fVoxelCoordinate(3)));
@@ -15,9 +16,12 @@ if ~isempty(g_strctModule.m_acAnatVol)
     if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctChambers')
         if ~isempty(g_strctModule.m_astrctChambers)
             a2fChamberXYZ = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_a2fM;
-            angleXY = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), -g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,3)))))/pi*180;
-            angleXZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,3)))))/pi*180;
-            angleYZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), g_strctModule.m_strctCrossSectionYZ.m_a2fM(1:3,3)))))/pi*180;
+            angleXY = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), ...
+                -g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,3)))))/pi*180;
+            angleXZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), ...
+                g_strctModule.m_strctCrossSectionXZ.m_a2fM(1:3,3)))))/pi*180;
+            angleYZ = acos(min(1,max(-1,dot(a2fChamberXYZ(1:3,3), ...
+                g_strctModule.m_strctCrossSectionYZ.m_a2fM(1:3,3)))))/pi*180;
             set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(12),'String', ...
                 sprintf('Chamber Angles: XY: %.2f, XZ: %.2f, YZ: %.2f',angleXY,angleXZ,angleYZ));
         end
@@ -32,9 +36,12 @@ if ~isempty(strctMouseOp.m_pt2fPos)
     % set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(6),'String', sprintf('ML %.2f (%.2f), R=%.2f, Y=%.2f',-pt3fPosInStereoSpace(2),pt3fPosInAtlasSpace(2),pt3fVoxelCoordinate(2),pt3fPosIn3DSpace(2)));
     % set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(7),'String', sprintf('DV %.2f (%.2f), S=%.2f, Z=%.2f',-pt3fPosInStereoSpace(3),pt3fPosInAtlasSpace(3),pt3fVoxelCoordinate(3),pt3fPosIn3DSpace(3)));
     
-    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(5),'String', sprintf('AP %.2f (%.2f)',-pt3fPosInStereoSpace(1),pt3fPosInAtlasSpace(1)));
-    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(6),'String', sprintf('ML %.2f (%.2f)',pt3fPosInStereoSpace(2),pt3fPosInAtlasSpace(2)));
-    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(7),'String', sprintf('DV %.2f (%.2f)',pt3fPosInStereoSpace(3),pt3fPosInAtlasSpace(3)));
+    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(5),'String', ...
+        sprintf('AP %.2f (%.2f)',pt3fPosInStereoSpace(1),pt3fPosInAtlasSpace(1)));
+    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(6),'String', ...
+        sprintf('ML %.2f (%.2f)',pt3fPosInStereoSpace(2),pt3fPosInAtlasSpace(2)));
+    set(g_strctModule.m_strctPanel.m_strctYZ.m_ahTextHandles(7),'String', ...
+        sprintf('DV %.2f (%.2f)',pt3fPosInStereoSpace(3),pt3fPosInAtlasSpace(3)));
 
     if 1% strcmpi(g_strctModule.m_strMouseMode,'QueryAtlas')
         if exist('pt3fPosIn3DSpace', 'var') && all(size(pt3fPosIn3DSpace)==[4 1])

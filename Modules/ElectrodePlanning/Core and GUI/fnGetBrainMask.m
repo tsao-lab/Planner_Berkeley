@@ -1,13 +1,13 @@
 function a3bBrainMask = fnGetBrainMask()
 global g_strctModule g_strctApp
 
-if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_a2fAtlasReg')
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = eye(4);
+if ~isfield(g_strctModule,'m_a2fAtlasReg')
+    g_strctModule.m_a2fAtlasReg = eye(4);
 end
 
 P = [g_strctApp.m_strctAtlasNew.m_strctSurface.vertices'; ...
     ones(1, size(g_strctApp.m_strctAtlasNew.m_strctSurface.vertices, 1))];
-Pmm = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * ...
+Pmm = g_strctModule.m_a2fAtlasReg * ...
     g_strctApp.m_strctAtlasNew.m_strctMRI.vox2ras0 * P;
 a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * ...
     inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg);

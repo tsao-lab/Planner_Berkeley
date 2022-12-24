@@ -12,7 +12,7 @@ bNoGrid = false;
 if g_strctModule.m_iCurrChamber == 0 || isempty(g_strctModule.m_astrctChambers)
     bNoGrid = true;
 else
-   iSelectedGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
+    iSelectedGrid = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
     if isempty(iSelectedGrid) || iSelectedGrid == 0
         bNoGrid = true;
     end
@@ -46,12 +46,9 @@ if isfield(g_strctModule,'m_strActiveGridHelperGUI') && ...
 end
 
 
-try
 g_strctModule.m_hGridHelperGUI=feval(strctGrid.m_strctGeneral.m_strGUI, 'InitNewGrid', ...
-    strctPlannerInfo, strctGrid.m_strctModel, strctGrid.m_strctGeneral,strctGrid.m_strName);
+    strctPlannerInfo, strctGrid.m_strctModel, strctGrid.m_strctGeneral, strctGrid.m_strName);
 g_strctModule.m_strActiveGridHelperGUI = strctGrid.m_strctGeneral.m_strGUI;
-catch %#ok
-end
 
 if bHideAfter
     figure(g_strctWindows.m_hFigure);

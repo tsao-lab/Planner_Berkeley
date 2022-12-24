@@ -13,9 +13,11 @@ if ~isempty(g_strctModule.m_astrctChambers) && g_strctModule.m_iCurrChamber ~= 0
         strctChamber = g_strctModule.m_astrctChambers(iChamberIter);
         if strctChamber.m_bVisible
             if iChamberIter == g_strctModule.m_iCurrChamber
-                g_strctModule.m_ahChamberHandles=[g_strctModule.m_ahChamberHandles, fnDrawChamberGridAndElectrodes(strctChamber, true)];
+                g_strctModule.m_ahChamberHandles = [g_strctModule.m_ahChamberHandles, ...
+                    fnDrawChamberGridAndElectrodes(strctChamber, true)];
             else
-                g_strctModule.m_ahChamberHandles=[g_strctModule.m_ahChamberHandles, fnDrawChamberGridAndElectrodes(strctChamber, false)];
+                g_strctModule.m_ahChamberHandles = [g_strctModule.m_ahChamberHandles, ...
+                    fnDrawChamberGridAndElectrodes(strctChamber, false)];
             end
         end
     end

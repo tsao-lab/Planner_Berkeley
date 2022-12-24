@@ -15,7 +15,7 @@ switch hAxes %#ok
                           
       
                           
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = a2fScaleMatrix * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg;
+        g_strctModule.m_a2fAtlasReg;
         
     case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
        
@@ -24,7 +24,7 @@ switch hAxes %#ok
                           0         0      fScale2 0;
                           0         0       0 1];
                           
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = a2fScaleMatrix * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg;
+        g_strctModule.m_a2fAtlasReg;
         
     case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes    
          a2fScaleMatrix = [fScale1 0 0 0;
@@ -32,7 +32,7 @@ switch hAxes %#ok
                           0         0      1 0;
                           0         0       0 1];
     
-        g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = a2fScaleMatrix * g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg;
+        g_strctModule.m_a2fAtlasReg;
   end
 fnInvalidate();
 

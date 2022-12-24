@@ -1,4 +1,3 @@
-
 function fnSelectMoveTarget()
 global g_strctModule
 aiCurrTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
@@ -8,4 +7,3 @@ if length(aiCurrTarget) > 1
 end
             
 fnChangeMouseMode('MoveTarget');
-return;

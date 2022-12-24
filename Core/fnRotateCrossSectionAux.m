@@ -1,4 +1,4 @@
-function strctCrossSectionNew = fnRotateCrossSectionAux(strctCrossSection1, strctCrossSection2,fRotAngleRad)
+function strctCrossSectionNew = fnRotateCrossSectionAux(strctCrossSection1, strctCrossSection2, fRotAngleRad)
 
 [pt3iPointOnLine, afRotateDir] = fnPlanePlaneIntersection(strctCrossSection1,...
     strctCrossSection2);
@@ -21,6 +21,4 @@ a2fRot(4,4) = 1;
 strctCrossSectionNew = strctCrossSection1;
 strctCrossSectionNew.m_a2fM = ...
     a2fPosTrans*a2fRot*a2fNegTrans*strctCrossSection1.m_a2fM;
-
-return;
 

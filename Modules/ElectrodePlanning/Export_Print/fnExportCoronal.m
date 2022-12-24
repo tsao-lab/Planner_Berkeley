@@ -18,7 +18,7 @@ function fnExportCoronal()
 % a2fZ = ones( size(a2fX)) * afAPRange(iIter); % AP 0
 % % Convert from atlas coords to 3D mm coordinates
 % P = [a2fX(:),a2fY(:),a2fZ(:), ones(length(a2fX(:)),1)];
-% Pmm = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * P';
+% Pmm = g_strctModule.m_a2fAtlasReg * P';
 % % Convert to CRS
 % a2fXYZ_To_CRS = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM) * inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg); %#ok
 % Pcrs = a2fXYZ_To_CRS * Pmm;

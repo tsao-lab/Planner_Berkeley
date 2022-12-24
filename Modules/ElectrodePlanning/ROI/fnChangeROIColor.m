@@ -13,7 +13,7 @@ end
 
 if iSelectedROI > 0
     RGB = uisetcolor();
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(iSelectedROI).m_strColor = RGB;
+    g_strctModule.m_astrctROIs(iSelectedROI).m_strColor = RGB;
     fnUpdateROIList();
     fnInvalidate(1);
 end

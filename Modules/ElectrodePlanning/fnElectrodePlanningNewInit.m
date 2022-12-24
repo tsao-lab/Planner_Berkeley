@@ -6,10 +6,18 @@ g_strctModule.m_bVolumeLoaded = false;
 bInitOK  = true;
 %strDefaultFontName = 'Helvetica';
 
+%%%%%%%%%%%%%%
+%% Top Menu %%
+%%%%%%%%%%%%%%
 
 hSubMenu1 = uimenu(strctParams.m_hMenu,'Label','Electrode Planning Mode','callback',{@fnCallback,'SetNormalMode'});
 hSubMenu2 = uimenu(strctParams.m_hMenu,'Label','Chamber Planning Mode','callback',{@fnCallback,'SetChamberMode'});
 hSubMenu3 = uimenu(strctParams.m_hMenu,'Label','Atlas Planning Mode','callback',{@fnCallback,'SetAtlasMode'});
+
+%%%%%%%%%%%%%%%%%%%%%
+%% Init Parameters %%
+%%%%%%%%%%%%%%%%%%%%%
+
 g_strctModule.m_strDefaultFilesFolder = strctParams.m_strctConfig.m_strctGeneral.m_strDefaultFilesFolder;
 
 g_strctModule.m_iCurrAnatVol = 0;
@@ -26,6 +34,7 @@ g_strctModule.m_iLastSelectedGridHole = 0;
 
 g_strctModule.m_strctGUIOptions.m_bShowChamber = true;
 g_strctModule.m_strctGUIOptions.m_bShowTargets = true;
+g_strctModule.m_strctGUIOptions.m_bShowCraniotomies = true;
 g_strctModule.m_strctGUIOptions.m_bShowSurface = true;
 g_strctModule.m_strctGUIOptions.m_bShowROIs = true;
 g_strctModule.m_strctGUIOptions.m_bShowLabels = true;
@@ -74,7 +83,7 @@ g_strctModule.m_strctOverlay.m_pt2fRightPos = [20, 1];
 
 g_strctModule.m_strctOverlay.m_afPvalueRange = [-30 30];
 
-g_strctModule.m_strMouseMode = 'Scroll';
+g_strctModule.m_strMouseMode = 'Pan';
 g_strctModule.m_strMouseIcon = [];
 g_strctModule.m_strMouse3DMode = 'Rotate';
 g_strctModule.m_strctPrevMouseOp = [];
@@ -82,8 +91,11 @@ g_strctModule.m_strctLastMouseDown = [];
 g_strctModule.m_strctLastMouseUp = [];
 
 
-%%
-% Initialize stereotaxtic models
+%%%%%%%%%%%%%%%%%
+%% Init Models %%
+%%%%%%%%%%%%%%%%%
+
+%% Initialize stereotaxtic models
 iNumModels = length(strctParams.m_strctConfig.m_acStereoModels.m_strctModel);
 for iModelIter=1:iNumModels
     astrctStereoTaxticModels(iModelIter).m_strName = strctParams.m_strctConfig.m_acStereoModels.m_strctModel{iModelIter}.m_strctGeneral.m_strModelName;
@@ -104,6 +116,7 @@ g_strctModule.m_astrctStereoTaxticModels = astrctStereoTaxticModels;
 g_strctModule.m_iStereoModelSelected = 1;
 g_strctModule.m_iStereoArmSelected = 1;
 g_strctModule.m_iJointSelected = 1;
+
 %% Initialize Chamber modeles
 iNumChamberModels = length(strctParams.m_strctConfig.m_acChamberModels.m_strctModel);
 for iModelIter=1:iNumChamberModels
@@ -150,21 +163,27 @@ end
 %% Init global crosssections (JL)
 fnInitCrossSections();
 
-%% Init global chambers, targets and markers (JL)
+%% Init global chambers, targets, craniotomies and markers (JL)
 g_strctModule.m_astrctChambers = [];
 g_strctModule.m_astrctTargets = [];
+g_strctModule.m_astrctCraniotomies = [];
 g_strctModule.m_astrctMarkers = [];
+g_strctModule.m_astrctROIs = [];
+g_strctModule.m_a2fAtlasReg = eye(4);
+g_strctModule.m_iCurrentTarget = 0;
+g_strctModule.m_iCurrentCraniotomy = 0;
+g_strctModule.m_iCurrentMarker = 0;
+g_strctModule.m_iCurrentROI = 0;
 
+
+%% Load default volume
+strFileName = which('D99_template_ebz.nii');
+if g_strctModule.m_strctConfig.m_strctGeneral.m_bInitLoadTemplate && ~isempty(strFileName)
+    fnLoadAnatVol(strFileName);
 end
 
 
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end
 
 
 
@@ -176,7 +195,9 @@ global g_strctModule g_strctWindows g_strctApp
 % Create the four-window display
 aiWindowSize = get(g_strctWindows.m_hFigure,'Position');
 
-%%
+%%%%%%%%%%%%%%%%%
+%% Init Layout %%
+%%%%%%%%%%%%%%%%%
 
 iOffset = 2;
 iHeight = aiWindowSize(4);
@@ -190,9 +211,9 @@ strctPanel.m_ahRightPanels(1) = uipanel('Units','Pixels','Position',strctPanel.m
 
 %delete(strctPanel.m_ahRightPanels(1) )
 
-
 strctPanel.m_aiWindowsPanelSize = [5 5  aiWindowSize(3)-strctPanel.m_aiRightPanelSize(3)-20 iHeight-30];
-strctPanel.m_hWindowsPanel = uipanel('Units','Pixels','Position',strctPanel.m_aiWindowsPanelSize,'parent',g_strctWindows.m_hFigure);
+strctPanel.m_hWindowsPanel = uipanel('Units','Pixels','Position',strctPanel.m_aiWindowsPanelSize, ...
+    'parent',g_strctWindows.m_hFigure);
 %delete(strctPanel.m_hWindowsPanel)
 
 iSeparationBetweenWindowsPix = 30;
@@ -204,8 +225,10 @@ strctPanel.m_aiImageRes = [256,256,3];
 strctPanel.m_aiAxesSize = [1 1 iAxesSize,iAxesSize];
 
 strctPanel.m_strct3D.m_aiPos = [1 1 iAxesSize,iAxesSize];
-strctPanel.m_strct3D.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strct3D.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
-strctPanel.m_strct3D.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strct3D.m_hPanel,...
+strctPanel.m_strct3D.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strct3D.m_aiPos, ...
+    'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strct3D.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize, ...
+    'parent',strctPanel.m_strct3D.m_hPanel,...
     'XTickLabel',[],'YTickLabel',[],'ZTickLabel',[],'FontName',g_strctWindows.m_strDefaultFontName);
 axis(strctPanel.m_strct3D.m_hAxes,'vis3d');
 axis(strctPanel.m_strct3D.m_hAxes,'ij');
@@ -217,72 +240,89 @@ uimenu(strctPanel.m_hMenu3D_2, 'Label', 'Pan', 'Callback', {@fnCallback,'SetPan3
 
 
 strctPanel.m_strctStereoTactic.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 5 iAxesSize,iAxesSize];
-strctPanel.m_strctStereoTactic.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctStereoTactic.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
-strctPanel.m_strctStereoTactic.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctStereoTactic.m_hPanel,...
-    'XTickLabel',[],'YTickLabel',[],'ZTickLabel',[],'UIcontextmenu',strctPanel.m_hMenu3D_2,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctStereoTactic.m_hPanel = uipanel('Units','Pixels', ...
+    'Position',strctPanel.m_strctStereoTactic.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strctStereoTactic.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize, ...
+    'parent',strctPanel.m_strctStereoTactic.m_hPanel,...
+    'XTickLabel',[],'YTickLabel',[],'ZTickLabel',[],'UIcontextmenu',strctPanel.m_hMenu3D_2, ...
+    'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctStereoTactic.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctStereoTactic.m_hAxes,'on');
 set(strctPanel.m_strctStereoTactic.m_hPanel,'visible','off');
 
-
-
-
 strctPanel.m_strctTimeCourse.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 5 iAxesSize,iAxesSize];
-strctPanel.m_strctTimeCourse.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctTimeCourse.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strctTimeCourse.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctTimeCourse.m_aiPos, ...
+    'parent',strctPanel.m_hWindowsPanel);
 aiSmallAxes = strctPanel.m_aiAxesSize;
 aiSmallAxes(1:2) = aiSmallAxes(1:2) + 30;
 aiSmallAxes(3:4) = aiSmallAxes(3:4) - 30;
-strctPanel.m_strctTimeCourse.m_hAxes = axes('units','pixels','position',aiSmallAxes,'parent',strctPanel.m_strctTimeCourse.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctTimeCourse.m_hAxes = axes('units','pixels','position',aiSmallAxes, ...
+    'parent',strctPanel.m_strctTimeCourse.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctTimeCourse.m_hAxes,'Visible','off');
 hold(strctPanel.m_strctTimeCourse.m_hAxes,'on');
 set(strctPanel.m_strctTimeCourse.m_hPanel,'visible','off');
 
-
-
 strctPanel.m_strctXY.m_aiPos = [iAxesSize+iSeparationBetweenWindowsPix 1 iAxesSize,iAxesSize];
-strctPanel.m_strctXY.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXY.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
-strctPanel.m_strctXY.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXY.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctXY.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXY.m_aiPos, ...
+    'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strctXY.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize, ...
+    'parent',strctPanel.m_strctXY.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXY.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXY.m_hAxes);
+strctPanel.m_strctXY.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'), ...
+    'parent',strctPanel.m_strctXY.m_hAxes);
 hold(strctPanel.m_strctXY.m_hAxes,'on');
 strctPanel.m_strctXY.m_hAtlas = image(strctPanel.m_strctXY.m_hAxes, ...
     [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
     zeros(strctPanel.m_aiImageRes(1:2), 'uint8'));
 set(strctPanel.m_strctXY.m_hAxes,'Visible','off');
 
-strctPanel.m_strctXY.m_ahTextHandles(1) = text(8,  128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXY.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXY.m_ahTextHandles(3) = text(128,8,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXY.m_ahTextHandles(4) = text(128,248,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(1) = text(8,  128,'L','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(3) = text(128,8,'A','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXY.m_ahTextHandles(4) = text(128,248,'P','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXY.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 strctPanel.m_strctXY.m_ahMouseRadiusSelect =[];
 strctPanel.m_strctYZ.m_ahMouseRadiusSelect =[];
 strctPanel.m_strctXZ.m_ahMouseRadiusSelect =[];
 
-
-
 strctPanel.m_strctYZ.m_aiPos = [1 strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35,iAxesSize,iAxesSize];
-strctPanel.m_strctYZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctYZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
-strctPanel.m_strctYZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctYZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctYZ.m_aiPos, ...
+    'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strctYZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize, ...
+    'parent',strctPanel.m_strctYZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctYZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctYZ.m_hAxes);
+strctPanel.m_strctYZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'), ...
+    'parent',strctPanel.m_strctYZ.m_hAxes);
 hold(strctPanel.m_strctYZ.m_hAxes,'on');
 strctPanel.m_strctYZ.m_hAtlas = image(strctPanel.m_strctYZ.m_hAxes, ...
     [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
     zeros(strctPanel.m_aiImageRes(1:2), 'uint8'));
 set(strctPanel.m_strctYZ.m_hAxes,'Visible','off');
 
-strctPanel.m_strctYZ.m_ahTextHandles(1) = text(8,  128,'P','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctYZ.m_ahTextHandles(2) = text(248,128,'A','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctYZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctYZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(1) = text(8,  128,'P','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(2) = text(248,128,'A','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName, ...
+    'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctYZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 
-strctPanel.m_strctXZ.m_aiPos =[iAxesSize+iSeparationBetweenWindowsPix strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35 iAxesSize,iAxesSize];
-strctPanel.m_strctXZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXZ.m_aiPos,'parent',strctPanel.m_hWindowsPanel);
-strctPanel.m_strctXZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize,'parent',strctPanel.m_strctXZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctXZ.m_aiPos =[iAxesSize+iSeparationBetweenWindowsPix ...
+    strctPanel.m_aiWindowsPanelSize(4)-iAxesSize-35 iAxesSize iAxesSize];
+strctPanel.m_strctXZ.m_hPanel = uipanel('Units','Pixels','Position',strctPanel.m_strctXZ.m_aiPos, ...
+    'parent',strctPanel.m_hWindowsPanel);
+strctPanel.m_strctXZ.m_hAxes = axes('units','pixels','position',strctPanel.m_aiAxesSize, ...
+    'parent',strctPanel.m_strctXZ.m_hPanel,'FontName',g_strctWindows.m_strDefaultFontName);
 set(strctPanel.m_strctXZ.m_hAxes,'xlim',[1 strctPanel.m_aiImageRes(2)],'ylim',[1 strctPanel.m_aiImageRes(1)]);
-strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'),'parent',strctPanel.m_strctXZ.m_hAxes);
+strctPanel.m_strctXZ.m_hImage = image([],[],zeros(strctPanel.m_aiImageRes, 'single'), ...
+    'parent',strctPanel.m_strctXZ.m_hAxes);
 hold(strctPanel.m_strctXZ.m_hAxes,'on');
 strctPanel.m_strctXZ.m_hAtlas = image(strctPanel.m_strctXZ.m_hAxes, ...
     [], [], zeros(strctPanel.m_aiImageRes(1:2), 'int16'), 'AlphaData', ...
@@ -290,280 +330,61 @@ strctPanel.m_strctXZ.m_hAtlas = image(strctPanel.m_strctXZ.m_hAxes, ...
 set(strctPanel.m_strctXZ.m_hAxes,'Visible','off');
 
 
-strctPanel.m_strctXZ.m_ahTextHandles(1) = text(8,128,'L','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXZ.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
-strctPanel.m_strctXZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(1) = text(8,128,'L','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName, ...
+    'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(2) = text(248,128,'R','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName, ...
+    'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(3) = text(128,8,'D','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName, ...
+    'HorizontalAlignment','center');
+strctPanel.m_strctXZ.m_ahTextHandles(4) = text(128,248,'V','fontsize',21,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'HorizontalAlignment','center');
 
 
-strctPanel.m_strctYZ.m_ahTextHandles(5) = text(5,20,'AP 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(6) = text(5,30,'ML 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(7) = text(5,40,'DV 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(8) = text(5,10,'Stereotax (Atlas)','fontsize',12,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(5) = text(5,20,'AP 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(6) = text(5,30,'ML 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(7) = text(5,40,'DV 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(8) = text(5,10,'Stereotax (Atlas)','fontsize',12, ...
+    'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
 
-strctPanel.m_strctYZ.m_ahTextHandles(9) = text(5,256-30,'C 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(10) = text(5,256-20,'W 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
-strctPanel.m_strctYZ.m_ahTextHandles(11) = text(5,256-10,' 0','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(9) = text(5,256-30,'C 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(10) = text(5,256-20,'W 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctYZ.m_ahTextHandles(11) = text(5,256-10,' 0','fontsize',10,'color',[1 1 0], ...
+    'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
 
-strctPanel.hMouseModeText = text(5,10,'Scroll','fontsize',14,'color',[1 1 1],'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.hMouseModeText = text(5,10,'Scroll','fontsize',14,'color',[1 1 1], ...
+    'parent',strctPanel.m_strctXZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
 
 
-strctPanel.m_strctYZ.m_ahTextHandles(12) = text(5,50,'Chamber Angles:','fontsize',10,'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName,'visible','off');
+strctPanel.m_strctYZ.m_ahTextHandles(12) = text(5,50,'Chamber Angles:','fontsize',10, ...
+    'color',[1 1 0],'parent',strctPanel.m_strctYZ.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName, ...
+    'visible','off');
 
 
 strctPanel.m_hMeasureLine  = [];
 strctPanel.m_hMeasureText  = [];
 
-%%
+%%%%%%%%%%%%%%%%%
+%% Right panel %%
+%%%%%%%%%%%%%%%%%
 
-% Set the overlay axes
+%% Set the overlay axes
 strctPanel.m_strctOverlayAxes.m_aiOverlaySize = [45 strctPanel.m_aiRightPanelSize(4)-65 iRightPanelWidth-80 60];
-strctPanel.m_strctOverlayAxes.m_hAxes = axes('units','pixels','position',strctPanel.m_strctOverlayAxes.m_aiOverlaySize,'parent',strctPanel.m_ahRightPanels(1),'FontName',g_strctWindows.m_strDefaultFontName);
+strctPanel.m_strctOverlayAxes.m_hAxes = axes('units','pixels','position', ...
+    strctPanel.m_strctOverlayAxes.m_aiOverlaySize,'parent',strctPanel.m_ahRightPanels(1), ...
+    'FontName',g_strctWindows.m_strDefaultFontName);
 grid(strctPanel.m_strctOverlayAxes.m_hAxes,'on');
 box(strctPanel.m_strctOverlayAxes.m_hAxes ,'on');
 hold(strctPanel.m_strctOverlayAxes.m_hAxes ,'on');
 
 hold(strctPanel.m_strct3D.m_hAxes,'on');
-
-% strctPanel.m_hStatusLine = uicontrol('style','text','String','Status Line','Position',...
-%      [5 strctPanel.m_aiWindowsPanelSize(4)-20 600 15],'parent',strctPanel.m_hWindowsPanel);
-
-strctPanel.m_hLoadAnatVolBut =  uicontrol('style','pushbutton','String','Load Anatomical',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-140 100 30],'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'LoadAnatVol'});
-
-
-strctPanel.m_hLoadFuncVolBut =  uicontrol('style','pushbutton','String','Load Overlay',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-140 100 30],'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'LoadFuncVol'});
-
-
-strctPanel.m_hAnatMenu = uicontextmenu;
-%uimenu(strctPanel.m_hAnatMenu, 'Label', 'Correct Orientation','Callback', {@fnCallback,'CorrectOrientation'});
-% JL: no more copy of orientation as orientation is always the same
-% strctPanel.m_hAnatOriCopySubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Copy orientation from');
-
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Stereotax Helper','Callback', {@fnCallback,'StereotaxHelper'});
-
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Surface Helper','Callback', {@fnCallback,'AddSurface'});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Add Blood Vessels','Callback', {@fnCallback,'AddBloodVessels'});
-
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameAnat'});
-%uimenu(strctPanel.m_hAnatMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformAnat',0});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
-strctPanel.m_hAnatTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform To');
-strctPanel.m_hAnatInvTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform To');
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportAnatRegMatrix',0});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportAnatVol'});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoAnat'});
-uimenu(strctPanel.m_hAnatMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveAnat',0},'separator','on');
-
-strctPanel.m_hAnatMoveMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Move in list');
-uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Down','Callback', {@fnCallback,'MoveAnatDown'});
-uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Up','Callback', {@fnCallback,'MoveAnatUp'});
-uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'First','Callback', {@fnCallback,'MoveAnatFirst'});
-uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Last','Callback', {@fnCallback,'MoveAnatLast'});
-
-
-strctPanel.m_hFuncMenu = uicontextmenu;
-%uimenu(strctPanel.m_hFuncMenu, 'Label', 'Attach Avg. Time Course','Callback', {@fnCallback,'AddAvgTimeCourse',0},'separator','on');
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameFunc'});
-%uimenu(strctPanel.m_hFuncMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformFunc',0});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Apply Transform','Callback', {@fnCallback,'fnApplyFuncTrans',0});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Apply Inv Transform','Callback', {@fnCallback,'fnApplyFuncInvTrans',0});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportFuncRegMatrix',0});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportFuncVol'});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoFunc'});
-uimenu(strctPanel.m_hFuncMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveFunc',0},'separator','on');
-
-strctPanel.m_hFuncMoveMenu = uimenu(strctPanel.m_hFuncMenu, 'Label', 'Move in list');
-uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Down','Callback', {@fnCallback,'MoveFuncDown'});
-uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Up','Callback', {@fnCallback,'MoveFuncUp'});
-uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'First','Callback', {@fnCallback,'MoveFuncFirst'});
-uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Last','Callback', {@fnCallback,'MoveFuncLast'});
-
-
-
-
-
-strctPanel.m_hChamberMenu = uicontextmenu;
-uimenu(strctPanel.m_hChamberMenu, 'Label', 'Align Axes To Chamber','Callback', {@fnCallback,'fnAlignToChamber'});
-strctPanel.m_hChamberMenuVisible = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Visible','Callback', {@fnCallback,'fnShowHideChamber'});
-uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameChamber'});
-% strctPanel.m_AnatCopySubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Copy To');
-uimenu(strctPanel.m_hChamberMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveChamber'},'separator','on');
-
-strctPanel.m_hChamberMenuSubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Change type');
-for k=1:length(g_strctModule.m_astrctChamberModels)
-   uimenu(strctPanel.m_hChamberMenuSubMenu,'Label',g_strctModule.m_astrctChamberModels(k).m_strType,'callback',{@fnCallback,'ChangeChamberType',k});
-end
-
-strctPanel.m_hAnatListText = uicontrol('style','text','String','Anatomicals',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-165 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-
-
-strctPanel.m_hAnatList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-230 120 70],'parent',...
-    strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SwitchAnat'},'UIcontextmenu',strctPanel.m_hAnatMenu);
-
-strctPanel.m_hFuncListText = uicontrol('style','text','String','Overlays',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-165 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-strctPanel.m_hFuncList = uicontrol('style','listbox','String','',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-230 120 70],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SwitchFunc'},'UIcontextmenu',strctPanel.m_hFuncMenu);
-
-strctPanel.m_hChamberListText = uicontrol('style','text','String','Chambers',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-260 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-strctPanel.m_hChamberList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-360 120 100],'parent',...
-    strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectChamber'},...
-    'UIcontextmenu',strctPanel.m_hChamberMenu);
-
-strctPanel.m_hGridListText = uicontrol('style','text','String','Grids',...
-    'Position',[160  strctPanel.m_aiRightPanelSize(4)-260 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-
-strctPanel.m_hGridMenu = uicontextmenu;
-hGridSubMenu = uimenu(strctPanel.m_hGridMenu, 'Label', 'Add Grid');
-iNumModels = length(g_strctModule.m_astrctGrids);
-for iGridModelIter=1:iNumModels
-    iNumSubModels = length(g_strctModule.m_astrctGrids(iGridModelIter).m_acSubModels);
-    if iNumSubModels == 0
-        hGridSubMenuModel = uimenu(hGridSubMenu, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_strType,'Callback', {@fnCallback,'AddGrid',iGridModelIter});
-    else
-        hGridSubMenuModel = uimenu(hGridSubMenu, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_strType);
-    end
-    for iSubModelsIter=1:iNumSubModels
-        uimenu(hGridSubMenuModel, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_acSubModels{iSubModelsIter}.m_strName, ...
-            'Callback', {@fnCallback,'AddGrid',iGridModelIter,iSubModelsIter});
-    end
-end
-
-uimenu(strctPanel.m_hGridMenu, 'Label', 'Duplicate Grid','callback',{@fnCallback,'DuplicateGrid'});
-
-uimenu(strctPanel.m_hGridMenu, 'Label', 'Rename Grid','callback',{@fnCallback,'RenameGrid'});
-uimenu(strctPanel.m_hGridMenu, 'Label', 'Print Grid','callback',{@fnCallback,'PrintGrid'});
-uimenu(strctPanel.m_hGridMenu, 'Label', 'Remove Grid','callback',{@fnCallback,'RemoveGrid'},'separator','on');
-
-
-
-
-strctPanel.m_hGridList = uicontrol('style','listbox','String','',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-360 120 100],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectGrid'},'UIContextMenu',strctPanel.m_hGridMenu);
-
-strctPanel.m_hTargetListText = uicontrol('style','text','String','Targets',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-380 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-strctPanel.m_hTargetListMenu = uicontextmenu;
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Rename', 'Callback', {@fnCallback,'TargetRename'});
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Keep View', 'Callback', {@fnCallback,'TargetKeepView'});
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Find Closest Hole(No Grid Rotation)', 'Callback', {@fnCallback,'TargetFindHole'});
-%uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Find Closest Hole(Allow Grid Rotation)', 'Callback', {@fnCallback,'TargetFindHoleWithGridRotation'});
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Optimal Grid Analysis', 'Callback', {@fnCallback,'TargetFindGridAndHole'});
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Project Blood Pattern On Surface', 'Callback', {@fnCallback,'ProjectBloodPattern'});
-
-% strctPanel.m_TargetCopySubMenu = uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Copy To');
-uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Remove', 'Callback', {@fnCallback,'RemoveTarget'},'separator','on');
-
-
-strctPanel.m_hTargetList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-580 120 200],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectTarget'},'UIContextMenu',strctPanel.m_hTargetListMenu);
-
-
-
-
-strctPanel.m_hROIListText = uicontrol('style','text','String','Region of Interest',...
-    'Position',[150  strctPanel.m_aiRightPanelSize(4)-380 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-strctPanel.m_hROIListMenu = uicontextmenu;
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI', 'Callback', {@fnCallback,'AddNewROI'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI From Atlas', 'Callback', {@fnCallback,'AddNewROIUsingAtlas'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'Toggle Visibility', 'Callback', {@fnCallback,'ToggleVisibilityROI'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'Rename ROI', 'Callback', {@fnCallback,'RenameROI'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'Change ROI Color', 'Callback', {@fnCallback,'ChangeROIColor'});
-%uimenu(strctPanel.m_hROIListMenu, 'Label', 'Project On Surface', 'Callback', {@fnCallback,'ProjectROIonSurface'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'Clear ROI', 'Callback', {@fnCallback,'ClearROI'});
-uimenu(strctPanel.m_hROIListMenu, 'Label', 'Delete ROI', 'Callback', {@fnCallback,'DeleteROI'});
-
-
-strctPanel.m_hROIList = uicontrol('style','listbox','String','',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-580 120 200],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectROI'},'UIContextMenu',strctPanel.m_hROIListMenu);
-
-strctPanel.m_hSurfaceListMenu = uicontextmenu;
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Add New Surface', 'Callback', {@fnCallback,'AddFreesurferSurface'});
-%uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Add Derived Surface', 'Callback', {@fnCallback,'AddDerivedFreesurferSurface'});
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Toggle Visibility 2D', 'Callback', {@fnCallback,'ToggleSurfaceVisibility2D'});
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Toggle Visibility 3D', 'Callback', {@fnCallback,'ToggleSurfaceVisibility3D'});
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Change Color', 'Callback', {@fnCallback,'ChangeSurfaceColor'});
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Rename Surface', 'Callback', {@fnCallback,'RenameSurface'});
-uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Delete Surface', 'Callback', {@fnCallback,'DeleteSurface'});
-
-% strctPanel.m_hDerivedSurfaceListMenu = uicontextmenu;
-% uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Show in separate window', 'Callback', {@fnCallback,'ShowDerivedSurface'});
-
-
-strctPanel.m_hSurfaceList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-680 120 80],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectSurface'},'UIContextMenu',strctPanel.m_hSurfaceListMenu);
-
-strctPanel.m_hSurfacesListText = uicontrol('style','text','String','Surfaces',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-600 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-
-
-
-
-strctPanel.m_hImageSeriesMenu = uicontextmenu;
-uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'New Series', 'Callback', {@fnCallback,'NewImageSeries'});
-uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Modify Series Properties', 'Callback', {@fnCallback,'ModifyImageSeries'});
-
-uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Delete Series', 'Callback', {@fnCallback,'DeleteImageSeries'});
-
-strctPanel.m_hImageSeriesList = uicontrol('style','listbox','String','',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-760 120 60],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageSeries'},'UIContextMenu',strctPanel.m_hImageSeriesMenu);
-
-strctPanel.m_hImageSeriesText = uicontrol('style','text','String','Image Series',...
-    'Position',[10  strctPanel.m_aiRightPanelSize(4)-700 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-
-strctPanel.m_hImageListMenu = uicontextmenu;
-uimenu(strctPanel.m_hImageListMenu , 'Label', 'Add Image(s)', 'Callback', {@fnCallback,'AddImagesToImageSeries'});
-uimenu(strctPanel.m_hImageListMenu , 'Label', 'Delete Image(s)', 'Callback', {@fnCallback,'RemoveImagesFromImageSeries'});
-
-strctPanel.m_hImageList = uicontrol('style','listbox','String','',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-760 120 60],...
-    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageFromSeries'},'UIContextMenu',strctPanel.m_hImageListMenu);
-
-strctPanel.m_hImageListText = uicontrol('style','text','String','Images',...
-    'Position',[140  strctPanel.m_aiRightPanelSize(4)-700 100 20],'parent',strctPanel.m_ahRightPanels(1));
-
-strShortCuts = sprintf('%s\n', ...
-    'Shortcuts:', ...
-    'S: Scroll', ...
-    'R: Rotate', ...
-    'P: Pan', ...
-    'Z: Zoom Linked', ...
-    'C: Contrast', ...
-    'T: Toggle Atlas', ...
-    'V: Reset Default View');
-
-strctPanel.m_hImageSeriesText = uicontrol('style','text','String',strShortCuts,...
-    'Position', [10 strctPanel.m_aiRightPanelSize(4)-1200 120 300],'parent',strctPanel.m_ahRightPanels(1), ...
-    'HorizontalAlignment','left');
-
-
-% strctPanel.m_hDerivedSurfaceList = uicontrol('style','listbox','String','',...
-%     'Position',[160  strctPanel.m_aiRightPanelSize(4)-520 120 60],...
-%     'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectDerivedSurface'},'UIContextMenu',strctPanel.m_hDerivedSurfaceListMenu);
-
-% strctPanel.m_hDerivedSurfacesListText = uicontrol('style','text','String','Derived Surfaces',...
-%     'Position',[160  strctPanel.m_aiRightPanelSize(4)-460 100 20],'parent',strctPanel.m_ahRightPanels(1));
 
 strctPanel.m_strctOverlayAxes.hLine2 = plot(strctPanel.m_strctOverlayAxes.m_hAxes,...
     [g_strctModule.m_strctOverlay.m_pt2fLeft(1) g_strctModule.m_strctOverlay.m_pt2fRight(1)],...
@@ -582,29 +403,244 @@ strctPanel.m_strctOverlayAxes.hLeftPointPos = plot( strctPanel.m_strctOverlayAxe
 strctPanel.m_strctOverlayAxes.hRightPointPos = plot( strctPanel.m_strctOverlayAxes.m_hAxes,...
  g_strctModule.m_strctOverlay.m_pt2fRightPos(1),g_strctModule.m_strctOverlay.m_pt2fRightPos(2),'g.','markersize',31);
 
-
 strctPanel.m_strctOverlayAxes.hLine4 = plot(strctPanel.m_strctOverlayAxes.m_hAxes,...
     [g_strctModule.m_strctOverlay.m_pt2fLeftPos(1) g_strctModule.m_strctOverlay.m_pt2fRightPos(1)],...
     [g_strctModule.m_strctOverlay.m_pt2fLeftPos(2) g_strctModule.m_strctOverlay.m_pt2fRightPos(2)],'k','LineWidth',2);
-
 
 axis(strctPanel.m_strctOverlayAxes.m_hAxes,[g_strctModule.m_strctOverlay.m_afPvalueRange -0.2 1.2]);
 xlabel(strctPanel.m_strctOverlayAxes.m_hAxes,'p-value');
 ylabel(strctPanel.m_strctOverlayAxes.m_hAxes,'Opacity');
 
 
+%% Context menus
+strctPanel.m_hAnatMenu = uicontextmenu;
+%uimenu(strctPanel.m_hAnatMenu, 'Label', 'Correct Orientation','Callback', {@fnCallback,'CorrectOrientation'});
+% JL: no more copy of orientation as orientation is always the same
+% strctPanel.m_hAnatOriCopySubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Copy orientation from');
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Stereotax Helper','Callback', {@fnCallback,'StereotaxHelper'});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Surface Helper','Callback', {@fnCallback,'AddSurface'});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Add Blood Vessels','Callback', {@fnCallback,'AddBloodVessels'});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameAnat'});
+%uimenu(strctPanel.m_hAnatMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformAnat',0});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Transform','Callback', {@fnCallback,'fnApplyAnatTrans',0});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Default Inv Transform','Callback', {@fnCallback,'fnApplyAnatInvTrans',0});
+strctPanel.m_hAnatTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Transform To');
+strctPanel.m_hAnatInvTransSubMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Apply Inv Transform To');
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportAnatRegMatrix',0});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportAnatVol'});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoAnat'});
+uimenu(strctPanel.m_hAnatMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveAnat',0},'separator','on');
+strctPanel.m_hAnatMoveMenu = uimenu(strctPanel.m_hAnatMenu, 'Label', 'Move in list');
+uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Down','Callback', {@fnCallback,'MoveAnatDown'});
+uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Up','Callback', {@fnCallback,'MoveAnatUp'});
+uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'First','Callback', {@fnCallback,'MoveAnatFirst'});
+uimenu(strctPanel.m_hAnatMoveMenu, 'Label', 'Last','Callback', {@fnCallback,'MoveAnatLast'});
+
+strctPanel.m_hFuncMenu = uicontextmenu;
+%uimenu(strctPanel.m_hFuncMenu, 'Label', 'Attach Avg. Time Course','Callback', {@fnCallback,'AddAvgTimeCourse',0},'separator','on');
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameFunc'});
+%uimenu(strctPanel.m_hFuncMenu, 'Label', 'Resize','Callback', {@fnCallback,'UnconformFunc',0});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Apply Transform','Callback', {@fnCallback,'fnApplyFuncTrans',0});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Apply Inv Transform','Callback', {@fnCallback,'fnApplyFuncInvTrans',0});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Export Reg Matrix','Callback', {@fnCallback,'ExportFuncRegMatrix',0});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Export','Callback', {@fnCallback,'ExportFuncVol'});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Info','Callback', {@fnCallback,'PrintInfoFunc'});
+uimenu(strctPanel.m_hFuncMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveFunc',0},'separator','on');
+strctPanel.m_hFuncMoveMenu = uimenu(strctPanel.m_hFuncMenu, 'Label', 'Move in list');
+uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Down','Callback', {@fnCallback,'MoveFuncDown'});
+uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Up','Callback', {@fnCallback,'MoveFuncUp'});
+uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'First','Callback', {@fnCallback,'MoveFuncFirst'});
+uimenu(strctPanel.m_hFuncMoveMenu, 'Label', 'Last','Callback', {@fnCallback,'MoveFuncLast'});
+
+strctPanel.m_hChamberMenu = uicontextmenu;
+uimenu(strctPanel.m_hChamberMenu, 'Label', 'Add', 'Callback', {@fnCallback,'AddChamberDefault'});
+uimenu(strctPanel.m_hChamberMenu, 'Label', 'Align Axes To Chamber','Callback', {@fnCallback,'fnAlignToChamber'});
+strctPanel.m_hChamberMenuVisible = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Visible','Callback', {@fnCallback,'fnShowHideChamber'});
+uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rename','Callback', {@fnCallback,'RenameChamber'});
+% strctPanel.m_AnatCopySubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Copy To');
+uimenu(strctPanel.m_hChamberMenu, 'Label', 'Remove','Callback', {@fnCallback,'RemoveChamber'},'separator','on');
+strctPanel.m_hChamberMenuSubMenu = uimenu(strctPanel.m_hChamberMenu, 'Label', 'Change Type');
+for k=1:length(g_strctModule.m_astrctChamberModels)
+   uimenu(strctPanel.m_hChamberMenuSubMenu,'Label',g_strctModule.m_astrctChamberModels(k).m_strType,'callback',{@fnCallback,'ChangeChamberType',k});
+end
+
+strctPanel.m_hGridMenu = uicontextmenu;
+hGridSubMenu = uimenu(strctPanel.m_hGridMenu, 'Label', 'Add Grid');
+iNumModels = length(g_strctModule.m_astrctGrids);
+for iGridModelIter=1:iNumModels
+    iNumSubModels = length(g_strctModule.m_astrctGrids(iGridModelIter).m_acSubModels);
+    if iNumSubModels == 0
+        hGridSubMenuModel = uimenu(hGridSubMenu, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_strType,'Callback', {@fnCallback,'AddGrid',iGridModelIter});
+    else
+        hGridSubMenuModel = uimenu(hGridSubMenu, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_strType);
+    end
+    for iSubModelsIter=1:iNumSubModels
+        uimenu(hGridSubMenuModel, 'Label', g_strctModule.m_astrctGrids(iGridModelIter).m_acSubModels{iSubModelsIter}.m_strName, ...
+            'Callback', {@fnCallback,'AddGrid',iGridModelIter,iSubModelsIter});
+    end
+end
+uimenu(strctPanel.m_hGridMenu, 'Label', 'Duplicate Grid','callback',{@fnCallback,'DuplicateGrid'});
+uimenu(strctPanel.m_hGridMenu, 'Label', 'Rename Grid','callback',{@fnCallback,'RenameGrid'});
+uimenu(strctPanel.m_hGridMenu, 'Label', 'Print Grid','callback',{@fnCallback,'PrintGrid'});
+uimenu(strctPanel.m_hGridMenu, 'Label', 'Remove Grid','callback',{@fnCallback,'RemoveGrid'},'separator','on');
+
+strctPanel.m_hTargetListMenu = uicontextmenu;
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Add', 'Callback', {@fnCallback,'AddTargetCoords'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Rename', 'Callback', {@fnCallback,'TargetRename'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Keep View', 'Callback', {@fnCallback,'TargetKeepView'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Add Grid Group from Craniotomy', 'Callback', {@fnCallback,'AddTargetGridGroup'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Find Closest Hole(No Grid Rotation)', 'Callback', {@fnCallback,'TargetFindHole'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Find Closest Hole(Allow Grid Rotation)', 'Callback', {@fnCallback,'TargetFindHoleWithGridRotation'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Optimal Grid Analysis', 'Callback', {@fnCallback,'TargetFindGridAndHole'});
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Project Blood Pattern On Surface', 'Callback', {@fnCallback,'ProjectBloodPattern'});
+% strctPanel.m_TargetCopySubMenu = uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Copy To');
+uimenu(strctPanel.m_hTargetListMenu, 'Label', 'Remove', 'Callback', {@fnCallback,'RemoveTarget'},'separator','on');
+
+strctPanel.m_hROIListMenu = uicontextmenu;
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI', 'Callback', {@fnCallback,'AddNewROI'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'New ROI From Atlas', 'Callback', {@fnCallback,'AddNewROIUsingAtlas'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Toggle Visibility', 'Callback', {@fnCallback,'ToggleVisibilityROI'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Rename ROI', 'Callback', {@fnCallback,'RenameROI'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Change ROI Color', 'Callback', {@fnCallback,'ChangeROIColor'});
+%uimenu(strctPanel.m_hROIListMenu, 'Label', 'Project On Surface', 'Callback', {@fnCallback,'ProjectROIonSurface'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Clear ROI', 'Callback', {@fnCallback,'ClearROI'});
+uimenu(strctPanel.m_hROIListMenu, 'Label', 'Delete ROI', 'Callback', {@fnCallback,'DeleteROI'});
+
+strctPanel.m_hCraniotomyListMenu = uicontextmenu;
+uimenu(strctPanel.m_hCraniotomyListMenu, 'Label', 'Rename', 'Callback', {@fnCallback,'AddCraniotomy'});
+uimenu(strctPanel.m_hCraniotomyListMenu, 'Label', 'Rename', 'Callback', {@fnCallback,'RenameCraniotomy'});
+uimenu(strctPanel.m_hCraniotomyListMenu, 'Label', 'Keep View', 'Callback', {@fnCallback,'CraniotomyKeepView'});
+uimenu(strctPanel.m_hCraniotomyListMenu, 'Label', 'Remove', 'Callback', {@fnCallback,'RemoveCraniotomy'});
+
+strctPanel.m_hSurfaceListMenu = uicontextmenu;
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Add New Surface', 'Callback', {@fnCallback,'AddFreesurferSurface'});
+%uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Add Derived Surface', 'Callback', {@fnCallback,'AddDerivedFreesurferSurface'});
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Toggle Visibility 2D', 'Callback', {@fnCallback,'ToggleSurfaceVisibility2D'});
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Toggle Visibility 3D', 'Callback', {@fnCallback,'ToggleSurfaceVisibility3D'});
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Change Color', 'Callback', {@fnCallback,'ChangeSurfaceColor'});
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Rename Surface', 'Callback', {@fnCallback,'RenameSurface'});
+uimenu(strctPanel.m_hSurfaceListMenu, 'Label', 'Delete Surface', 'Callback', {@fnCallback,'DeleteSurface'});
+
+strctPanel.m_hImageSeriesMenu = uicontextmenu;
+uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'New Series', 'Callback', {@fnCallback,'NewImageSeries'});
+uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Modify Series Properties', 'Callback', {@fnCallback,'ModifyImageSeries'});
+uimenu(strctPanel.m_hImageSeriesMenu , 'Label', 'Delete Series', 'Callback', {@fnCallback,'DeleteImageSeries'});
+
+strctPanel.m_hImageListMenu = uicontextmenu;
+uimenu(strctPanel.m_hImageListMenu , 'Label', 'Add Image(s)', 'Callback', {@fnCallback,'AddImagesToImageSeries'});
+uimenu(strctPanel.m_hImageListMenu , 'Label', 'Delete Image(s)', 'Callback', {@fnCallback,'RemoveImagesFromImageSeries'});
+
+%% Load Buttons
+strctPanel.m_hLoadAnatVolBut =  uicontrol('style','pushbutton','String','Load Anatomical',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-140 120 30],'parent',strctPanel.m_ahRightPanels(1), ...
+    'callback',{@fnCallback,'LoadAnatVol'});
+
+strctPanel.m_hLoadFuncVolBut =  uicontrol('style','pushbutton','String','Load Overlay',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-140 120 30],'parent',strctPanel.m_ahRightPanels(1), ...
+    'callback',{@fnCallback,'LoadFuncVol'});
+
+%% Panel grid
+strctPanel.m_hAnatListText = uicontrol('style','text','String','Anatomicals',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-170 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hAnatList = uicontrol('style','listbox','String','',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-280 120 110],'parent',...
+    strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SwitchAnat'},'UIcontextmenu',strctPanel.m_hAnatMenu);
+
+strctPanel.m_hFuncListText = uicontrol('style','text','String','Overlays',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-170 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hFuncList = uicontrol('style','listbox','String','',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-280 120 110],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SwitchFunc'}, ...
+    'UIcontextmenu',strctPanel.m_hFuncMenu);
+
+
+strctPanel.m_hChamberListText = uicontrol('style','text','String','Chambers',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-310 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hChamberList = uicontrol('style','listbox','String','',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-390 120 80],'parent',...
+    strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectChamber'},...
+    'UIcontextmenu',strctPanel.m_hChamberMenu);
+
+strctPanel.m_hGridListText = uicontrol('style','text','String','Grids',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-310 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hGridList = uicontrol('style','listbox','String','',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-390 120 80],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectGrid'}, ...
+    'UIContextMenu',strctPanel.m_hGridMenu);
+
+
+strctPanel.m_hTargetListText = uicontrol('style','text','String','Targets',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-420 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hTargetList = uicontrol('style','listbox','String','',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-620 120 200],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectTarget'}, ...
+    'UIContextMenu',strctPanel.m_hTargetListMenu);
+
+strctPanel.m_hROIListText = uicontrol('style','text','String','Region of Interest',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-420 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hROIList = uicontrol('style','listbox','String','',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-620 120 200],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectROI'}, ...
+    'UIContextMenu',strctPanel.m_hROIListMenu);
+
+
+strctPanel.m_hCraniotomyListText = uicontrol('style','text','String','Craniotomies',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-650 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hCraniotomyList = uicontrol('style','listbox','String','',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-730 120 80],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectCraniotomy'}, ...
+    'UIContextMenu',strctPanel.m_hCraniotomyListMenu);
+
+strctPanel.m_hSurfacesListText = uicontrol('style','text','String','Surfaces',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-650 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hSurfaceList = uicontrol('style','listbox','String','',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-730 120 80],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectSurface'}, ...
+    'UIContextMenu',strctPanel.m_hSurfaceListMenu);
+
+
+strctPanel.m_hImageSeriesText = uicontrol('style','text','String','Image Series',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-760 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hImageSeriesList = uicontrol('style','listbox','String','',...
+    'Position',[10  strctPanel.m_aiRightPanelSize(4)-820 120 60],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageSeries'}, ...
+    'UIContextMenu',strctPanel.m_hImageSeriesMenu);
+
+strctPanel.m_hImageListText = uicontrol('style','text','String','Images',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-760 120 20],'parent',strctPanel.m_ahRightPanels(1));
+strctPanel.m_hImageList = uicontrol('style','listbox','String','',...
+    'Position',[140  strctPanel.m_aiRightPanelSize(4)-820 120 60],...
+    'parent',strctPanel.m_ahRightPanels(1),'callback',{@fnCallback,'SelectImageFromSeries'}, ...
+    'UIContextMenu',strctPanel.m_hImageListMenu);
+
+strShortCuts = sprintf('%s\n', ...
+    'Shortcuts:', ...
+    'S: Scroll', ...
+    'R: Rotate', ...
+    'P: Pan', ...
+    'Z: Zoom Linked', ...
+    'C: Contrast', ...
+    'T: Toggle Atlas', ...
+    'V: Reset Default View');
+strctPanel.m_hImageSeriesText = uicontrol('style','text','String',strShortCuts,...
+    'Position', [10 strctPanel.m_aiRightPanelSize(4)-1200 120 320],'parent',strctPanel.m_ahRightPanels(1), ...
+    'HorizontalAlignment','left');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Left panel contex menus %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 strctPanel.m_hMenu = uicontextmenu('Callback',@fnMouseDownEmulator);
 uimenu(strctPanel.m_hMenu, 'Label', 'Scroll', 'Callback', {@fnCallback,'SetSlicesMode'});
 uimenu(strctPanel.m_hMenu, 'Label', 'Rotate', 'Callback', {@fnCallback,'SetRotate2DMode'});
 uimenu(strctPanel.m_hMenu, 'Label', 'Contrast', 'Callback', {@fnCallback,'SetContrastMode'});
+uimenu(strctPanel.m_hMenu, 'Label', 'Full Screen', 'Callback', {@fnCallback,'SetFullScreen'});
+uimenu(strctPanel.m_hMenu, 'Label', 'Zoom', 'Callback', {@fnCallback,'SetZoomMode'});
+uimenu(strctPanel.m_hMenu, 'Label', 'Zoom (Linked)', 'Callback', {@fnCallback,'SetLinkedZoomMode'});
 
 strctPanel.m_hEditMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Edit');
 uimenu(strctPanel.m_hEditMenu, 'Label', 'Erase 3D', 'Callback', {@fnCallback,'SetEraseMode','3D'});
 uimenu(strctPanel.m_hEditMenu, 'Label', 'Erase 2D', 'Callback', {@fnCallback,'SetEraseMode','2D'});
-
-uimenu(strctPanel.m_hMenu, 'Label', 'Full Screen', 'Callback', {@fnCallback,'SetFullScreen'});
-uimenu(strctPanel.m_hMenu, 'Label', 'Zoom', 'Callback', {@fnCallback,'SetZoomMode'});
-uimenu(strctPanel.m_hMenu, 'Label', 'Zoom (Linked)', 'Callback', {@fnCallback,'SetLinkedZoomMode'});
 
 strctPanel.m_hZoomMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Zoom (Accurate)');
 
@@ -612,7 +648,6 @@ uimenu(strctPanel.m_hZoomMenu, 'Label', '20 mm', 'Callback', {@fnCallback,'SetFi
 uimenu(strctPanel.m_hZoomMenu, 'Label', '30 mm', 'Callback', {@fnCallback,'SetFixedZoom',30});
 uimenu(strctPanel.m_hZoomMenu, 'Label', '40 mm', 'Callback', {@fnCallback,'SetFixedZoom',40});
 uimenu(strctPanel.m_hZoomMenu, 'Label', 'Other', 'Callback', {@fnCallback,'SetFixedZoom'});
-%            g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM = max(1,g_strctModule.m_strctCrossSectionXY.m_fHalfHeightMM + fDiff);
 
 
 uimenu(strctPanel.m_hMenu, 'Label', 'Pan', 'Callback', {@fnCallback,'SetPanMode'});
@@ -638,22 +673,21 @@ uimenu(strctPanel.m_hChamberMenu, 'Label', 'Move Chamber', 'Callback', {@fnCallb
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Move Chamber (along axis)', 'Callback', {@fnCallback,'SetChamberTransAxis'},'Separator','off');
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rotate Chamber (along axis)', 'Callback', {@fnCallback,'SetChamberRotateAxis'},'Separator','on');
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Flip Chamber axis', 'Callback', {@fnCallback,'FlipChamberAxis'},'Separator','on');
-
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rotate Chamber', 'Callback', {@fnCallback,'SetChamberRot'});
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rotate Chamber (Accurate)', 'Callback', {@fnCallback,'RotChamberAccurate'});
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Rotate Chamber 3D', 'Callback', {@fnCallback,'SetRotateChamber3DMode'},'Separator','on');
-
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Flip direction', 'Callback', {@fnCallback,'FlipChamberAxis'},'Separator','on');
-
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Move Grid', 'Callback', {@fnCallback,'SetGridTrans'});
 uimenu(strctPanel.m_hChamberMenu, 'Label', 'Add Grid Using Direction', 'Callback', {@fnCallback,'AddGridUsingDirection'},'Separator','on');
-
-
+uimenu(strctPanel.m_hChamberMenu, 'Label', 'Add Grid Group Using Direction', 'Callback', {@fnCallback,'AddGridGroupUsingDirection'});
 
 strctPanel.m_hTargetMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Target', 'Separator','on');
 uimenu(strctPanel.m_hTargetMenu, 'Label', 'Add Target', 'Callback', {@fnCallback,'AddTarget'});
 uimenu(strctPanel.m_hTargetMenu, 'Label', 'Move Target', 'Callback', {@fnCallback,'MoveTarget'});
 
+strctPanel.m_hCraniotomyMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Craniotomy', 'Separator','on');
+uimenu(strctPanel.m_hCraniotomyMenu, 'Label', 'Add Craniotomy', 'Callback', {@fnCallback,'AddCraniotomy'});
+uimenu(strctPanel.m_hCraniotomyMenu, 'Label', 'Move Craniotomy', 'Callback', {@fnCallback,'MoveCraniotomy'});
 
 
 strctPanel.m_hImageSeriesMenu = uimenu(strctPanel.m_hMenu, 'Label', 'Image Series', 'Separator','on');
@@ -709,13 +743,12 @@ uimenu(strctPanel.m_hViewMenu, 'Label', 'Default View', 'Callback', {@fnCallback
 % uimenu(strctPanel.m_hViewMenu, 'Label', 'Atlas View', 'Callback', {@fnCallback,'SetAtlasView'}, 'Separator','on');
 uimenu(strctPanel.m_hViewMenu, 'Label', 'Set this as default view', 'Callback', {@fnCallback,'SetNewDefaultView'}, 'Separator','on');
 
-
-
 strctPanel.m_hOnOffMenu = uimenu(strctPanel.m_hMenu, 'Label', '(on/off)');%, 'Callback', {@fnCallback,'ShowHideCrosshairs'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Crosshair', 'Callback', {@fnCallback,'ShowHideCrosshairs'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Functional Overlay', 'Callback', {@fnCallback,'ShowFunctional'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Chamber', 'Callback', {@fnCallback,'ShowHideChamber'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Targets', 'Callback', {@fnCallback,'ShowHideTargets'});
+uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Craniotomies', 'Callback', {@fnCallback,'ShowHideCraniotomies'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Blood Vessels', 'Callback', {@fnCallback,'ShowHideBloodVessels'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Markers', 'Callback', {@fnCallback,'ShowHideMarkers'});
 uimenu(strctPanel.m_hOnOffMenu, 'Label', 'Time Course', 'Callback', {@fnCallback,'ShowHideTimeCourse'});
@@ -741,8 +774,6 @@ uimenu(strctPanel.m_hScaleBarMenu, 'Label', 'Top Right', 'Callback', {@fnCallbac
 uimenu(strctPanel.m_hScaleBarMenu, 'Label', 'Bottom Left', 'Callback', {@fnCallback,'SetScaleBarLocation','BottomLeft'});
 uimenu(strctPanel.m_hScaleBarMenu, 'Label', 'Bottom Right', 'Callback', {@fnCallback,'SetScaleBarLocation','BottomRight'});
 
-
-
 % set(strctPanel.m_strctXY.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
 % set(strctPanel.m_strctYZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
 % set(strctPanel.m_strctXZ.m_hImage, 'UIContextMenu', strctPanel.m_hMenu);
@@ -765,13 +796,12 @@ uimenu(strctPanel.m_hMenu3D, 'Label', 'Hide/Show Blood Vessels', 'Callback',{@fn
 %uimenu(strctPanel.m_hMenu3D, 'Label', 'Change Isosurface Threshold', 'Callback',{@fnCallback,'IsoSurfaceThresholdMode'});
 
 set(strctPanel.m_strct3D.m_hAxes, 'UIContextMenu', strctPanel.m_hMenu3D);
-
  
- axes( strctPanel.m_strct3D.m_hAxes);
- L1=light();
- L2=light();
- lightangle(L1, 80, -3.4);
- lightangle(L2, -70, -54);
+axes(strctPanel.m_strct3D.m_hAxes);
+L1=light();
+L2=light();
+lightangle(L1, 80, -3.4);
+lightangle(L2, -70, -54);
  
   
 % 
@@ -780,15 +810,22 @@ strctPanel.m_ahAxes = [strctPanel.m_strctXY.m_hAxes, strctPanel.m_strctYZ.m_hAxe
     strctPanel.m_strct3D.m_hAxes,...
     strctPanel.m_strctStereoTactic.m_hAxes,...
     strctPanel.m_strctTimeCourse.m_hAxes,...
-    strctPanel.m_strctOverlayAxes.m_hAxes,...
-       ]; %strctPanel.m_strctGrid.m_hAxes 
+    strctPanel.m_strctOverlayAxes.m_hAxes];
 
+strctPanel.m_ahAxesPanels = [strctPanel.m_strctXY.m_hPanel, strctPanel.m_strctYZ.m_hPanel, ...
+    strctPanel.m_strctXZ.m_hPanel,...
+    strctPanel.m_strct3D.m_hPanel,...
+    strctPanel.m_strctStereoTactic.m_hPanel,...
+    strctPanel.m_strctTimeCourse.m_hPanel,...
+    strctPanel.m_ahRightPanels(1)];
 
 set(strctPanel.m_ahRightPanels(1),'visible','off');
 strctPanel.m_ahRightPanels(2) = uipanel('Units','Pixels','Position',strctPanel.m_aiRightPanelSize);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Stereotaxtic alignment controls %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Generate the stereotaxtic alignment controls
 strctPanel.m_hMarkersListText = uicontrol('style','text','String','Markers (MRI Features)',...
     'Position',[10  strctPanel.m_aiRightPanelSize(4)-30 160 20],'parent',strctPanel.m_ahRightPanels(2),'horizontalalignment','left','foregroundcolor',[1 0 0]);
 
@@ -949,8 +986,10 @@ g_strctModule.m_strctVirtualArm = g_strctModule.m_astrctStereoTaxticModels(1).m_
 [strctPanel.m_ahLinkFixed,strctPanel.m_ahLinkSlider, strctPanel.m_ahLinkEdit, iNextY] = ...
     fnGenerateControllersForVirtualArm(strctPanel,g_strctModule.m_strctVirtualArm.m_astrctJointsDescription, iStartY);
 
+%%%%%%%%%%%%%%%%%
+%% Atlas panel %%
+%%%%%%%%%%%%%%%%%
 
-%% Generate the Atlas panel
 set(strctPanel.m_ahRightPanels(1),'visible','off');
 set(strctPanel.m_ahRightPanels(2),'visible','off');
 strctPanel.m_ahRightPanels(3) = uipanel('Units','Pixels','Position',strctPanel.m_aiRightPanelSize);
@@ -1066,6 +1105,12 @@ g_strctModule.m_strctPanel = strctPanel;
 fnUpdateAtlasTable();
 
 end
+
+
+
+
+
+
 
 function pt2fMouseDownPosition = fnGetMouseCoordinate(hAxes)
 pt2fMouseDownPosition = get(hAxes,'CurrentPoint');

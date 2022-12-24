@@ -399,28 +399,9 @@ function hAddGroup_Callback(hObject, eventdata, handles)
 strctGridModel = getappdata(handles.figure1,'strctGridModel');
 iNumGroups = length(strctGridModel.m_strctGridParams.m_acGroupNames);
 iNewGroupIndex = iNumGroups+1;
-a2fColors = lines(iNewGroupIndex);
-afNextColor = a2fColors(end,:);
-strctHoleGroup = fnDefaultHoleGroup();
-iNumHoles = length(strctHoleGroup.a2fXc);
-
-strctGridModel.m_strctGridParams.m_a2fGroupColor = ...
-    [strctGridModel.m_strctGridParams.m_a2fGroupColor, afNextColor'];
-strctGridModel.m_strctGridParams.m_acGroupNames = [strctGridModel.m_strctGridParams.m_acGroupNames ...
-    sprintf('%d',iNewGroupIndex)];
-strctGridModel.m_strctGridParams.m_aiGroupAssignment = [strctGridModel.m_strctGridParams.m_aiGroupAssignment ...
-    repmat(iNewGroupIndex, 1, iNumHoles)];
-strctGridModel.m_strctGridParams.m_afGridHoleXMM = [strctGridModel.m_strctGridParams.m_afGridHoleXMM ...
-    strctHoleGroup.a2fXc];
-strctGridModel.m_strctGridParams.m_afGridHoleYMM = [strctGridModel.m_strctGridParams.m_afGridHoleYMM ...
-    strctHoleGroup.a2fYc];
-strctGridModel.m_strctGridParams.m_afGroupRotationDeg(iNewGroupIndex) = 0;
-strctGridModel.m_strctGridParams.m_afGroupTiltDeg(iNewGroupIndex) = 0;
-strctGridModel.m_strctGridParams.m_afGroupXMM(iNewGroupIndex) = 0;
-strctGridModel.m_strctGridParams.m_afGroupYMM(iNewGroupIndex) = 0;
-
-setappdata(handles.figure1,'aiSelectedHoles',[]);
+strctGridModel = fnAddGenericGridGroup(strctGridModel);
 fnUpdateGridModel(handles,strctGridModel);
+setappdata(handles.figure1,'aiSelectedHoles',[]);
 set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',iNewGroupIndex);
 
 
@@ -447,9 +428,10 @@ if ~isempty(aiSelectedHoles)
 end
     
 setappdata(handles.figure1,'aiSelectedHoles',[]);
+set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames, ...
+    'value',length(strctGridModel.m_strctGridParams.m_acGroupNames));
 fnUpdateGridModel(handles,strctGridModel);
-set(handles.hGridHoleGroups,'String',strctGridModel.m_strctGridParams.m_acGroupNames,'value',length(strctGridModel.m_strctGridParams.m_acGroupNames));
-       
+
 
 function strctGridModel = fnDeleteHoles(strctGridModel, aiSelectedHoles)
 strctGridModel.m_strctGridParams.m_afGridHoleXMM(aiSelectedHoles) = [];

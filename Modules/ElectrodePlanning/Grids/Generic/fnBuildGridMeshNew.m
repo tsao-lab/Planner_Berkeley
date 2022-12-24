@@ -22,7 +22,7 @@ for iGroupIter = 1:iNumGroups
             else
                 P1 = P0 + repmat(afNormal', iNumPts,1) * 40;
             end
-            strctMesh= fnCreateMeshFromTwoPolygons(P0, P1, afGroupColor);
+            strctMesh = fnCreateMeshFromTwoPolygons(P0, P1, afGroupColor);
             astrctMesh = [astrctMesh,strctMesh];
         end
     end
@@ -32,10 +32,10 @@ end
 % Now place electrodes...
 if bDrawShort
     fAboveGridMM = 0;
-    fElectrodeLengthMM = 2*fGridHeightMM;
+    fElectrodeLengthMM = 20;
 else
-    fAboveGridMM = 25;
-    fElectrodeLengthMM = 60;
+    fAboveGridMM = 10;
+    fElectrodeLengthMM = 80;
 end
 
 iNumActiveHoles = sum(strctGridModel.m_strctGridParams.m_abSelectedHoles);

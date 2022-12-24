@@ -22,8 +22,9 @@ else
     end
     if iNumMarkers == 0
         iValue = 1;
-    end;    
+    end
     set(g_strctModule.m_strctPanel.m_hMarkersList,'String',strName(2:end),'value',iValue,'min',1,'max',max(1,iNumMarkers));
+    g_strctModule.m_iCurrentMarker = iValue;
 end
 
 % Update Markers axes

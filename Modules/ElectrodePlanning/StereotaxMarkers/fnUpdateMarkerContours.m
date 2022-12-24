@@ -43,7 +43,7 @@ a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg
 
 for k=1:iNumMarkers
     
-    pt3fMarkerPosMM = inv(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)* a2fCRS_To_XYZ*[g_strctModule.m_astrctMarkers(k).m_pt3fPosition_vox(:);1];
+    pt3fMarkerPosMM = a2fCRS_To_XYZ*[g_strctModule.m_astrctMarkers(k).m_pt3fPosition_vox(:);1];
     
     ahHandlesMarkers(k) = plot3(g_strctModule.m_strctPanel.m_strct3D.m_hAxes,...
         pt3fMarkerPosMM(1),...

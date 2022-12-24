@@ -21,7 +21,7 @@ bShowTopHoles = true;
 bShowInvalid = true;
 bShowNumber = false;
 ahHolesHandles = zeros(1,iNumHoles);
-ahSelectedHoleHandles = zeros(1,iNumHoles);
+% ahSelectedHoleHandles = zeros(1,iNumHoles);
 if ~isfield(strctDisplayParam,'m_aiHighlightedGroups')
     strctDisplayParam.m_aiHighlightedGroups  = [];
 end
@@ -84,9 +84,10 @@ for iHoleIter=1:iNumHoles
     end
 end
 
-fLengthMM = g_strctModule.m_astrctChambers.m_strctModel.m_strctModel.strctParams.m_fLengthMM;
-fWidthMM = g_strctModule.m_astrctChambers.m_strctModel.m_strctModel.strctParams.m_fWidthMM;
-a2fVertices = g_strctModule.m_astrctChambers.m_strctModel.m_strctModel.m_astrctMeshLong(2).m_a2fVertices;
+strctModel = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_strctModel.m_strctModel;
+fLengthMM = strctModel.strctParams.m_fLengthMM;
+fWidthMM = strctModel.strctParams.m_fWidthMM;
+a2fVertices = strctModel.m_astrctMeshLong(2).m_a2fVertices;
 a2fVertices = a2fVertices(1:2, a2fVertices(3, :)==0);
 a2fVertices = [a2fVertices a2fVertices(:, 1)];
 plot(hAxes, a2fVertices(1, :), a2fVertices(2, :), 'm', 'LineWidth', 2);

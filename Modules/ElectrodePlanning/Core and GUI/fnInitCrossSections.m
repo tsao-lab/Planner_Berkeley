@@ -16,7 +16,7 @@ switch strCrossSection
     case 'm_strctCrossSectionXZ'
         a2fM = ...
             [ 1.000  0.000  0.000  0.000;
-              0.000  0.000 -1.000  0.000;
+              0.000  0.000  1.000  0.000;
               0.000 -1.000  0.000 16.875;
               0.000  0.000  0.000  1.000];
     case 'm_strctCrossSectionYZ'

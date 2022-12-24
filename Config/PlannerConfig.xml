@@ -9,6 +9,7 @@
                 m_strInitFunc="fnElectrodePlanningNewInit"
                 m_strCallbackFunc="fnElectrodePlanningNewCallback"
                 m_strDefaultFilesFolder="D:\Jialiang\Data\MRI\"
+                m_bInitLoadTemplate="1"
                 />
 
             <m_acStereoModels>

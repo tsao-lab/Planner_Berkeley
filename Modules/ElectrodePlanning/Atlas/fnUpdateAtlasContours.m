@@ -10,7 +10,7 @@ function fnUpdateAtlasContours()
 % 
 % %iActiveAtlas = get(
 % if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_a2fAtlasReg')
-%     g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg  = [...
+%     g_strctModule.m_a2fAtlasReg  = [...
 %         -1 0 0 0;
 %         0 -1 0 0;
 %         0 0 1 0;
@@ -37,7 +37,7 @@ function fnUpdateAtlasContours()
 %         % Apply the transformation
 %         P = [g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).vertices'; ...
 %             ones(1,size(g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).vertices,1))];
-%         Pt = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg * P;
+%         Pt = g_strctModule.m_a2fAtlasReg * P;
 %         
 %         strctMeshRegion.m_a2fVertices = Pt(1:3,:);
 %         strctMeshRegion.m_a2iFaces = g_strctModule.m_strctAtlas.m_astrctMesh(iRegion).faces';

@@ -118,6 +118,8 @@ switch strCallback
             iGridSubModel = [];
         end
         fnAddGrid(iGridModel,iGridSubModel);
+    case 'AddChamberDefault'
+        fnAddChamberAux(g_strctModule.m_strctCrossSectionXY.m_a2fM.*[1 -1 -1 1]);
     case 'AddChamberSinglePoint'
         fnAddChamberNormalToPlane();
     case 'AddChamberTwoPoints'
@@ -135,14 +137,20 @@ switch strCallback
         fnPrintSlices();
     case 'AddTarget'
         fnAddTarget();
+    case 'AddTargetCoords'
+        fnAddTargetCoords();
     case 'MoveTarget'
         fnSelectMoveTarget();
     case 'SelectTarget'
         fnSelectTarget();
     case 'TargetRename'
         fnRenameTarget();
+    case 'RemoveTarget'
+        fnRemoveTarget();
     case 'TargetKeepView'
         fnTargetKeepView();
+    case 'AddTargetGridGroup'
+        fnAddTargetGridGroup();
     case 'RotateGrid'
         fnRotateGrid();
     case 'ShowHideTargets'
@@ -153,6 +161,20 @@ switch strCallback
         fnTargetFindHoleWithGridRotation();
     case 'TargetFindGridAndHole'
         fnTargetFindGridAndHole();
+    case 'AddCraniotomy'
+        fnAddCraniotomy();
+    case 'MoveCraniotomy'
+        fnSelectMoveCraniotomy();
+    case 'SelectCraniotomy'
+        fnSelectCraniotomy();
+    case 'CraniotomyRename'
+        fnRenameCraniotomy();
+    case 'RemoveCraniotomy'
+        fnRemoveCraniotomy();
+    case 'CraniotomyKeepView'
+        fnCraniotomyKeepView();
+    case 'ShowHideCraniotomies'
+        fnShowHideCraniotomies();
     case 'SaveSession'
         fnSaveSession();
     case 'LoadSession'
@@ -161,8 +183,6 @@ switch strCallback
         fnRemoveGrid();
     case 'RenameGrid'
         fnRenameGrid();
-    case 'RemoveTarget'
-        fnRemoveTarget();
     case 'RenameFunc'
         fnRenameFunc();
     case 'RenameAnat'
@@ -203,6 +223,8 @@ switch strCallback
         fnMeasureDist();
     case 'AddGridUsingDirection'
         fnAddGridUsingDirection();
+    case 'AddGridGroupUsingDirection'
+        fnAddGridGroupUsingDirection();
     case 'MeasureDistTopGrid'
         fnMeasureDistTopGrid();
     case 'SetDepth'
@@ -305,7 +327,6 @@ switch strCallback
         fnChangeChamberType(varargin{1})
     case 'ExportFuncRegMatrix'
         fnExportFuncRegMatrix();
-        
     case 'ExportFuncVol'
         fnExportFuncVol();
     case 'ExportAnatVol'
@@ -518,24 +539,33 @@ global g_strctModule g_strctWindows
 afDelta= strctMouseOp.m_pt2fPos - strctPrevMouseOp.m_pt2fPos;
 afDiff = g_strctModule.m_strctLastMouseDown.m_pt2fPos - strctMouseOp.m_pt2fPos;
 
-if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && (strcmp(g_strctModule.m_strMouseMode,'AddBloodVessel')  || strcmp(g_strctModule.m_strMouseMode,'RemoveBloodVessel') )&& ...
+if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && ...
+        (strcmp(g_strctModule.m_strMouseMode,'AddBloodVessel') || ...
+        strcmp(g_strctModule.m_strMouseMode,'RemoveBloodVessel') )&& ...
         ((g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strctXY.m_hAxes) || ...
         (g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strctYZ.m_hAxes) || ...
         (g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strctXZ.m_hAxes) )
     
-    [pt3fPosIn3DSpace,pt3fPosInStereoSpace, pt3fVoxelCoordinate, strctCrossSection,pt3fPosInAtlasSpace]=fnGet3DCoord(strctMouseOp); %#ok
+    [pt3fPosIn3DSpace,pt3fPosInStereoSpace, pt3fVoxelCoordinate, strctCrossSection,pt3fPosInAtlasSpace] = ...
+        fnGet3DCoord(strctMouseOp); %#ok
     if strcmp(g_strctModule.m_strMouseMode,'AddBloodVessel')
         iCubeRad = 0;
-        aiYRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,1),      max(1,round(pt3fVoxelCoordinate(2))-iCubeRad:round(pt3fVoxelCoordinate(2))+iCubeRad));
-        aiXRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,2),max(1,round(pt3fVoxelCoordinate(1))-iCubeRad:round(pt3fVoxelCoordinate(1))+iCubeRad));
-        aiZRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,3),max(1,round(pt3fVoxelCoordinate(3))-iCubeRad:round(pt3fVoxelCoordinate(3))+iCubeRad));
+        aiYRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,1), ...
+            max(1,round(pt3fVoxelCoordinate(2))-iCubeRad:round(pt3fVoxelCoordinate(2))+iCubeRad));
+        aiXRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,2), ...
+            max(1,round(pt3fVoxelCoordinate(1))-iCubeRad:round(pt3fVoxelCoordinate(1))+iCubeRad));
+        aiZRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,3), ...
+            max(1,round(pt3fVoxelCoordinate(3))-iCubeRad:round(pt3fVoxelCoordinate(3))+iCubeRad));
         
         g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume(aiYRange,aiXRange,aiZRange) = 1;
     else
         iCubeRad = 1;
-        aiYRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,1),      max(1,round(pt3fVoxelCoordinate(2))-iCubeRad:round(pt3fVoxelCoordinate(2))+iCubeRad));
-        aiXRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,2),max(1,round(pt3fVoxelCoordinate(1))-iCubeRad:round(pt3fVoxelCoordinate(1))+iCubeRad));
-        aiZRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,3),max(1,round(pt3fVoxelCoordinate(3))-iCubeRad:round(pt3fVoxelCoordinate(3))+iCubeRad));
+        aiYRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,1), ...
+            max(1,round(pt3fVoxelCoordinate(2))-iCubeRad:round(pt3fVoxelCoordinate(2))+iCubeRad));
+        aiXRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,2), ...
+            max(1,round(pt3fVoxelCoordinate(1))-iCubeRad:round(pt3fVoxelCoordinate(1))+iCubeRad));
+        aiZRange = min(size( g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume,3), ...
+            max(1,round(pt3fVoxelCoordinate(3))-iCubeRad:round(pt3fVoxelCoordinate(3))+iCubeRad));
         g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3bBloodVolume(aiYRange,aiXRange,aiZRange) = 0;
     end
     % HERE !
@@ -572,11 +602,14 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
             
             fAngleRad = -atan2(fDistYMM,fDistXMM)-pi/2;
             fDiffMM = sqrt(fDistXMM^2+fDistYMM^2);
-            set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm, %.2f Deg',fDiffMM,fAngleRad/pi*180),'FontSize',11,'FontWeight','bold');
+            set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm, %.2f Deg',fDiffMM, ...
+                fAngleRad/pi*180),'FontSize',11,'FontWeight','bold');
         elseif strcmpi(g_strctModule.m_strDistMode,'PointToGridTop');
             
-            if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ~isempty(g_strctModule.m_astrctChambers) && ...
-                    g_strctModule.m_iCurrChamber > 0 && g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected > 0
+            if ~isempty(g_strctModule.m_acAnatVol) && g_strctModule.m_iCurrAnatVol > 0 && ...
+                    ~isempty(g_strctModule.m_astrctChambers) && ...
+                    g_strctModule.m_iCurrChamber > 0 && g_strctModule.m_astrctChambers( ...
+                    g_strctModule.m_iCurrChamber).m_iGridSelected > 0
                 strctChamber = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber);
                 iSelectedGrid=g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected;
                 
@@ -589,9 +622,10 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
                 pt3fPosIn3DSpace=fnGet3DCoord(strctMouseOp);
                 
                 [fMinDist, afMinDistToTarget, iBestHole, fDistanceFromHoleMM]=fnGridErrorFunction(...
-                    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids(iSelectedGrid).m_strctModel,...
-                    pt3fPosIn3DSpace, a2fM_WithMeshOffset); %#ok
-                set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm from grid top',fDistanceFromHoleMM),'FontSize',11,'FontWeight','bold');
+                    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids( ...
+                    iSelectedGrid).m_strctModel,pt3fPosIn3DSpace, a2fM_WithMeshOffset); %#ok
+                set(g_strctModule.m_strctPanel.m_hMeasureText,'string',sprintf('%.3f mm from grid top', ...
+                    fDistanceFromHoleMM),'FontSize',11,'FontWeight','bold');
             end
         end
     else
@@ -601,7 +635,8 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && strcmp(g_strctModule.
         
         g_strctModule.m_strctPanel.m_hMeasureText = text(g_strctModule.m_strctLastMouseDown.m_pt2fPos(1),...
             g_strctModule.m_strctLastMouseDown.m_pt2fPos(2)-5,...
-            '0 mm','color','g','parent',g_strctModule.m_strctLastMouseDown.m_hAxes,'FontName',g_strctWindows.m_strDefaultFontName);
+            '0 mm','color','g','parent',g_strctModule.m_strctLastMouseDown.m_hAxes,'FontName', ...
+            g_strctWindows.m_strDefaultFontName);
         
     end
     
@@ -611,7 +646,8 @@ end
 
 if strcmp(g_strctModule.m_strMouseMode,'WaitForTwoClickEndPoint') && ...
         ((g_strctModule.m_strctLastMouseDown.m_hAxes == strctMouseOp.m_hAxes))
-    if isfield(g_strctModule.m_strctPanel,'m_hTwoClickObjectTempLine')  && ~isempty(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine)
+    if isfield(g_strctModule.m_strctPanel,'m_hTwoClickObjectTempLine') && ...
+            ~isempty(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine)
         set(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine,'xdata',...
             [g_strctModule.m_strctLastMouseDown.m_pt2fPos(1),strctMouseOp.m_pt2fPos(1)],...
             'ydata',[g_strctModule.m_strctLastMouseDown.m_pt2fPos(2),strctMouseOp.m_pt2fPos(2)]);
@@ -624,7 +660,8 @@ end
 
 if strcmp(g_strctModule.m_strMouseMode,'ModifyController')
     % Modify controller....
-    fnModifyController(g_strctModule.m_strctActiveController.m_iIndex,strctMouseOp,g_strctModule.m_strctActiveController.m_strWhat);
+    fnModifyController(g_strctModule.m_strctActiveController.m_iIndex,strctMouseOp, ...
+        g_strctModule.m_strctActiveController.m_strWhat);
     fnInvalidate(1);
     return;
 end
@@ -635,7 +672,8 @@ if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxesSelected)
     if bPan
         fnShiftPlaneExact(g_strctModule.m_strctLastMouseDown, strctMouseOp)
     else
-        fnRotatePlane(g_strctModule.m_strctLastMouseDown.m_hAxesLineSelected, sum(-afDelta .* g_strctModule.m_strctLastMouseDown.m_afAxesPen));
+        fnRotatePlane(g_strctModule.m_strctLastMouseDown.m_hAxesLineSelected, ...
+            sum(-afDelta.*g_strctModule.m_strctLastMouseDown.m_afAxesPen));
         %fnRotatePlaneExact(g_strctModule.m_strctLastMouseDown, strctMouseOp);
     end
     fnInvalidate();
@@ -650,7 +688,9 @@ end
 
 % 3D Operation
 
-if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && (g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes ||g_strctModule.m_strctLastMouseDown.m_hAxes ==  g_strctModule.m_strctPanel.m_strctStereoTactic.m_hAxes)
+if ~isempty(g_strctModule.m_strctLastMouseDown.m_hAxes) && ...
+        (g_strctModule.m_strctLastMouseDown.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes || ...
+        g_strctModule.m_strctLastMouseDown.m_hAxes ==  g_strctModule.m_strctPanel.m_strctStereoTactic.m_hAxes)
     afDiffScr = strctMouseOp.m_pt2fPosScr - strctPrevMouseOp.m_pt2fPosScr;
     
     switch g_strctModule.m_strMouse3DMode
@@ -748,6 +788,8 @@ else
             fnRotateMarkerAux(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
         case 'MoveTarget'
             fnMoveTarget(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
+        case 'MoveCraniotomy'
+            fnMoveCraniotomy(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
         case 'MoveAtlas'
             fnMoveAtlas(g_strctModule.m_strctLastMouseDown.m_hAxes,afDelta);
         case 'RotateAtlas'
@@ -810,10 +852,10 @@ if  ~isempty(strctMouseOp.m_hAxes)
     end
 end
 
-if strcmpi(g_strctModule.m_strMouseMode,'AddTwoClickObject')
-    set(g_strctWindows.m_hFigure,'Pointer','fleur');
-end
-
+% if strcmpi(g_strctModule.m_strMouseMode,'AddTwoClickObject')
+%     set(g_strctWindows.m_hFigure,'Pointer','fleur');
+% end
+% 
 g_strctModule.m_strctPrevMouseOp = strctMouseOp;
 
 
@@ -901,10 +943,9 @@ if ~g_strctModule.m_bVolumeLoaded
     return;
 end
 
-
-
 if g_strctModule.m_strctGUIOptions.m_bShow2DPlanes
-    [strctMouseOp.m_hAxesSelected,bCloseToCenter,afPenDir,strctMouseOp.m_hAxesLineSelected] = fnIntersectAxis(strctMouseOp);
+    [strctMouseOp.m_hAxesSelected, bCloseToCenter, afPenDir, strctMouseOp.m_hAxesLineSelected] = ...
+        fnIntersectAxis(strctMouseOp);
     if isempty(strctMouseOp.m_hAxesSelected)
         strctMouseOp.m_strAxisOp = 'Pan';
     else
@@ -1097,8 +1138,8 @@ if strcmp(g_strctModule.m_strMouseMode,'AddSingleClickObject') && strcmpi(strctM
             
             feval(g_strctModule.m_hClickCallback,strctMouseOp);
             set(g_strctWindows.m_hFigure,'Pointer','arrow');
-            
-            g_strctModule.m_strMouseMode = 'Scroll';
+            fnChangeMouseMode('Pan');
+%             g_strctModule.m_strMouseMode = 'Scroll';
             return;
         elseif strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes
             
@@ -1150,17 +1191,19 @@ end
 
 if strcmpi(g_strctModule.m_strMouseMode,'WaitForTwoClickEndPoint')
     % Add chamber
-    if isfield(g_strctModule.m_strctPanel,'m_hTwoClickObjectTempLine') && ~isempty(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine) && ishandle(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine)
+    if isfield(g_strctModule.m_strctPanel,'m_hTwoClickObjectTempLine') && ...
+            ~isempty(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine) && ...
+            ishandle(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine)
         delete(g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine)
         g_strctModule.m_strctPanel.m_hTwoClickObjectTempLine = [];
     end
-    g_strctModule.m_strMouseMode = 'Scroll';
+    fnChangeMouseMode('Pan');
     
     strctStartPoint = g_strctModule.m_strctLastMouseDown;
     strctEndPoint = strctMouseOp;
     
     if strctEndPoint.m_hAxes == strctStartPoint.m_hAxes % Otherwise, it does not make sense!
-        feval(g_strctModule.m_hClickCallback,strctStartPoint,strctEndPoint);
+        feval(g_strctModule.m_hClickCallback, strctStartPoint, strctEndPoint);
     end
 end
 %profile off
@@ -1192,11 +1235,12 @@ else
     if (strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strct3D.m_hAxes)
         fnZoom3DAxes(strctMouseOp.m_iScroll);
     else
-        if strctMouseOp.m_hAxes  == g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
-             strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
-        end
+%         if strctMouseOp.m_hAxes == g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
+%              strctMouseOp.m_iScroll = -strctMouseOp.m_iScroll;
+%         end
         
-        fnShiftPlane(strctMouseOp.m_hAxes , min(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing)*strctMouseOp.m_iScroll)
+        fnShiftPlane(strctMouseOp.m_hAxes, ...
+            -min(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_afVoxelSpacing)*strctMouseOp.m_iScroll)
     end
 end
 fnUpdatePos();
@@ -1327,7 +1371,7 @@ return
 
 function fnSetROIAdd(b2D)
 global g_strctModule
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
+if isempty(g_strctModule.m_astrctROIs)
     h=msgbox('Please add an ROI first');
     waitfor(h);
     return;
@@ -1344,7 +1388,7 @@ return
 
 function fnSetROISubtract(b2D)
 global g_strctModule
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
+if isempty(g_strctModule.m_astrctROIs)
     h=msgbox('Please add an ROI first');
     waitfor(h);
     return;
@@ -1369,9 +1413,6 @@ end
 fnUpdateSelectRadiusPos();
 return
 
-
-function fnAddTargetAux()
-return
 
 function fnToggleLabelsVisibility()
 global g_strctModule

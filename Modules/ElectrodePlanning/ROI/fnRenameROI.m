@@ -11,12 +11,12 @@ end
 
 if iSelectedROI > 0
     
-    answer=inputdlg({'New ROI Name'},'Change ROI Name',1,{g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(iSelectedROI).m_strName});
+    answer=inputdlg({'New ROI Name'},'Change ROI Name',1,{g_strctModule.m_astrctROIs(iSelectedROI).m_strName});
     
     if isempty(answer)
         return;
     end
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(iSelectedROI).m_strName = answer{1};
+    g_strctModule.m_astrctROIs(iSelectedROI).m_strName = answer{1};
     fnUpdateROIList()
 end
 

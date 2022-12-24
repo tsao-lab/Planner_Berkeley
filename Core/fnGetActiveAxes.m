@@ -6,20 +6,20 @@ if ~isfield(g_strctModule,'m_strctPanel') || ~isfield(g_strctModule.m_strctPanel
 end
 for k=1:length(g_strctModule.m_strctPanel.m_ahAxes)
     
-    hParent = get(g_strctModule.m_strctPanel.m_ahAxes(k),'parent');
+    hParent = g_strctModule.m_strctPanel.m_ahAxesPanels(k);
     
     if strcmp(get(hParent,'visible'),'off')
         continue;
     end
     
-    if get(g_strctModule.m_strctPanel.m_ahAxes(k),'parent') ~= g_strctWindows.m_hFigure
+    if hParent ~= g_strctWindows.m_hFigure
         %This should be a while loop....
         aiAxesRect = get(g_strctModule.m_strctPanel.m_ahAxes(k),'position');
-        hParent = get(g_strctModule.m_strctPanel.m_ahAxes(k),'parent');
+%         hParent = get(g_strctModule.m_strctPanel.m_ahAxes(k),'parent');
         while (1)
             aiParentRect = get(hParent ,'position');
             aiAxesRect(1:2) = aiAxesRect(1:2) + aiParentRect(1:2);
-            hParent= get(hParent,'parent');
+            hParent = get(hParent,'parent');
             if hParent == g_strctWindows.m_hFigure
                 break;
             end

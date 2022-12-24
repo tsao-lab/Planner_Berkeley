@@ -33,7 +33,7 @@ switch strCommand
         a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_a2fReg*g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_a2fM;
         
         a3bTemp = zeros(size(g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_a3fVol),'uint8')>0;
-        a3bTemp(g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_astrctROIs(iROIIndex).m_aiVolumeIndices)=true;
+        a3bTemp(g_strctModule.m_astrctROIs(iROIIndex).m_aiVolumeIndices)=true;
         varargout{1} = a3bTemp;
         varargout{2} =a2fCRS_To_XYZ;
 
@@ -42,7 +42,7 @@ switch strCommand
         iAnatomicalVolumeIndex = varargin{1};
         strROI = varargin{2};
         iSelectedFunctional = varargin{3};
-        iROIIndex = find(ismember({g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_astrctROIs.m_strName},strROI));
+        iROIIndex = find(ismember({g_strctModule.m_astrctROIs.m_strName},strROI));
         if ~isempty(iROIIndex)
           varargout{1} =  PlannerAPI('GetROI_Func_Coordinates_By_Index',iAnatomicalVolumeIndex,iROIIndex,iSelectedFunctional);
         end
@@ -53,7 +53,7 @@ switch strCommand
         iROIIndex = varargin{2};
         iSelectedFunctional = varargin{3};
 
-        [aiI,aiJ,aiK]=ind2sub( size(g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_a3fVol),         g_strctModule.m_acAnatVol{iAnatomicalVolumeIndex}.m_astrctROIs(iROIIndex).m_aiVolumeIndices);
+        [aiI,aiJ,aiK]=ind2sub( size(g_strctModule.m_astrctROIs(iROIIndex).m_aiVolumeIndices);
         P = [aiJ;aiI;aiK];
         iNumPoints =size(aiI,2);
         PAug = [P; ones(1,iNumPoints)];

@@ -37,9 +37,6 @@ if fnSameStruct(strctPrevCrossSectionXY, g_strctModule.m_strctCrossSectionXY) &&
 else
     [a2fCrossSectionXY, apt3fPlanePointsXY] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY);
     
-    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsXY;ones(1,size(apt3fPlanePointsXY,2))];
-    apt3fPlanePointsXY=Tmp(1:3,:);
-    
     a2fPrevCrossSectionXY =a2fCrossSectionXY;
     apt3fPrevPlanePointsXY = apt3fPlanePointsXY;
     strctPrevCrossSectionXY = g_strctModule.m_strctCrossSectionXY;
@@ -60,9 +57,6 @@ if fnSameStruct(strctPrevCrossSectionYZ, g_strctModule.m_strctCrossSectionYZ) &&
 else
     [a2fCrossSectionYZ, apt3fPlanePointsYZ] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionYZ);
     
-    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsYZ;ones(1,size(apt3fPlanePointsYZ,2))];
-    apt3fPlanePointsYZ=Tmp(1:3,:);
-    
     a2fPrevCrossSectionYZ =a2fCrossSectionYZ;
     apt3fPrevPlanePointsYZ = apt3fPlanePointsYZ;
     strctPrevCrossSectionYZ = g_strctModule.m_strctCrossSectionYZ;
@@ -81,9 +75,6 @@ if fnSameStruct(strctPrevCrossSectionXZ, g_strctModule.m_strctCrossSectionXZ) &&
     a2fCrossSectionXZ_Func = a2fPrevCrossSectionXZ_Func;
 else
     [a2fCrossSectionXZ, apt3fPlanePointsXZ] = fnResampleCrossSection(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXZ);
-    
-    Tmp= (g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM)\[apt3fPlanePointsXZ;ones(1,size(apt3fPlanePointsXZ,2))];
-    apt3fPlanePointsXZ=Tmp(1:3,:);
     
     a2fPrevCrossSectionXZ =a2fCrossSectionXZ;
     apt3fPrevPlanePointsXZ = apt3fPlanePointsXZ;
@@ -167,9 +158,9 @@ end
 
 if g_strctModule.m_strctGUIOptions.m_bShowROIs
     a3bTemp = zeros(size(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol),'uint8')>0;
-    for k=1:length(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
-        if g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(k).m_bVisible
-            a3bTemp(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(k).m_aiVolumeIndices) = true;
+    for k=1:length(g_strctModule.m_astrctROIs)
+        if g_strctModule.m_astrctROIs(k).m_bVisible
+            a3bTemp(g_strctModule.m_astrctROIs(k).m_aiVolumeIndices) = true;
         end
     end
     [a2fROIXY] = fnResampleCrossSection(a3bTemp, a2fXYZ_To_CRS, g_strctModule.m_strctCrossSectionXY);
@@ -221,6 +212,11 @@ else
     fnDeleteTargetContours();
 end
 
+if g_strctModule.m_strctGUIOptions.m_bShowCraniotomies
+    fnUpdateCraniotomyContours();
+else
+    fnDeleteCraniotomyContours();
+end
 
 
 if g_strctModule.m_strctGUIOptions.m_bShowFreesurferSurfaces
@@ -242,7 +238,7 @@ else
 end
 
 
- fnDrawControlableObject();
+fnDrawControlableObject();
 
 
 if isfield(g_strctModule.m_strctGUIOptions,'m_bShowMarkers') && g_strctModule.m_strctGUIOptions.m_bShowMarkers

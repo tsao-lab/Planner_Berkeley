@@ -43,8 +43,7 @@ end
 %%
 strctGridModel.m_abIntersect = fnTestHoleIntersection(strctGridModel);
 strctGridModel.m_acGroupBoundaries = fnFindGroupBoundaries(strctGridModel);
-
-
+strctGridModel.m_astrctGridMesh = fnBuildGridMeshNew(strctGridModel, false, true);
 
 end
 

@@ -1,29 +1,21 @@
-
 function fnSelectTarget()
 global g_strctModule
-persistent iLastSelectedTarget
-if isempty(iLastSelectedTarget)
-    iLastSelectedTarget = 0;
+if isempty(g_strctModule.m_iCurrentTarget)
+    g_strctModule.m_iCurrentTarget = 0;
 end
 iSelectedTarget = get(g_strctModule.m_strctPanel.m_hTargetList,'value');
 if length(iSelectedTarget)>1 || isempty(g_strctModule.m_astrctTargets) || ...
-    iSelectedTarget~=iLastSelectedTarget
-    iLastSelectedTarget = iSelectedTarget;
+        iSelectedTarget~=g_strctModule.m_iCurrentTarget
+    g_strctModule.m_iCurrentTarget = iSelectedTarget;
     return
 end
-if ~isempty(iSelectedTarget) && iSelectedTarget > 0 && isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTargets')
-
+if ~isempty(iSelectedTarget) && iSelectedTarget>0
     g_strctModule.m_strctCrossSectionXY = ...
         g_strctModule.m_astrctTargets(iSelectedTarget).m_strctCrossSectionXY;
-
     g_strctModule.m_strctCrossSectionYZ = ...
         g_strctModule.m_astrctTargets(iSelectedTarget).m_strctCrossSectionYZ;
-
     g_strctModule.m_strctCrossSectionXZ = ...
         g_strctModule.m_astrctTargets(iSelectedTarget).m_strctCrossSectionXZ;
-    
-    
-    
     pt3fPosMM = g_strctModule.m_astrctTargets(iSelectedTarget).m_pt3fPosition;
     g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,4) = pt3fPosMM;
     g_strctModule.m_strctCrossSectionYZ.m_a2fM(1:3,4) = pt3fPosMM;
@@ -32,6 +24,5 @@ if ~isempty(iSelectedTarget) && iSelectedTarget > 0 && isfield(g_strctModule.m_a
     fnInvalidate();
 end
 
-end
 
     

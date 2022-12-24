@@ -26,5 +26,3 @@ switch strctMouseOp.m_hAxes
 end
 
 fnAddChamberAux(a2fM);
-return;      
-

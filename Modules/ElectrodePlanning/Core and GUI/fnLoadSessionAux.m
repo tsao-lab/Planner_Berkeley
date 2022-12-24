@@ -19,7 +19,13 @@ g_strctModule.m_bFuncVolLoaded = strctSavedSession.g_strctModule.m_bFuncVolLoade
 g_strctModule.m_fCurrentDepth = strctSavedSession.g_strctModule.m_fCurrentDepth;
 g_strctModule.m_astrctChambers = strctSavedSession.g_strctModule.m_astrctChambers;
 g_strctModule.m_astrctTargets = strctSavedSession.g_strctModule.m_astrctTargets;
+g_strctModule.m_astrctCraniotomies = strctSavedSession.g_strctModule.m_astrctCraniotomies;
 g_strctModule.m_astrctMarkers = strctSavedSession.g_strctModule.m_astrctMarkers;
+g_strctModule.m_astrctROIs = strctSavedSession.g_strctModule.m_astrctROIs;
+g_strctModule.m_iCurrentTarget = strctSavedSession.g_strctModule.m_iCurrentTarget;
+g_strctModule.m_iCurrentCraniotomy = strctSavedSession.g_strctModule.m_iCurrentCraniotomy;
+g_strctModule.m_iCurrentMarker = strctSavedSession.g_strctModule.m_iCurrentMarker;
+g_strctModule.m_iCurrentROI = strctSavedSession.g_strctModule.m_iCurrentROI;
 
 acFieldNames = fieldnames(g_strctModule.m_strctGUIOptions);
 for k=1:length(acFieldNames)
@@ -48,6 +54,7 @@ fnUpdateFunctionalsList();
 fnUpdateChamberList();
 fnUpdateGridList();
 fnUpdateTargetList();
+fnUpdateCraniotomyList();
 %fnUpdateBloodVesselList();
 fnUpdateROIList();
 fnUpdateMarkerList();

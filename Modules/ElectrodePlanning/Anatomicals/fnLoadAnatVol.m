@@ -1,14 +1,14 @@
-
-function fnLoadAnatVol()
+function fnLoadAnatVol(strFileName)
 global g_strctModule
-    
-[strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.img;*.nii'], ...
-    'MultiSelect','off');
-if strFile(1) == 0
-    return;
+
+if ~exist('strFileName', 'var') || isempty(strFileName)
+    [strFile, strPath] = uigetfile([g_strctModule.m_strDefaultFilesFolder,'*.mgz;*.img;*.nii'], ...
+        'MultiSelect','off');
+    if strFile(1) == 0
+        return;
+    end
+    strFileName = fullfile(strPath, strFile);
 end
-% Start the import process
-strFileName = fullfile(strPath,strFile);
 strctVol=fnQuickAddVolume(strFileName);
 
 % Add the new volume to planner

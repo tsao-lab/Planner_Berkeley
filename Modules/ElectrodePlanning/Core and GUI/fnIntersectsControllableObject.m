@@ -1,5 +1,4 @@
-
-function [bIntersects, strctObject, strWhat,iObjectIndex] = fnIntersectsControllableObject(strctMouseOp)
+function [bIntersects, strctObject, strWhat, iObjectIndex] = fnIntersectsControllableObject(strctMouseOp)
 global g_strctModule    
 bIntersects = false;
 strctObject  = [];
@@ -12,12 +11,10 @@ if isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_acControll
         switch strctObject.m_strType
             case 'Ruler'
                 iObjectIndex = iObjectIter;
-               [bIntersects, strWhat] = fnIntersectsRuler(strctObject, strctMouseOp);
-               if bIntersects
-                return;
-               end
+                [bIntersects, strWhat] = fnIntersectsRuler(strctObject, strctMouseOp);
+                if bIntersects
+                    return;
+                end
         end
     end
 end
-
-return;

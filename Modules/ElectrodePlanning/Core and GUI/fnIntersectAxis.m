@@ -1,19 +1,21 @@
-
-function [hAxes,bCloseToCenter, afPenDir,hAxesLine] = fnIntersectAxis(strctMouseOp)
+function [hAxes, bCloseToCenter, afPenDir, hAxesLine] = fnIntersectAxis(strctMouseOp)
 global g_strctModule g_strctWindows
 hAxes = [];
 hAxesLine = [];
 fThreshold = 2;
 iWindowSize = g_strctModule.m_strctPanel.m_strctXY.m_aiPos(end);
 fCenterDist = 0.6*(iWindowSize/2); %#ok
-bCloseToCenter = false; %#ok
 afPenDir = [];
-bCloseToCenter = min([abs(255-strctMouseOp.m_pt2fPos(2)),abs(255-strctMouseOp.m_pt2fPos(1)),(strctMouseOp.m_pt2fPos(2)),(strctMouseOp.m_pt2fPos(1))]) > 20;
+bCloseToCenter = true;
+% bCloseToCenter = min([abs(255-strctMouseOp.m_pt2fPos(2)),abs(255-strctMouseOp.m_pt2fPos(1)), ...
+%     (strctMouseOp.m_pt2fPos(2)),(strctMouseOp.m_pt2fPos(1))]) > 20;
 if ~isempty(strctMouseOp.m_hAxes)
     switch strctMouseOp.m_hAxes
         case g_strctModule.m_strctPanel.m_strctXY.m_hAxes
-            [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ); %#ok
-            [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ); %#ok
+            [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ); %#ok
+            [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ); %#ok
             %[fDistXZ, fDistFromCenterXZ;fDistYZ, fDistFromCenterYZ]
             if fDistXZ < fDistYZ
                 if fDistXZ < fThreshold
@@ -31,8 +33,10 @@ if ~isempty(strctMouseOp.m_hAxes)
                 end
             end
          case g_strctModule.m_strctPanel.m_strctYZ.m_hAxes
-            [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ);  %#ok
-            [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY); %#ok
+            [fDistXZ, fDistFromCenterXZ,afPenDirXZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctYZ.m_hLineXZ);  %#ok
+            [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctYZ.m_hLineXY); %#ok
             if fDistXZ < fDistXY
                 if fDistXZ < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctXZ.m_hAxes;
@@ -49,8 +53,10 @@ if ~isempty(strctMouseOp.m_hAxes)
                 end
             end
         case g_strctModule.m_strctPanel.m_strctXZ.m_hAxes
-            [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ); %#ok
-            [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos,  g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY); %#ok
+            [fDistYZ, fDistFromCenterYZ,afPenDirYZ] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctXZ.m_hLineYZ); %#ok
+            [fDistXY, fDistFromCenterXY,afPenDirXY] =fnGetDistanceToLine(strctMouseOp.m_pt2fPos, ...
+                g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY); %#ok
             if fDistYZ < fDistXY
                 if fDistYZ < fThreshold
                     hAxes = g_strctModule.m_strctPanel.m_strctYZ.m_hAxes;
@@ -65,15 +71,15 @@ if ~isempty(strctMouseOp.m_hAxes)
                     afPenDir = -afPenDirXY;
                     hAxesLine = g_strctModule.m_strctPanel.m_strctXZ.m_hLineXY;
                 end
-            end;            
+            end
     end
 end
 
 if ~isempty(hAxes)
     if bCloseToCenter
-       strPrev = get(g_strctWindows.m_hFigure,'Pointer');
-       g_strctModule.m_strPrevMouseIcon = strPrev;
-       set(g_strctWindows.m_hFigure,'Pointer','fleur');
+        strPrev = get(g_strctWindows.m_hFigure,'Pointer');
+        g_strctModule.m_strPrevMouseIcon = strPrev;
+        set(g_strctWindows.m_hFigure,'Pointer','fleur');
     else
         strPrev = get(g_strctWindows.m_hFigure,'Pointer');
         g_strctModule.m_strPrevMouseIcon = strPrev;
@@ -82,7 +88,7 @@ if ~isempty(hAxes)
 else
     if isfield(g_strctModule,'m_strPrevMouseIcon') && ~isempty(g_strctModule.m_strPrevMouseIcon)
         set(g_strctWindows.m_hFigure,'Pointer',g_strctModule.m_strPrevMouseIcon);
-        g_strctModule.m_strPrevMouseIcon = [];
+        g_strctModule.m_strPrevMouseIcon = '';
     else
         set(g_strctWindows.m_hFigure,'Pointer','arrow');
         g_strctModule.m_strPrevMouseIcon = 'arrow';

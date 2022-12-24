@@ -68,23 +68,26 @@ fHoleDistanceX= -afDirectionToHoleOnPlane'*a2fChamber(1:3,1);
 fHoleDistanceY= afDirectionToHoleOnPlane'*a2fChamber(1:3,2);
 
 % Generate the grid...
-gridType = 'generic circular';
+gridType = g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_astrctGrids( ...
+    g_strctModule.m_astrctChambers(g_strctModule.m_iCurrChamber).m_iGridSelected).m_strType;
 switch gridType
+    case 'Generic'
+
     
-    case 'standard circular'
+    case 'Standard Circular'
         iDefaultModel = 1;  
         strctGridParam = fnDefineGridModel_Standard();
         strctGridParam.m_acParam{1}.m_Value = fDesiredTiltDeg;
         strctGridParam.m_acParam{2}.m_Value = fDesiredRotationDeg;
         strctGridModel = fnBuildGridModel_Standard(strctGridParam);
         
-    case 'generic circular'
+    case 'Generic Circular'
         iDefaultModel = 3;
         fNewTiltAngle = fDesiredTiltDeg;
         strctGridParam = fnDefineGridModel_Generic();
         fCurrentDistanceMM = 1 / cos(strctGridParam.m_afGridHoleTiltDeg(1)/180*pi);
         afDistToCenter = sqrt(strctGridParam.m_afGridHoleXMM.^2+strctGridParam.m_afGridHoleYMM.^2);
-        [fMin, iMinIndex]=min(afDistToCenter);
+        [~, iMinIndex] = min(afDistToCenter);
         afXGrid = (strctGridParam.m_afGridHoleXMM - strctGridParam.m_afGridHoleXMM(iMinIndex)) / fCurrentDistanceMM;
         afYGrid = (strctGridParam.m_afGridHoleYMM - strctGridParam.m_afGridHoleYMM(iMinIndex)) / fCurrentDistanceMM;
         fNewDistanceMM = 1 / cos(fNewTiltAngle/180*pi);
@@ -96,9 +99,11 @@ switch gridType
 
         strctGridModel = fnBuildGridModel_Generic(strctGridParam);
 
+    otherwise
+
 end
 
-[fClosestDistanceToGridHoleMM, iHoleIndex]=min( sqrt((strctGridModel.m_afGridHolesX-fHoleDistanceX).^2+(strctGridModel.m_afGridHolesY-fHoleDistanceY).^2));
+[~, iHoleIndex] = min( sqrt((strctGridModel.m_afGridHolesX-fHoleDistanceX).^2+(strctGridModel.m_afGridHolesY-fHoleDistanceY).^2));
 strctGridModel.m_strctGridParams.m_abSelectedHoles(iHoleIndex) = true;
 
 

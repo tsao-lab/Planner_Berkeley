@@ -3,7 +3,7 @@ global g_strctModule
 if isempty(g_strctModule.m_acAnatVol)
     return;
 end
-a2fM = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg;
+a2fM = g_strctModule.m_a2fAtlasReg;
 strctCrossSection = fnAxesHandleToStrctCrossSection(hAxes);
 
 dxy = -g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,3)' * g_strctModule.m_strctCrossSectionXY.m_a2fM(1:3,4);
@@ -26,7 +26,7 @@ if ~isempty(strctCrossSection)
     a2fRot(1:3,1:3) = a2fR;
     a2fRot(4,4) = 1;
     
-    g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fAtlasReg = inv(a2fT) * a2fRot * a2fT * a2fM; %#ok
+    g_strctModule.m_a2fAtlasReg = inv(a2fT) * a2fRot * a2fT * a2fM; %#ok
 end
 fnInvalidate();
 return;

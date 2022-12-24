@@ -1,7 +1,7 @@
 function iNewROIIndex = fnAddNewROIAux(strctMouseOp)
 global g_strctModule
 
-if isempty(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs)
+if isempty(g_strctModule.m_astrctROIs)
 iSelectedROI= fnAddNewROI();
 else
     iSelectedROI= get(g_strctModule.m_strctPanel.m_hROIList,'value');
@@ -44,7 +44,7 @@ end
  % Back to MM and then back to voxels in anatomical space.
 a2fCRS_To_XYZ = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fReg*g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a2fM;
 Tmp = inv(a2fCRS_To_XYZ) *  a2fCRS_To_XYZ_Func * [aiJ, aiI, aiK, ones(size(aiI))]';
-g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_astrctROIs(iSelectedROI).m_aiVolumeIndices = sub2ind(size(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol), round(Tmp(2,:)),round(Tmp(1,:)),round(Tmp(3,:)));
+g_strctModule.m_astrctROIs(iSelectedROI).m_aiVolumeIndices = sub2ind(size(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_a3fVol), round(Tmp(2,:)),round(Tmp(1,:)),round(Tmp(3,:)));
  fnInvalidate(1);
 return;
 

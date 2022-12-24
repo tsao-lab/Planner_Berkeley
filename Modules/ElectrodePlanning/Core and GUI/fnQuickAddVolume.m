@@ -50,9 +50,9 @@ strctAnatVol.m_a2fRegToStereoTactic = 1/10*fnRotateVectorAboutAxis4D([1 0 0],pi)
 
 % strctAnatVol.m_a2fRegToStereoTactic = fnRotateVectorAboutAxis4D([1 0 0],pi)* inv(strctAnatVol.m_strctCrossSectionHoriz.m_a2fM);
 
-strctAnatVol.m_astrctChambers = [];
-strctAnatVol.m_astrctTargets = [];
-strctAnatVol.m_astrctROIs= [];
+% strctAnatVol.m_astrctChambers = [];
+% strctAnatVol.m_astrctTargets = [];
+% strctAnatVol.m_astrctROIs= [];
 strctAnatVol.m_acSavedVirtualArms = {};
 strctMRI = rmfield(strctMRI,'vol');
 strctAnatVol.m_strctFreeSurfer = strctMRI;

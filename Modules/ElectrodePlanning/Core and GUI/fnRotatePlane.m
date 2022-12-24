@@ -1,13 +1,12 @@
-
 function fnRotatePlane(hAxes, fDiff)
 global g_strctModule
 switch hAxes
     
-    case g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ % bottom left, red
+    case g_strctModule.m_strctPanel.m_strctXY.m_hLineYZ % bottom right, red
         g_strctModule.m_strctCrossSectionYZ = fnRotateCrossSectionAux(...
             g_strctModule.m_strctCrossSectionYZ, g_strctModule.m_strctCrossSectionXZ, -fDiff/100/2*pi);
         
-    case g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ % bottom left, green
+    case g_strctModule.m_strctPanel.m_strctXY.m_hLineXZ % bottom right, green
         
         g_strctModule.m_strctCrossSectionXZ = fnRotateCrossSectionAux(...
             g_strctModule.m_strctCrossSectionXZ, g_strctModule.m_strctCrossSectionYZ, -fDiff/100/2*pi);

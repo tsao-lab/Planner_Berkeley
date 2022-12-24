@@ -10,7 +10,7 @@ if ~exist('useNearestNeighbor', 'var') || isempty(useNearestNeighbor)
     useNearestNeighbor = false;
 end
 
-[a2fXmm,a2fYmm] = meshgrid(...
+[a2fXmm, a2fYmm] = meshgrid(...
     linspace(-strctCrossSection.m_fHalfWidthMM, strctCrossSection.m_fHalfWidthMM, strctCrossSection.m_iResWidth),...
     linspace(-strctCrossSection.m_fHalfHeightMM, strctCrossSection.m_fHalfHeightMM, strctCrossSection.m_iResHeight));
 
@@ -34,7 +34,8 @@ apt3fPlanePoints = a2fTmp(1:3,:);
 % however, matlab representation is relative to [1,1,1].
 % The fast interp 3 dll get indices which are relative to [1,1,1],
 % therefore, we add one to all three dimensions.
-a2fCrossSection = reshape(fndllFastInterp3(a3fVol, 1+apt2fPoints(1,:),1+apt2fPoints(2,:),1+apt2fPoints(3,:), useNearestNeighbor), size(a2fXmm));
+a2fCrossSection = reshape(fndllFastInterp3(a3fVol, 1+apt2fPoints(1,:),1+apt2fPoints(2,:),1+apt2fPoints(3,:), ...
+    useNearestNeighbor), size(a2fXmm));
 %  iMode=2;
 %  a2fCrossSection = reshape(interp3fast_double(a3fVol, 1+apt2fPoints(2,:),1+apt2fPoints(1,:),1+apt2fPoints(3,:),iMode), size(a2fXmm));
 

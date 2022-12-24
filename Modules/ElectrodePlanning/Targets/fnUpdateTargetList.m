@@ -1,7 +1,6 @@
-
 function fnUpdateTargetList()
 global g_strctModule
-if ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTargets')
+if ~isfield(g_strctModule,'m_astrctTargets')
     set(g_strctModule.m_strctPanel.m_hTargetList,'String','');
 else
     strName = '';
@@ -16,8 +15,8 @@ else
     end
     if iNumTargets == 0
         iValue = 1;
-    end;    
-    set(g_strctModule.m_strctPanel.m_hTargetList,'String',strName(2:end),'value',iValue,'min',1,'max',max(1,iNumTargets));
+    end
+    set(g_strctModule.m_strctPanel.m_hTargetList,'String',strName(2:end), ...
+        'value',iValue,'min',1,'max',max(1,iNumTargets));
+    g_strctModule.m_iCurrentTarget = iValue;
 end
-
-return;

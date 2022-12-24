@@ -1,6 +1,7 @@
 function fnUpdateTargetContours()
 global g_strctModule
-if g_strctModule.m_iCurrAnatVol == 0 || ~isfield(g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol},'m_astrctTargets')
+if g_strctModule.m_iCurrAnatVol == 0 || ...
+        ~isfield(g_strctModule, 'm_astrctTargets')
     return;
 end
 if isfield(g_strctModule.m_strctPanel,'m_ahTargets')
@@ -29,14 +30,16 @@ for iTargetIter=1:iNumTargets
     
     for iAxesIter=1:3
         for iMeshIter=1:length(astrctMesh)
-            a2fLinesPix = fnMeshCrossSectionIntersection(astrctMesh(iMeshIter), astrctCrossSection(iAxesIter) );
+            a2fLinesPix = fnMeshCrossSectionIntersection(astrctMesh(iMeshIter), ...
+                astrctCrossSection(iAxesIter) );
             if ~isempty(a2fLinesPix)
-                ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), a2fLinesPix, astrctMesh(iMeshIter).m_afColor); %#ok
+                ahHandles(end+1) = fnPlotLinesAsSinglePatch(ahAxes(iAxesIter), ...
+                    a2fLinesPix, astrctMesh(iMeshIter).m_afColor); %#ok
             end
         end
         
     end
-    pt3fTarget3D = g_strctModule.m_acAnatVol{g_strctModule.m_iCurrAnatVol}.m_strctCrossSectionHoriz.m_a2fM \ [strctTarget.m_pt3fPosition;1];
+    pt3fTarget3D = [strctTarget.m_pt3fPosition;1];
     
     % Draw target in 3D
     if sum(iTargetIter == aiCurrTarget) > 0
